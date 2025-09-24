@@ -13,12 +13,12 @@ const toPublicPath = (path: string) => `${basePath}${path}`;
 const sortedWorks = [...works].sort((a, b) => (b.year - a.year) || a.title.localeCompare(b.title));
 const highlight = sortedWorks.slice(0, 3);
 
-const mediaPool = [
+const fallbackMediaPool = [
   toPublicPath('/assets/work-yacht-club.jpg'),
   toPublicPath('/assets/work-kotsubo-market.jpg'),
   toPublicPath('/assets/work-shimouma-residence.jpg'),
 ];
-const mediaByTitle = new Map(
+const fallbackMediaByTitle = new Map(
   [
     ['The Super Yacht Club', toPublicPath('/assets/work-yacht-club.jpg')],
     ['KOTSUBO Jacaranda Market Place', toPublicPath('/assets/work-kotsubo-market.jpg')],
@@ -63,7 +63,10 @@ const narratives = [
 
 const stories = highlight.map((item, index) => ({
   ...item,
-  media: mediaByTitle.get(item.title) ?? mediaPool[index % mediaPool.length],
+  media:
+    (item.image ? toPublicPath(item.image) : undefined) ??
+    fallbackMediaByTitle.get(item.title) ??
+    fallbackMediaPool[index % fallbackMediaPool.length],
   ...narratives[index % narratives.length],
 }));
 

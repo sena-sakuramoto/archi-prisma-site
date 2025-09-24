@@ -15,6 +15,7 @@ export interface WorkItem {
   type: string;
   region: string;
   phase: string;
+  image?: string;
 }
 
 export interface TeamData {

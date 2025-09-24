@@ -1,7 +1,28 @@
 [
-  { "year": 2024, "title": "The Super Yacht Club", "type": "Hospitality/Club", "region": "Japan", "phase": "Planning/Design" },
-  { "year": 2024, "title": "KOTSUBO Jacaranda Market Place", "type": "Urban/Commercial", "region": "Japan", "phase": "Planning/Design" },
-  { "year": 2024, "title": "下馬賃貸マンション", "type": "Residential", "region": "Japan", "phase": "Design" },
+  {
+    "year": 2024,
+    "title": "The Super Yacht Club",
+    "type": "Hospitality/Club",
+    "region": "Japan",
+    "phase": "Planning/Design",
+    "image": "/assets/work-yacht-club.jpg"
+  },
+  {
+    "year": 2024,
+    "title": "KOTSUBO Jacaranda Market Place",
+    "type": "Urban/Commercial",
+    "region": "Japan",
+    "phase": "Planning/Design",
+    "image": "/assets/work-kotsubo-market.jpg"
+  },
+  {
+    "year": 2024,
+    "title": "下馬賃貸マンション",
+    "type": "Residential",
+    "region": "Japan",
+    "phase": "Design",
+    "image": "/assets/work-shimouma-residence.jpg"
+  },
   { "year": 2024, "title": "下目黒オフィスビル", "type": "Office", "region": "Japan", "phase": "Design" },
   { "year": 2024, "title": "小坪漁港屋台村", "type": "Urban/Market", "region": "Japan", "phase": "Planning/Design" },
   { "year": 2024, "title": "名古屋錦3丁目開発（事業コンペ）", "type": "Urban/Commercial", "region": "Japan", "phase": "Competition" },
