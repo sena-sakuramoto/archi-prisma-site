@@ -1,0 +1,119 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+const primaryPalette = [
+  { name: 'Primary 200', hex: '#BED8FF', role: 'Glow' },
+  { name: 'Primary 300', hex: '#8CBCFF', role: 'Accent' },
+  { name: 'Primary 500', hex: '#2F7FE8', role: 'Focus' },
+];
+
+const surfacePalette = [
+  { name: 'Surface 50', hex: '#F8FAFC', role: 'Base' },
+  { name: 'Surface 500', hex: '#64748B', role: 'Text' },
+  { name: 'Surface 950', hex: '#080D19', role: 'Backdrop' },
+];
+
+const typography = [
+  { label: 'Display', font: 'Barlow Condensed', usage: 'H1 / Section titles' },
+  { label: 'Primary', font: 'Noto Sans JP', usage: 'Body copy / UI' },
+  { label: 'Numerics', font: 'Barlow Condensed', usage: 'Stats / Metrics' },
+];
+
+const gridGuides = [
+  { label: 'Column Grid', detail: '12 cols · 24px gutter · 1120px max' },
+  { label: 'Spacing Scale', detail: '8px base · 24px rhythm for sections' },
+  { label: 'Corner Radius', detail: '32px primary · 24px secondary' },
+];
+---
+
+<section id="brand" class="bg-white py-20 sm:py-28">
+  <div class="mx-auto flex max-w-6xl flex-col gap-12 px-6 sm:px-8 lg:px-12">
+    <SectionHeading
+      kicker="System"
+      highlight="Brand Framework"
+      title="体験全体を支えるブランドプロトコル"
+      summary="カラー・タイポグラフィ・グリッドを先に定義し、Hero から Works、Contact まで一貫したトーンで構成します。以下のパネルを基準に各セクションをリフレッシュしました。"
+      cta={{ label: 'ブランドデッキ相談', href: '#contact' }}
+    />
+
+    <div class="grid gap-8 lg:grid-cols-[1.1fr,0.9fr]">
+      <article class="interactive-card grid gap-6 rounded-[36px] border border-surface-200/80 bg-surface-50 p-6 shadow-[0_28px_80px_rgba(15,23,42,0.12)] sm:p-8">
+        <header class="flex flex-col gap-2">
+          <span class="text-[11px] uppercase tracking-[0.35em] text-primary-500/80">Color Palette</span>
+          <p class="text-sm text-surface-500">Primary グローと Surface ニュートラルの組合せで、暗転背景でも高い可読性を確保します。</p>
+        </header>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div class="flex flex-col gap-3">
+            <h3 class="text-xs font-semibold uppercase tracking-[0.35em] text-surface-400">Primary</h3>
+            <div class="grid gap-3">
+              {primaryPalette.map((swatch) => (
+                <div class="flex items-center justify-between rounded-3xl border border-surface-200 bg-white/70 p-4">
+                  <div class="flex items-center gap-3">
+                    <span class="inline-flex h-10 w-10 rounded-2xl" style={`background-color: ${swatch.hex};`}></span>
+                    <div class="flex flex-col">
+                      <span class="text-sm font-semibold text-surface-700">{swatch.name}</span>
+                      <span class="text-xs text-surface-500">{swatch.role}</span>
+                    </div>
+                  </div>
+                  <code class="text-xs text-surface-500">{swatch.hex}</code>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div class="flex flex-col gap-3">
+            <h3 class="text-xs font-semibold uppercase tracking-[0.35em] text-surface-400">Surface</h3>
+            <div class="grid gap-3">
+              {surfacePalette.map((swatch) => (
+                <div class="flex items-center justify-between rounded-3xl border border-surface-200 bg-white/70 p-4">
+                  <div class="flex items-center gap-3">
+                    <span class="inline-flex h-10 w-10 rounded-2xl border border-surface-200" style={`background-color: ${swatch.hex};`}></span>
+                    <div class="flex flex-col">
+                      <span class="text-sm font-semibold text-surface-700">{swatch.name}</span>
+                      <span class="text-xs text-surface-500">{swatch.role}</span>
+                    </div>
+                  </div>
+                  <code class="text-xs text-surface-500">{swatch.hex}</code>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <div class="grid gap-6">
+        <article class="interactive-card flex flex-col gap-4 rounded-[32px] border border-surface-200/80 bg-surface-50 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.12)]">
+          <header class="flex flex-col gap-2">
+            <span class="text-[11px] uppercase tracking-[0.35em] text-primary-500/80">Typography</span>
+            <p class="text-sm text-surface-500">表示と本文の棲み分けを徹底し、英数字は Display で揃えます。</p>
+          </header>
+          <ul class="space-y-3">
+            {typography.map((item) => (
+              <li class="flex items-center justify-between rounded-2xl border border-surface-200 bg-white/70 px-4 py-3">
+                <div class="flex flex-col">
+                  <span class="text-sm font-semibold text-surface-700">{item.label}</span>
+                  <span class="text-xs text-surface-500">{item.font}</span>
+                </div>
+                <span class="text-xs text-surface-400">{item.usage}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+
+        <article class="interactive-card flex flex-col gap-4 rounded-[32px] border border-surface-200/80 bg-surface-50 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.12)]">
+          <header class="flex flex-col gap-2">
+            <span class="text-[11px] uppercase tracking-[0.35em] text-primary-500/80">Grid & Rhythm</span>
+            <p class="text-sm text-surface-500">余白とモジュール設計を揃え、全セクションで呼吸感を一定に。</p>
+          </header>
+          <ul class="space-y-3">
+            {gridGuides.map((item) => (
+              <li class="flex items-center justify-between rounded-2xl border border-surface-200 bg-white/70 px-4 py-3">
+                <span class="text-sm font-semibold text-surface-700">{item.label}</span>
+                <span class="text-xs text-surface-500">{item.detail}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>

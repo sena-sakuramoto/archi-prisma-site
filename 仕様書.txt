@@ -1,0 +1,265 @@
+Archi-Prisma 簡易HP — codex CLI 仕様書
+1. 前提
+
+Node.js 20、PNPM 8（corepack でOK）
+
+GitHub パーソナルアクセストークンを GITHUB_TOKEN にエクスポート済み
+
+リポジトリは <YOUR_GH_ORG_OR_USER>/archi-prisma-site を使用
+
+export GITHUB_TOKEN=<YOUR_GITHUB_PAT>
+
+2. 雛形プロジェクト作成
+
+Astro + Tailwind の最小テンプレートで初期化
+
+依存関係の導入
+
+codex init --template astro-tailwind --name archi-prisma-site
+cd archi-prisma-site
+corepack enable && corepack prepare pnpm@latest --activate
+pnpm install
+
+3. ディレクトリとコンテンツ投入
+
+必要フォルダの作成
+
+文章・JSON・デザイン定義の配置
+
+画像は public/assets/ に WebP/AVIF で配置（後述の最適化コマンドあり）
+
+mkdir -p content design .github/workflows public/assets
+
+# 文章（Markdown）
+cat > content/about.md << 'EOF'
+# Archi-Prisma Design Works — About
+MOVE HEARTS. — 心を動かせ
+AI × 建築で、人生と街に “わくわく” の火を灯す。
+
+Archi-Prisma Design Works 株式会社は、2001年に英国で設立された Archi-Prisma Ltd. London、
+および日本法人として設立されたアーキプリズマインターナショナル株式会社の実績と経験を継承し、
+2024年に東京・品川で誕生しました。AIとArchicadの統合、国際的デザイナーとの強固なパートナー体制を軸に、
+都市開発・商業施設・ホテル・住宅までを幅広く手掛けます。
+
+代表・櫻本聖成は、最年少でArchicadの代理店契約を締結。
+AI連動のアドオン開発や高精度のビジュアライゼーションで、設計から意思決定までの体験を刷新します。
+EOF
+
+cat > content/services.md << 'EOF'
+# Services
+1. 建築・土木設計監理
+2. 建築関連の事業計画・コンサルティング
+3. 都市開発・建設・飲食等プロデュース
+4. 建築パース・CG制作
+5. 店舗・オフィス・住宅等インテリアデザイン
+6. コンピューターソフトウェアの企画・開発
+7. コンピューター操作指導
+8. 家具・食器・照明等プロダクトデザイン
+9. ロゴマーク・サイン等グラフィックデザイン
+10. ホテル・宿泊施設の経営・管理
+EOF
+
+cat > content/licenses.md << 'EOF'
+# Licenses
+1. 一級建築士事務所登録：東京都知事登録 第6108号
+2. 管理建築士登録：国土交通大臣登録 第75397号
+3. 所在地：〒141-0021 東京都品川区上大崎2-6-7 SMA白金長者丸301
+EOF
+
+cat > content/contact.md << 'EOF'
+# Contact
+住所：〒141-0021 東京都品川区上大崎2-6-7 SMA白金長者丸301
+CTA：相談する／資料請求（後日設定）
+EOF
+
+cat > content/team.json << 'EOF'
+{
+  "core": [
+    { "name": "櫻本 聖成", "role": "代表取締役社長", "notes": "最年少でArchicadの代理店契約を締結。AI×Archicadの実装・教育・アドオン開発を推進。" },
+    { "name": "中村 奨", "role": "管理建築士", "license": "一級 建築士（国土交通大臣登録 第75397号）" },
+    { "name": "近藤 旭", "role": "スタッフ" },
+    { "name": "鈴木 海人", "role": "スタッフ" },
+    { "name": "藤本 晃世", "role": "スタッフ" }
+  ],
+  "advisory_legacy": [
+    { "name": "尾ケ井 正敏", "role": "Advisory & Legacy", "notes": "MD設計・Archi-Prisma Ltd. London の代表。歴史と知見で若手を支援。" },
+    { "name": "長行司 倫子", "role": "Advisory & Legacy", "notes": "MD設計のメンバー、Archi-Prisma Ltd. London の役員。国際案件の経験を継承。" }
+  ],
+  "collaborators": [
+    { "name": "Jose A. Cruzat", "role": "Architecture" },
+    { "name": "Eugenie Van Harinxma", "role": "Interior Design (UK)" },
+    { "name": "David Glover", "role": "Architecture & Project Design" }
+  ]
+}
+EOF
+
+cat > content/partners.json << 'EOF'
+{
+  "companies": [
+    { "name": "archisoft", "area": "BIMソリューション販売・導入支援" },
+    { "name": "LANDCOLOR", "area": "3Dビジュアライゼーション事業" },
+    { "name": "ASOLABO", "area": "建築教育・人材育成支援" },
+    { "name": "建築構造研究所（BSI）", "area": "構造設計・耐震診断・解析・3D模型・産業連携" }
+  ]
+}
+EOF
+
+cat > content/works.json << 'EOF'
+[
+  { "year": 2024, "title": "The Super Yacht Club", "type": "Hospitality/Club", "region": "Japan", "phase": "Planning/Design" },
+  { "year": 2024, "title": "KOTSUBO Jacaranda Market Place", "type": "Urban/Commercial", "region": "Japan", "phase": "Planning/Design" },
+  { "year": 2024, "title": "下馬賃貸マンション", "type": "Residential", "region": "Japan", "phase": "Design" },
+  { "year": 2024, "title": "下目黒オフィスビル", "type": "Office", "region": "Japan", "phase": "Design" },
+  { "year": 2024, "title": "小坪漁港屋台村", "type": "Urban/Market", "region": "Japan", "phase": "Planning/Design" },
+  { "year": 2024, "title": "名古屋錦3丁目開発（事業コンペ）", "type": "Urban/Commercial", "region": "Japan", "phase": "Competition" },
+
+  { "year": 2005, "title": "Shanghai Grand Hyatt Hotel Redecoration Plan", "type": "Hotel", "region": "China", "phase": "Design" },
+  { "year": 2005, "title": "Tama-Plaza Station Redevelopment Project", "type": "Urban", "region": "Japan", "phase": "Planning" },
+  { "year": 2005, "title": "MM21-4街区事業（名古屋市港湾局／事業コンペ）", "type": "Urban", "region": "Japan", "phase": "Competition" },
+  { "year": 2001, "title": "ATSUGI TELECOM TOWN PROJECT", "type": "Urban", "region": "Japan", "phase": "Planning" },
+  { "year": 1999, "title": "Kobe（沢の鶴）Sawanoturu Project", "type": "Cultural/Industrial", "region": "Japan", "phase": "Planning" },
+  { "year": 1999, "title": "Yokohama Museum Project", "type": "Culture", "region": "Japan", "phase": "Planning" },
+  { "year": 2005, "title": "South Nanchang Industrial Park", "type": "Industrial Park", "region": "China", "phase": "Planning" },
+  { "year": 2005, "title": "Taiwan Jianhushan World Project", "type": "Theme Park", "region": "Taiwan", "phase": "Planning" },
+
+  { "year": 1998, "title": "大船カルフォルニアプラザ（ラ・カンパニア／KFC／フェイマスエイモス）", "type": "Commercial", "region": "Japan", "phase": "Design" },
+  { "year": 1998, "title": "京都・宝ヶ池トニーローマ", "type": "Restaurant", "region": "Japan", "phase": "Design" },
+  { "year": 1997, "title": "霞町再開発（フェスティバルゲート）", "type": "Urban Redevelopment", "region": "Japan", "phase": "Planning" },
+  { "year": 1996, "title": "サッポロビール川口工場再開発", "type": "Industrial Redevelopment", "region": "Japan", "phase": "Planning" },
+  { "year": 1996, "title": "港北ニュータウンセンター中央開発", "type": "Urban", "region": "Japan", "phase": "Planning" },
+  { "year": 1996, "title": "港北ニュータウンセンター南駅前開発", "type": "Urban", "region": "Japan", "phase": "Planning" },
+  { "year": 1995, "title": "中部国際空港臨空タウン（扶養グループ）", "type": "Urban", "region": "Japan", "phase": "Planning" },
+  { "year": 1995, "title": "愛知県大府再開発計画（ワーナーブラザース共同提案事業）", "type": "Urban", "region": "Japan", "phase": "Planning" },
+  { "year": 1994, "title": "ボートピア標準タイプ計画（ロゴ／ネーミング／標準設計／本社1Fモデル）", "type": "Brand/Prototype", "region": "Japan", "phase": "Design" },
+  { "year": 1994, "title": "大船撮影所再開発（シネマワールド）", "type": "Entertainment", "region": "Japan", "phase": "Design" },
+  { "year": 1993, "title": "鎌倉メディアセンター", "type": "Culture", "region": "Japan", "phase": "Planning" },
+  { "year": 1993, "title": "シネマコンプレックス基本計画", "type": "Entertainment", "region": "Japan", "phase": "Planning" },
+  { "year": 1992, "title": "ラ・ツール・ダルジャン青山店", "type": "Restaurant", "region": "Japan", "phase": "Design" },
+  { "year": 1992, "title": "岩谷産業本社隣地レストラン＆ベーカリー計画", "type": "Restaurant", "region": "Japan", "phase": "Design" },
+  { "year": 1991, "title": "フリースタンディング店舗標準設計（江の島ほか約10店）", "type": "Retail Prototype", "region": "Japan", "phase": "Design" },
+  { "year": 1990, "title": "標準店舗群（LX-1／81シリーズ／逗子・用賀・山中湖・江の島・森戸・新宿富里・横浜元町ほか約200店）", "type": "Retail Rollout", "region": "Japan", "phase": "Design" },
+  { "year": 1990, "title": "レストランアニーズ標準設計（中野坂上ほか約5店）", "type": "Restaurant", "region": "Japan", "phase": "Design" },
+  { "year": 1989, "title": "鹿児島串木野金山再開発（ゴールドパーク串木野）", "type": "Cultural/Industrial", "region": "Japan", "phase": "Planning" },
+  { "year": 1989, "title": "三井金属エンジニアリング本社", "type": "Office/Industrial", "region": "Japan", "phase": "Design" },
+  { "year": 1989, "title": "福島県白河工場", "type": "Industrial", "region": "Japan", "phase": "Design" },
+  { "year": 1988, "title": "広島県大島ゴミ焼却場", "type": "Infrastructure", "region": "Japan", "phase": "Design" },
+  { "year": 1987, "title": "根尾断層展示場計画", "type": "Museum/Science", "region": "Japan", "phase": "Planning" },
+  { "year": 1987, "title": "ブリオッシュ・ドーレ（6店舗）", "type": "Bakery Chain", "region": "Japan", "phase": "Design" },
+  { "year": 1986, "title": "大阪ガス本社瓦斯ビル社員食堂リニューアル", "type": "Corporate Facility", "region": "Japan", "phase": "Design" },
+  { "year": 1986, "title": "心斎橋ファッションビル改修工事", "type": "Commercial Renovation", "region": "Japan", "phase": "Design" }
+]
+EOF
+
+4. 生成コンポーネントとページ
+
+セクション単位のコンポーネントを生成（props 経由で Markdown/JSON を読み込み）
+
+トップページに配置
+
+codex generate component Hero
+codex generate component Services
+codex generate component WorksTimeline
+codex generate component Partners
+codex generate component Team
+codex generate component Contact
+
+
+実装指針
+
+Hero はコピー・背景メディア・CTA を props 化。
+
+Services は content/services.md を読み込んでカード化。
+
+WorksTimeline は content/works.json を読み込んで年表＋フィルタ表示。
+
+Partners は content/partners.json、Team は content/team.json をグリッド表示。
+
+Contact は住所＋CTA。将来フォーム差し替え可。
+
+5. 画像最適化（任意）
+
+最大幅1600px、WebP/AVIF に変換
+
+遅延読み込みと <picture> を使用
+
+codex assets optimize --input ./raw-assets --output ./public/assets --max-width 1600 --format webp,avif
+
+6. ビルド
+pnpm build
+
+7. GitHub リモート設定と初回プッシュ
+git init
+git branch -M main
+git remote add origin https://github.com/<YOUR_GH_ORG_OR_USER>/archi-prisma-site.git
+git add .
+git commit -m "feat: initial site"
+git push -u origin main
+
+8. GitHub Pages（Actions 自動デプロイ）
+
+ワークフローを配置
+
+main への push をトリガーに dist/ を公開
+
+cat > .github/workflows/pages.yml << 'EOF'
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches: [ main ]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: corepack enable && corepack prepare pnpm@latest --activate
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+EOF
+
+
+CNAME を使う場合は、public/CNAME を作成して独自ドメインを記述。
+
+9. 品質基準（最終チェック）
+
+パフォーマンス目標
+
+LCP ≤ 2.0s（4G/中端）
+
+CLS ≤ 0.03
+
+JS（圧縮後） ≤ 50KB
+
+アクセシビリティ
+
+コントラスト比 4.5:1
+
+キーボード操作・フォーカス可視
+
+aria ラベル・見出し階層
+
+SEO/OGP
+
+<title> <meta name="description">
+
+OGP（1200×630）
+
+JSON-LD（Organization）

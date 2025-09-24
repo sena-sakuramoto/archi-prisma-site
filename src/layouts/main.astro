@@ -1,0 +1,155 @@
+---
+import '../styles/global.css';
+
+interface LayoutProps {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage = '/og-image.png',
+  structuredData,
+} = Astro.props as LayoutProps;
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const pageUrl = canonical ?? (site ? `${site}${Astro.url.pathname}` : undefined);
+const navItems = [
+  { href: '#about', label: 'About' },
+  { href: '#brand', label: 'Brand' },
+  { href: '#services', label: 'Services' },
+  { href: '#works', label: 'Works' },
+  { href: '#partners', label: 'Partners' },
+  { href: '#team', label: 'Team' },
+  { href: '#contact', label: 'Contact' },
+];
+---
+
+<html lang="ja" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="mask-icon" href="/favicon.svg" color="#1d1d1f" />
+    <meta name="theme-color" content="#0f172a" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {pageUrl && <meta property="og:url" content={pageUrl} />}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    {pageUrl && <link rel="canonical" href={pageUrl} />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600&display=swap"
+    />
+    {structuredData && (
+      <script type="application/ld+json" is:inline>
+        {JSON.stringify(structuredData)}
+      </script>
+    )}
+  </head>
+  <body class="bg-surface-50 text-surface-900">
+    <header class="sticky top-0 z-30 w-full border-b border-surface-200/70 bg-white/80 backdrop-blur-xl">
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4 sm:px-8 lg:px-12">
+        <a href="#about" class="flex items-center gap-3">
+          <span class="flex h-10 w-10 items-center justify-center rounded-full bg-surface-900 text-sm font-semibold uppercase tracking-[0.3em] text-surface-50">
+            AP
+          </span>
+          <span class="hidden flex-col text-xs font-semibold uppercase tracking-[0.35em] text-surface-600 sm:flex">
+            Archi-Prisma
+            <span class="text-[10px] font-normal tracking-[0.4em] text-primary-500">Design Works</span>
+          </span>
+        </a>
+        <nav class="hidden items-center gap-8 text-[11px] font-semibold uppercase tracking-[0.28em] text-surface-500 lg:flex">
+          {navItems.map((item) => (
+            <a href={item.href} class="nav-link transition-colors hover:text-primary-500">{item.label}</a>
+          ))}
+        </nav>
+        <div class="flex items-center gap-2">
+          <a
+            href="#contact"
+            class="hidden items-center gap-2 rounded-full border border-primary-400/60 bg-primary-300 px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-surface-950 transition hover:bg-primary-200 sm:inline-flex"
+          >
+            Project Desk
+          </a>
+          <button
+            class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-surface-200 text-xs uppercase tracking-[0.25em] text-surface-600 lg:hidden"
+            type="button"
+            data-nav-toggle
+            aria-label="メニューを開く"
+          >
+            ☰
+          </button>
+        </div>
+      </div>
+      <div class="lg:hidden" data-nav-panel hidden>
+        <nav class="space-y-2 border-t border-surface-200/70 bg-white px-6 py-5 text-[11px] font-semibold uppercase tracking-[0.3em] text-surface-500">
+          {navItems.map((item) => (
+            <a href={item.href} class="block rounded-full border border-transparent px-3 py-2 transition hover:border-primary-200 hover:text-primary-500">
+              {item.label}
+            </a>
+          ))}
+          <a
+            href="#contact"
+            class="mt-4 flex items-center justify-center gap-2 rounded-full border border-primary-300/60 bg-primary-300 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-surface-950"
+          >
+            Project Desk
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="bg-surface-900 py-16 text-surface-300">
+      <div class="mx-auto flex max-w-6xl flex-col gap-6 px-6 sm:px-8 lg:px-12">
+        <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <p class="text-sm uppercase tracking-[0.25em] text-primary-200">Archi-Prisma Design Works</p>
+          <div class="flex flex-wrap items-center gap-4 text-[11px] uppercase tracking-[0.3em] text-surface-500">
+            {navItems.map((item) => (
+              <a href={item.href} class="transition hover:text-primary-200">{item.label}</a>
+            ))}
+            <span class="hidden font-light text-surface-600 sm:inline">Tokyo · London</span>
+          </div>
+        </div>
+        <p class="text-xs text-surface-500">© {new Date().getFullYear()} Archi-Prisma Design Works 株式会社. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script is:inline>
+      const toggle = document.querySelector('[data-nav-toggle]');
+      const panel = document.querySelector('[data-nav-panel]');
+      if (toggle && panel) {
+        toggle.addEventListener('click', () => {
+          const isHidden = panel.hasAttribute('hidden');
+          if (isHidden) {
+            panel.removeAttribute('hidden');
+            toggle.setAttribute('aria-expanded', 'true');
+          } else {
+            panel.setAttribute('hidden', '');
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+        panel.addEventListener('click', (event) => {
+          if (event.target instanceof HTMLAnchorElement) {
+            panel.setAttribute('hidden', '');
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

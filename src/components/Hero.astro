@@ -1,0 +1,171 @@
+---
+import StatsRibbon from './StatsRibbon.astro';
+
+interface CTALink {
+  label: string;
+  href: string;
+  note?: string;
+}
+
+interface Props {
+  title: string;
+  tagline?: string;
+  subheading?: string;
+  paragraphs: string[];
+  cta?: CTALink | null;
+}
+
+const { title, tagline, subheading, paragraphs, cta } = Astro.props;
+const [primaryParagraph, ...detailParagraphs] = paragraphs;
+
+const highlightPillars = [
+  {
+    title: 'Strategic Design',
+    body: '都市／商業／ホスピタリティ領域の事業構想から空間実装まで、一気通貫で支援。',
+  },
+  {
+    title: 'BIM × AI Ops',
+    body: 'Archicad を中心に AI ツールや自社アドオンを組み合わせ、意思決定速度を最大化。',
+  },
+  {
+    title: 'Visual Story',
+    body: 'ステークホルダーの共感を引き出すシナリオ設計とビジュアライゼーション。',
+  },
+];
+---
+
+<section id="about" class="relative isolate overflow-hidden bg-surface-950 text-surface-50">
+  <div class="absolute inset-0" data-parallax="0.12" aria-hidden="true">
+    <video
+      class="h-full w-full object-cover opacity-85"
+      src="/assets/hero-loop.mp4"
+      poster="/assets/hero-bg.jpg"
+      autoplay
+      muted
+      loop
+      playsinline
+    ></video>
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-br from-surface-950/95 via-surface-950/70 to-surface-900/40" aria-hidden="true"></div>
+  <div class="pointer-events-none absolute -left-40 top-20 h-[520px] w-[520px] rounded-full bg-primary-400/25 blur-[160px] animate-glow-ring" aria-hidden="true"></div>
+  <div class="pointer-events-none absolute -right-32 bottom-24 h-[420px] w-[420px] rounded-full bg-primary-200/20 blur-[140px] animate-glow-ring" aria-hidden="true"></div>
+
+  <div class="relative z-10 mx-auto flex max-w-6xl flex-col gap-16 px-6 py-28 sm:px-8 lg:px-12">
+    <div class="grid gap-14 lg:grid-cols-[1.3fr,0.9fr] lg:items-end lg:gap-12">
+      <div class="flex flex-col gap-8">
+        <div class="flex flex-col gap-5 text-balance">
+          <span class="text-[11px] font-semibold uppercase tracking-[0.45em] text-primary-200/80">{title.replace('—', ' · ')}</span>
+          <h1 class="text-4xl font-semibold leading-tight text-surface-50 sm:text-5xl lg:text-6xl">
+            {subheading || 'Architecture & Experience design that moves people and markets.'}
+          </h1>
+          <p class="max-w-2xl text-sm leading-relaxed text-surface-200 sm:text-base">
+            {primaryParagraph || '東京とロンドンで磨いたハイブリッドチームが、都市戦略と空間体験をつなぐエコシステムを構築。AI × BIM のワークフローで意思決定を加速させ、事業と感性の両軸から街をアップデートします。'}
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <a
+            href={cta?.href ?? '#contact'}
+            class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-primary-300 px-8 py-3 text-sm font-semibold uppercase tracking-[0.25em] text-surface-950 transition hover:bg-primary-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-200"
+          >
+            <span class="relative z-10">{cta?.label ?? 'Project Consultation'}</span>
+            <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">↗</span>
+            <span aria-hidden="true" class="shimmer"></span>
+          </a>
+          <a
+            href="#works"
+            class="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-surface-200 transition hover:border-primary-200 hover:text-primary-100"
+          >
+            View Works
+          </a>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-3">
+          {highlightPillars.map((pillar) => (
+            <article class="interactive-card relative overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-6 text-sm text-surface-100 shadow-[0_25px_70px_rgba(8,13,25,0.45)]">
+              <h2 class="text-sm font-semibold uppercase tracking-[0.3em] text-primary-200">{pillar.title}</h2>
+              <p class="mt-3 text-xs text-surface-200">{pillar.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <aside class="flex flex-col gap-6">
+        <div class="interactive-card relative overflow-hidden rounded-[32px] border border-white/15 bg-white/10 shadow-[0_40px_120px_rgba(0,0,0,0.45)]" data-parallax="0.05">
+          <picture>
+            <source srcset="/assets/hero-visual.jpg" type="image/jpeg" />
+            <img
+              src="/assets/hero-visual.jpg"
+              alt="Archi-Prisma のレンダリングプレビュー"
+              loading="lazy"
+              class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+            />
+          </picture>
+          <div class="absolute inset-0 bg-gradient-to-t from-surface-950/85 via-surface-900/10 to-transparent"></div>
+          <div class="absolute inset-x-0 bottom-0 flex flex-col gap-3 px-6 py-6">
+            <p class="text-[10px] uppercase tracking-[0.4em] text-primary-200">Featured concept</p>
+            <p class="text-lg font-semibold text-surface-50">Tokyo Bay Hybrid District</p>
+            <p class="text-xs text-surface-300">BIM × AI プロトタイピングで意思決定を加速</p>
+          </div>
+        </div>
+
+        {detailParagraphs.length > 0 && (
+          <div class="interactive-card relative overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-6 text-sm text-surface-100 shadow-[0_25px_70px_rgba(8,13,25,0.45)]">
+            <p class="text-xs text-surface-200">{detailParagraphs[0]}</p>
+          </div>
+        )}
+      </aside>
+    </div>
+
+    <StatsRibbon
+      items={[
+        { value: '1000+', label: 'Projects', sublabel: 'since 1980s' },
+        { value: '12', label: 'Global partners', sublabel: 'Architecture · Interiors' },
+        { value: '3', label: 'Delivery modes', sublabel: 'BIM · Visuals · DX' },
+      ]}
+    />
+  </div>
+
+  <script is:inline>
+    const hero = document.getElementById('about');
+    if (hero) {
+      const parallaxTargets = Array.from(hero.querySelectorAll('[data-parallax]'));
+      const state = { scroll: 0, x: 0, y: 0 };
+      let raf = 0;
+
+      const apply = () => {
+        parallaxTargets.forEach((element) => {
+          const intensity = Number(element.getAttribute('data-parallax')) || 0.1;
+          const translateX = state.x * intensity * -40;
+          const translateY = state.scroll * intensity * -60 + state.y * intensity * -25;
+          element.style.transform = `translate3d(${translateX}px, ${translateY}px, 0)`;
+        });
+      };
+
+      const queue = () => {
+        if (raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(apply);
+      };
+
+      const updateScroll = () => {
+        const rect = hero.getBoundingClientRect();
+        const viewport = window.innerHeight || document.documentElement.clientHeight;
+        const progress = Math.min(Math.max((viewport - rect.top) / (rect.height + viewport), 0), 1);
+        hero.style.setProperty('--hero-progress', progress.toString());
+        state.scroll = progress;
+        queue();
+      };
+
+      const handlePointer = (event) => {
+        const rect = hero.getBoundingClientRect();
+        state.x = (event.clientX - rect.left) / rect.width - 0.5;
+        state.y = (event.clientY - rect.top) / rect.height - 0.5;
+        queue();
+      };
+
+      updateScroll();
+      window.addEventListener('scroll', updateScroll, { passive: true });
+      hero.addEventListener('mousemove', handlePointer);
+    }
+  </script>
+</section>

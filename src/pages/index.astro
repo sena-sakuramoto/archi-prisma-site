@@ -1,0 +1,76 @@
+---
+import Layout from '../layouts/main.astro';
+import Hero from '../components/Hero.astro';
+import BrandPanel from '../components/BrandPanel.astro';
+import Services from '../components/Services.astro';
+import WorksTimeline from '../components/WorksTimeline.astro';
+import Partners from '../components/Partners.astro';
+import Team from '../components/Team.astro';
+import Contact from '../components/Contact.astro';
+import {
+  loadAbout,
+  loadServices,
+  loadWorks,
+  loadTeam,
+  loadPartners,
+  loadContact,
+  loadLicenses,
+} from '../lib/content';
+
+const [about, services, works, team, partners, contact, licenses] = await Promise.all([
+  loadAbout(),
+  loadServices(),
+  loadWorks(),
+  loadTeam(),
+  loadPartners(),
+  loadContact(),
+  loadLicenses(),
+]);
+
+const ctaMatch = contact.cta.match(/^(.*?)(?:（(.*)）)?$/);
+const ctaLabel = ctaMatch?.[1]?.trim() ?? contact.cta;
+const ctaNote = ctaMatch?.[2]?.trim();
+
+const pageTitle = 'Archi-Prisma Design Works | AI × 建築で心を動かす';
+const pageDescription =
+  'Archi-Prisma Design Works 株式会社は、AIとArchicadを統合した設計・可視化で都市開発から住宅までの体験を刷新する建築デザインファームです。';
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Archi-Prisma Design Works 株式会社',
+  description: pageDescription,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '東京都品川区上大崎2-6-7 SMA白金長者丸301',
+    postalCode: '141-0021',
+    addressLocality: '品川区',
+    addressRegion: '東京都',
+    addressCountry: 'JP',
+  },
+  url: Astro.site ? String(Astro.site) : undefined,
+  logo: '/favicon.svg',
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} structuredData={structuredData}>
+  <Hero
+    title={about.title}
+    tagline={about.tagline}
+    subheading={about.subheading}
+    paragraphs={about.paragraphs}
+    cta={{ label: ctaLabel, href: '#contact', note: ctaNote ?? undefined }}
+  />
+  <BrandPanel />
+  <Services title="Strategic Service Lines" services={services} />
+  <WorksTimeline title="Project Timeline" works={works} />
+  <Partners title="Allied Creators" partners={partners.companies} />
+  <Team title="Global & Hybrid Team" team={team} />
+  <Contact
+    title="Connect with Archi-Prisma"
+    address={contact.address}
+    ctaLabel={ctaLabel}
+    ctaNote={ctaNote}
+    licenses={licenses}
+  />
+</Layout>

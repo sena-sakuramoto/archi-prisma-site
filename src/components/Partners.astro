@@ -1,0 +1,66 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+interface Partner {
+  name: string;
+  area: string;
+}
+
+interface Props {
+  title: string;
+  partners: Partner[];
+}
+
+const { title, partners } = Astro.props;
+const accentImage = '/assets/partners-network.jpg';
+---
+
+<section id="partners" class="bg-surface-100 py-24 sm:py-32">
+  <div class="mx-auto flex max-w-6xl flex-col gap-12 px-6 sm:px-8 lg:px-12">
+    <SectionHeading
+      kicker="Allies"
+      highlight="Co-design Network"
+      title={title}
+      summary="各領域のスペシャリストと組み、BIM 導入からビジュアライゼーション、教育・運用までを横断的に支えます。ロゴプレースホルダーを差し替えるだけでブランド露出が整います。"
+      cta={{ label: 'パートナー相談', href: '#contact' }}
+    />
+
+    <div class="grid gap-6 lg:grid-cols-[1.1fr,0.9fr] lg:items-stretch">
+      <article class="interactive-card relative overflow-hidden rounded-[36px] border border-surface-200/80 bg-white shadow-[0_28px_80px_rgba(15,23,42,0.12)]">
+        <img src={accentImage} alt="パートナーコラボレーションのプレースホルダー" class="h-full w-full object-cover" loading="lazy" />
+        <div class="absolute inset-0 bg-gradient-to-br from-surface-950/80 via-surface-900/20 to-transparent"></div>
+        <div class="absolute inset-0 flex flex-col justify-end gap-4 px-8 pb-10 text-surface-50">
+          <span class="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em]">
+            Strategic Partners
+          </span>
+          <p class="max-w-lg text-lg font-medium text-surface-50">
+            Archi-Prisma は国内外 12 社と提携し、建築ビジュアライゼーション、BIM ラボ、教育プログラムを共同で展開しています。
+          </p>
+        </div>
+      </article>
+
+      <div class="grid gap-4 rounded-[36px] border border-surface-200/80 bg-white/80 p-6 shadow-[inset_0_12px_40px_rgba(15,23,42,0.06)]">
+        <div class="grid gap-4 sm:grid-cols-2">
+          {partners.map((partner) => (
+            <article class="interactive-card group relative overflow-hidden rounded-[28px] border border-surface-200/60 bg-surface-50 p-6">
+              <div class="mb-4 flex items-center gap-3">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-200 to-primary-400 text-sm font-semibold text-surface-950">
+                  {partner.name.slice(0, 2).toUpperCase()}
+                </div>
+                <h3 class="text-base font-semibold text-surface-900">{partner.name}</h3>
+              </div>
+              <p class="text-xs text-surface-500">{partner.area}</p>
+              <div class="mt-4 flex items-center justify-between text-[10px] uppercase tracking-[0.3em] text-primary-500">
+                <span>Active Collaboration</span>
+                <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+              </div>
+            </article>
+          ))}
+        </div>
+        <p class="text-xs text-surface-400">
+          ※ 実際のロゴや提携情報に差し替えてご利用ください。グリッドは最大 6 社まで美しく収まるよう調整済みです。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

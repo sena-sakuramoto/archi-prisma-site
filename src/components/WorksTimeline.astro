@@ -1,0 +1,208 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import type { WorkItem } from '../lib/content';
+
+interface Props {
+  title: string;
+  works: WorkItem[];
+}
+
+const { title, works } = Astro.props;
+const sortedWorks = [...works].sort((a, b) => (b.year - a.year) || a.title.localeCompare(b.title));
+const highlight = sortedWorks.slice(0, 3);
+
+const mediaPool = ['/assets/works-hospitality.jpg', '/assets/works-urban.jpg', '/assets/works-signature.jpg'];
+const narratives = [
+  {
+    code: '01',
+    headline: 'Immersive Hospitality Club',
+    challenge: '超富裕層向け会員制クラブの構想段階で、体験価値と投資基準を両立させる判断軸が不足していた。',
+    approach: [
+      'AI massing と BIM を統合し、光環境と導線を定量最適化',
+      'メタバース上で会員導線を再現し、意思決定者の共感を獲得',
+      '投資家向け資料と同期したビジュアライズを高速生成',
+    ],
+    value: '合意形成のリードタイムを 1/3 に短縮し、先行会員募集の KPI 達成に貢献。',
+  },
+  {
+    code: '02',
+    headline: 'Seaside Culture Market',
+    challenge: '観光とローカル経済の分断が進み、マーケット再生に向けた共通の事業ビジョンが描けていなかった。',
+    approach: [
+      '住民・事業者・行政を交えた共創ワークショップで課題を可視化',
+      'ブランドアイデンティティと空間演出を同時設計し、連続した体験動線を構築',
+      '複数フェーズの収益シナリオを年表化し、資金調達の透明性を確保',
+    ],
+    value: '地域事業者 8 社が参画し、通年観光とローカル回遊を両立する運営モデルを実装。',
+  },
+  {
+    code: '03',
+    headline: 'Hybrid Creative Residence',
+    challenge: 'オーナー企業が賃貸マンションを再定義したい一方で、入居体験と運営効率の両立方法が不透明だった。',
+    approach: [
+      'BIM で躯体と内装の制約を整理し、柔軟な居住オプションをシナリオ設計',
+      '入居者のペルソナごとに DX ワークフローとサービス設計を連携',
+      '可視化パッケージでリーシングと投資家説明を省力化',
+    ],
+    value: '竣工前リーシングの問い合わせ率を 2.4 倍に引き上げ、運営チームの工数を 30% 削減。',
+  },
+];
+
+const stories = highlight.map((item, index) => ({
+  ...item,
+  media: mediaPool[index % mediaPool.length],
+  ...narratives[index % narratives.length],
+}));
+
+const keywordFor = (type: string) => {
+  if (type.includes('Urban')) return 'Urbanity';
+  if (type.includes('Hotel') || type.includes('Hospitality')) return 'Hospitality';
+  if (type.includes('Residential')) return 'Living';
+  if (type.includes('Office')) return 'Workspace';
+  if (type.includes('Theme') || type.includes('Park')) return 'Experience';
+  if (type.includes('Retail')) return 'Retail';
+  return 'Design';
+};
+
+const regionList = Array.from(new Set(sortedWorks.map((item) => item.region)));
+const decadeKey = (year: number) => Math.floor(year / 10) * 10;
+
+const worksByDecade = new Map<number, Map<string, WorkItem[]>>();
+for (const item of sortedWorks) {
+  const decade = decadeKey(item.year);
+  if (!worksByDecade.has(decade)) {
+    worksByDecade.set(decade, new Map());
+  }
+  const regionMap = worksByDecade.get(decade)!;
+  if (!regionMap.has(item.region)) {
+    regionMap.set(item.region, []);
+  }
+  regionMap.get(item.region)!.push(item);
+}
+
+for (const regionMap of worksByDecade.values()) {
+  for (const list of regionMap.values()) {
+    list.sort((a, b) => (b.year - a.year) || a.title.localeCompare(b.title));
+  }
+}
+
+const timelineRows = Array.from(worksByDecade.entries())
+  .sort((a, b) => b[0] - a[0])
+  .map(([decade, regionMap]) => {
+    const decadeLabel = `${decade}s`;
+    const regions = regionList.map((region) => regionMap.get(region) ?? []);
+    const total = regions.reduce((sum, items) => sum + items.length, 0);
+    return { decade, decadeLabel, total, regions };
+  });
+
+const columnTemplate = `grid-template-columns: minmax(160px, 200px) repeat(${regionList.length}, minmax(0, 1fr));`;
+---
+
+<section id="works" class="relative isolate overflow-hidden bg-surface-950 py-24 text-surface-50 sm:py-32">
+  <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-surface-950/40 to-surface-950" aria-hidden="true"></div>
+  <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(92,155,249,0.22),_transparent_55%)]" aria-hidden="true"></div>
+
+  <div class="relative mx-auto flex max-w-6xl flex-col gap-12 px-6 sm:px-8 lg:px-12">
+    <SectionHeading
+      kicker="Projects"
+      highlight="Challenge → Solution → Value"
+      title={title}
+      summary="都市・商業・ホスピタリティを横断する 1000 件超のアーカイブ。最新案件は課題・解決・価値の 3 枚構成で俯瞰し、年代 × 領域のマトリクスで蓄積を透明化します。"
+      cta={{ label: '全プロジェクト相談', href: '#contact' }}
+    />
+
+    <div class="grid gap-6 md:grid-cols-3" data-story-grid>
+      {stories.map((story, index) => (
+        <article class="interactive-card group relative flex flex-col overflow-hidden rounded-[32px] border border-white/15 bg-white/5 shadow-[0_32px_90px_rgba(0,0,0,0.45)]">
+          <div class="relative aspect-[4/3] overflow-hidden">
+            <img src={story.media} alt={`${story.title} のビジュアル`} loading="lazy" class="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+            <div class="absolute inset-0 bg-gradient-to-t from-surface-950/75 via-transparent to-transparent"></div>
+            <div class="absolute inset-x-0 bottom-0 flex items-center justify-between px-6 pb-5 text-[11px] uppercase tracking-[0.35em] text-primary-200/90">
+              <span>Case {String(index + 1).padStart(2, '0')}</span>
+              <span>{story.year} · {story.region}</span>
+            </div>
+          </div>
+          <div class="flex flex-1 flex-col gap-6 p-6 sm:p-7">
+            <div class="flex flex-col gap-2">
+              <p class="text-xs uppercase tracking-[0.35em] text-primary-200/80">{story.headline}</p>
+              <h3 class="text-xl font-semibold text-surface-50 sm:text-2xl">{story.title}</h3>
+            </div>
+            <dl class="flex flex-col gap-5 text-sm text-surface-200">
+              <div>
+                <dt class="text-xs uppercase tracking-[0.35em] text-primary-200/70">課題</dt>
+                <dd class="mt-2 leading-relaxed text-surface-100">{story.challenge}</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-[0.35em] text-primary-200/70">解決</dt>
+                <dd class="mt-2">
+                  <ul class="space-y-2">
+                    {story.approach.map((point) => (
+                      <li class="flex items-start gap-3 text-sm text-surface-100">
+                        <span class="mt-1 inline-flex h-1.5 w-1.5 rounded-full bg-primary-300"></span>
+                        <span class="leading-relaxed">{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-[0.35em] text-primary-200/70">価値</dt>
+                <dd class="mt-2 leading-relaxed text-surface-50">{story.value}</dd>
+              </div>
+            </dl>
+            <div class="mt-auto flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.3em] text-primary-200/90">
+              <span class="rounded-full border border-white/20 px-3 py-1">{keywordFor(story.type)}</span>
+              <span class="rounded-full border border-white/20 px-3 py-1">{story.phase}</span>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="grid gap-6" id="works-matrix">
+      <div class="flex flex-col gap-2">
+        <span class="text-[11px] uppercase tracking-[0.35em] text-primary-200/80">Timeline Matrix</span>
+        <p class="max-w-3xl text-sm text-surface-200 sm:text-base">
+          年代を縦軸、領域（進出地域）を横軸にとったアーカイブ。案件名とフェーズを公開し、どの時期にどの領域へリソースを集中してきたかが一目でわかります。
+        </p>
+      </div>
+
+      <div class="overflow-x-auto rounded-[36px] border border-white/10 bg-white/5 p-6 shadow-[0_30px_90px_rgba(0,0,0,0.45)]">
+        <div class="min-w-[720px] space-y-6">
+          <div class="grid items-end gap-4 text-[11px] uppercase tracking-[0.35em] text-primary-200/70" style={columnTemplate}>
+            <span>年代</span>
+            {regionList.map((region) => (
+              <span>{region}</span>
+            ))}
+          </div>
+
+          {timelineRows.map((row) => (
+            <section class="grid gap-6 rounded-3xl border border-white/10 bg-surface-950/70 p-6 shadow-[0_24px_70px_rgba(0,0,0,0.4)]" style={columnTemplate}>
+              <div class="flex flex-col gap-3 text-sm">
+                <span class="text-[11px] uppercase tracking-[0.35em] text-primary-200/80">{row.decadeLabel}</span>
+                <span class="text-3xl font-semibold text-surface-50">{row.total}<span class="ml-2 text-xs text-surface-400">件</span></span>
+              </div>
+              {row.regions.map((items) => (
+                <div class="flex flex-col gap-3 text-sm text-surface-200">
+                  {items.length ? (
+                    <ul class="space-y-3">
+                      {items.map((work) => (
+                        <li class="rounded-2xl border border-white/5 bg-white/5 p-3">
+                          <span class="text-[11px] uppercase tracking-[0.35em] text-primary-200/70">{work.year}</span>
+                          <p class="mt-2 text-sm font-semibold text-surface-50">{work.title}</p>
+                          <p class="text-xs text-surface-300">{work.type} · {work.phase}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p class="text-xs text-surface-500">該当なし</p>
+                  )}
+                </div>
+              ))}
+            </section>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

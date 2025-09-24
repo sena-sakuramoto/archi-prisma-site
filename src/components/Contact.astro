@@ -1,0 +1,101 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+interface Props {
+  title: string;
+  address: string;
+  ctaLabel: string;
+  ctaNote?: string;
+  licenses: string[];
+}
+
+const { title, address, ctaLabel, ctaNote, licenses } = Astro.props;
+const backdrop = '/assets/contact-space.jpg';
+---
+
+<section id="contact" class="bg-surface-900 py-24 text-surface-50 sm:py-32">
+  <div class="mx-auto flex max-w-6xl flex-col gap-12 px-6 sm:px-8 lg:px-12">
+    <SectionHeading
+      kicker="Connect"
+      highlight="Next Conversation"
+      title={title}
+      summary="プロジェクト相談や DX 推進、施設運営パートナー提携など、お気軽にご連絡ください。プレースホルダーカードを差し替えるだけで連絡チャネルが完成します。"
+      cta={{ label: ctaLabel, href: '#contact-details' }}
+    />
+
+    <div id="contact-details" class="grid gap-8 rounded-[32px] border border-white/10 bg-white/5 p-8 shadow-[0_30px_90px_rgba(0,0,0,0.45)] backdrop-blur-sm lg:grid-cols-[1.2fr,0.8fr]">
+      <div class="flex flex-col gap-8">
+        <article class="interactive-card relative overflow-hidden rounded-3xl border border-white/15 bg-white/10">
+          <img src={backdrop} alt="東京・品川のオフィスをイメージしたプレースホルダー" class="h-full w-full object-cover" loading="lazy" />
+          <div class="absolute inset-0 bg-gradient-to-br from-surface-950/80 via-surface-900/20 to-transparent"></div>
+          <div class="absolute inset-0 flex flex-col justify-between gap-4 px-6 py-6">
+            <div class="flex flex-col gap-2">
+              <span class="text-[11px] uppercase tracking-[0.4em] text-primary-200">Head Office</span>
+              <p class="text-xl font-medium text-surface-50 sm:text-2xl">{address}</p>
+            </div>
+            <div class="flex flex-wrap gap-4 text-xs uppercase tracking-[0.3em] text-surface-200">
+              <span class="rounded-full border border-white/20 px-4 py-1">品川 · Tokyo</span>
+              <span class="rounded-full border border-white/20 px-4 py-1">Remote Collaboration</span>
+            </div>
+          </div>
+        </article>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <article class="interactive-card flex flex-col gap-3 rounded-3xl border border-white/15 bg-white/10 p-5">
+            <span class="text-[11px] uppercase tracking-[0.3em] text-primary-200">Primary Contact</span>
+            <a href="mailto:hello@example.com" class="text-sm font-semibold text-surface-50">hello@example.com</a>
+            <p class="text-xs text-surface-400">実際のメールアドレスに置き換えてください。</p>
+          </article>
+          <article class="interactive-card flex flex-col gap-3 rounded-3xl border border-white/15 bg-white/10 p-5">
+            <span class="text-[11px] uppercase tracking-[0.3em] text-primary-200">Booking</span>
+            <a href="https://example.com/booking" target="_blank" rel="noreferrer" class="text-sm font-semibold text-surface-50">オンライン相談カレンダー</a>
+            <p class="text-xs text-surface-400">Calendly / Microsoft Bookings などの URL を想定。</p>
+          </article>
+        </div>
+
+        <button
+          type="button"
+          class="group flex items-center justify-between rounded-full border border-primary-300/80 bg-primary-300 px-7 py-3 text-sm font-semibold uppercase tracking-[0.25em] text-surface-950 transition hover:bg-primary-200"
+          disabled
+          aria-disabled="true"
+        >
+          <span>{ctaLabel}</span>
+          <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">↗</span>
+        </button>
+        {ctaNote && <p class="text-xs text-surface-400">{ctaNote}</p>}
+      </div>
+
+      <div class="flex flex-col gap-8">
+        <article class="interactive-card rounded-3xl border border-white/15 bg-surface-900/70 p-6">
+          <h3 class="text-xs uppercase tracking-[0.3em] text-primary-200">Next Steps</h3>
+          <ul class="mt-4 space-y-3 text-sm text-surface-200">
+            <li class="flex items-start gap-3">
+              <span class="mt-1 inline-flex h-1.5 w-1.5 rounded-full bg-primary-300"></span>
+              <span>ヒアリング → コンセプトスケッチ → ステークホルダープレゼンテーション</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 inline-flex h-1.5 w-1.5 rounded-full bg-primary-300"></span>
+              <span>BIM &amp; AI ワークフローの診断と PoC プランの策定</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 inline-flex h-1.5 w-1.5 rounded-full bg-primary-300"></span>
+              <span>DX・運営フェーズに向けた伴走チームの編成</span>
+            </li>
+          </ul>
+        </article>
+
+        <article class="interactive-card rounded-3xl border border-white/15 bg-surface-900/70 p-6">
+          <h3 class="text-xs uppercase tracking-[0.3em] text-primary-200">Licenses</h3>
+          <ul class="mt-4 space-y-3 text-sm text-surface-200">
+            {licenses.map((item) => (
+              <li class="flex items-start gap-3">
+                <span class="mt-1 h-1.5 w-1.5 rounded-full bg-primary-300" aria-hidden="true"></span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
