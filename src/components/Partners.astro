@@ -12,7 +12,9 @@ interface Props {
 }
 
 const { title, partners } = Astro.props;
-const accentImage = '/assets/partners-network.jpg';
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path: string) => `${basePath}${path}`;
+const accentImage = toPublicPath('/assets/partners-network.jpg');
 ---
 
 <section id="partners" class="bg-surface-100 py-24 sm:py-32">

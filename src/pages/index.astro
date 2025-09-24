@@ -35,6 +35,16 @@ const pageTitle = 'Archi-Prisma Design Works | AI × 建築で心を動かす';
 const pageDescription =
   'Archi-Prisma Design Works 株式会社は、AIとArchicadを統合した設計・可視化で都市開発から住宅までの体験を刷新する建築デザインファームです。';
 
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path: string) => `${basePath}${path}`;
+const siteUrl = Astro.site;
+const siteOrigin = siteUrl ? siteUrl.origin : '';
+const sitePathname = siteUrl ? siteUrl.pathname.replace(/\/$/, '') : '';
+const siteBase = `${siteOrigin}${sitePathname}`;
+const publicBase = `${siteBase}${basePath}`;
+const homeUrl = siteBase ? `${publicBase || siteBase}/` : undefined;
+const toAbsoluteUrl = (path: string) => (siteBase ? `${publicBase}${path}` : toPublicPath(path));
+
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -48,8 +58,8 @@ const structuredData = {
     addressRegion: '東京都',
     addressCountry: 'JP',
   },
-  url: Astro.site ? String(Astro.site) : undefined,
-  logo: '/favicon.svg',
+  url: homeUrl,
+  logo: toAbsoluteUrl('/favicon.svg'),
 };
 ---
 

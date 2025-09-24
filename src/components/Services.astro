@@ -8,6 +8,9 @@ interface Props {
 
 const { title, services } = Astro.props;
 
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path: string) => `${basePath}${path}`;
+
 const groups = {
   vision: [] as string[],
   architecture: [] as string[],
@@ -33,7 +36,7 @@ const storyline = [
     headline: '事業とブランドの解像度を高める',
     summary: '経営陣とステークホルダーを巻き込み、課題仮説・事業戦略・ブランド体験を一本化。Works の「課題」で共有されるインサイトをここで設計します。',
     services: groups.vision,
-    media: '/assets/services-strategy.jpg',
+    media: toPublicPath('/assets/services-strategy.jpg'),
     bridge: 'Hero で掲げたビジョンを現場で言語化するフェーズ',
   },
   {
@@ -42,7 +45,7 @@ const storyline = [
     headline: 'BIM × AI で解決策を具体化する',
     summary: '空間・プロダクト・ビジュアルを同時設計し、Works の「解決」で紹介するアウトプットをつくり込みます。感性と数値の両方から意思決定を支援。',
     services: groups.architecture,
-    media: '/assets/services-urban.jpg',
+    media: toPublicPath('/assets/services-urban.jpg'),
     bridge: 'Challenge に対する Solution をプロトタイプするフェーズ',
   },
   {
@@ -51,7 +54,7 @@ const storyline = [
     headline: '運用・DXまで価値を定着させる',
     summary: 'ソフトウェア開発と教育、運営支援まで伴走し、Works の「価値」で語る成果指標を実装します。データ連動型の運用で改善を繰り返します。',
     services: groups.delivery,
-    media: '/assets/works-hospitality.jpg',
+    media: toPublicPath('/assets/works-hospitality.jpg'),
     bridge: 'Solution を Value へ転換するエクスペリエンス設計',
   },
 ];
@@ -75,7 +78,7 @@ const bridgeChips = [
 
     <div class="grid gap-8">
       <article class="interactive-card relative overflow-hidden rounded-[36px] border border-surface-200/70 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.12)]">
-        <img src="/assets/service-matrix.jpg" alt="サービスストーリーラインのイメージ" loading="lazy" class="h-full w-full object-cover" />
+        <img src={toPublicPath('/assets/service-matrix.jpg')} alt="サービスストーリーラインのイメージ" loading="lazy" class="h-full w-full object-cover" />
         <div class="absolute inset-0 bg-gradient-to-br from-surface-950/80 via-surface-900/30 to-transparent"></div>
         <div class="absolute inset-0 flex flex-col justify-between gap-6 px-8 py-8 text-surface-50 sm:px-12 sm:py-12">
           <div class="flex flex-col gap-3 text-balance">

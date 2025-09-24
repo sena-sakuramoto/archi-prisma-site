@@ -17,8 +17,22 @@ const {
   structuredData,
 } = Astro.props as LayoutProps;
 
-const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
-const pageUrl = canonical ?? (site ? `${site}${Astro.url.pathname}` : undefined);
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path: string) => `${basePath}${path}`;
+const siteUrl = Astro.site;
+const siteOrigin = siteUrl ? siteUrl.origin : '';
+const sitePathname = siteUrl ? siteUrl.pathname.replace(/\/$/, '') : '';
+const siteBase = `${siteOrigin}${sitePathname}`;
+const pageUrl = canonical ?? (siteBase ? `${siteBase}${Astro.url.pathname}` : undefined);
+const resolvedOgImage =
+  ogImage && /^https?:\/\//.test(ogImage)
+    ? ogImage
+    : ogImage
+    ? siteBase
+      ? `${siteBase}${toPublicPath(ogImage)}`
+      : toPublicPath(ogImage)
+    : undefined;
+const faviconHref = toPublicPath('/favicon.svg');
 const navItems = [
   { href: '#about', label: 'About' },
   { href: '#brand', label: 'Brand' },
@@ -34,8 +48,8 @@ const navItems = [
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="mask-icon" href="/favicon.svg" color="#1d1d1f" />
+    <link rel="icon" type="image/svg+xml" href={faviconHref} />
+    <link rel="mask-icon" href={faviconHref} color="#1d1d1f" />
     <meta name="theme-color" content="#0f172a" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -43,9 +57,9 @@ const navItems = [
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {pageUrl && <meta property="og:url" content={pageUrl} />}
-    {ogImage && <meta property="og:image" content={ogImage} />}
+    {resolvedOgImage && <meta property="og:image" content={resolvedOgImage} />}
     <meta name="twitter:card" content="summary_large_image" />
-    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    {resolvedOgImage && <meta name="twitter:image" content={resolvedOgImage} />}
     {pageUrl && <link rel="canonical" href={pageUrl} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -54,9 +68,7 @@ const navItems = [
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600&display=swap"
     />
     {structuredData && (
-      <script type="application/ld+json" is:inline>
-        {JSON.stringify(structuredData)}
-      </script>
+      <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     )}
   </head>
   <body class="bg-surface-50 text-surface-900">

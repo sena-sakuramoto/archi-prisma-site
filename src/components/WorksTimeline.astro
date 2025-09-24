@@ -8,10 +8,16 @@ interface Props {
 }
 
 const { title, works } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path: string) => `${basePath}${path}`;
 const sortedWorks = [...works].sort((a, b) => (b.year - a.year) || a.title.localeCompare(b.title));
 const highlight = sortedWorks.slice(0, 3);
 
-const mediaPool = ['/assets/works-hospitality.jpg', '/assets/works-urban.jpg', '/assets/works-signature.jpg'];
+const mediaPool = [
+  toPublicPath('/assets/works-hospitality.jpg'),
+  toPublicPath('/assets/works-urban.jpg'),
+  toPublicPath('/assets/works-signature.jpg'),
+];
 const narratives = [
   {
     code: '01',

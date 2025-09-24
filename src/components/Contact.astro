@@ -10,7 +10,9 @@ interface Props {
 }
 
 const { title, address, ctaLabel, ctaNote, licenses } = Astro.props;
-const backdrop = '/assets/contact-space.jpg';
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path: string) => `${basePath}${path}`;
+const backdrop = toPublicPath('/assets/contact-space.jpg');
 ---
 
 <section id="contact" class="bg-surface-900 py-24 text-surface-50 sm:py-32">
