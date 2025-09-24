@@ -18,9 +18,9 @@ export interface WorkItem {
 }
 
 export interface TeamData {
-  core: Array<{ name: string; role: string; notes?: string; license?: string }>;
-  advisory_legacy: Array<{ name: string; role: string; notes?: string }>;
-  collaborators: Array<{ name: string; role: string; notes?: string }>;
+  core: Array<{ name: string; role: string; image?: string; notes?: string; license?: string }>;
+  advisory_legacy: Array<{ name: string; role: string; image?: string; notes?: string }>;
+  collaborators: Array<{ name: string; role: string; image?: string; notes?: string }>;
 }
 
 export interface ContactInfo {

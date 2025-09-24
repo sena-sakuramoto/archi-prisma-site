@@ -14,10 +14,17 @@ const sortedWorks = [...works].sort((a, b) => (b.year - a.year) || a.title.local
 const highlight = sortedWorks.slice(0, 3);
 
 const mediaPool = [
-  toPublicPath('/assets/works-hospitality.jpg'),
-  toPublicPath('/assets/works-urban.jpg'),
-  toPublicPath('/assets/works-signature.jpg'),
+  toPublicPath('/assets/work-yacht-club.jpg'),
+  toPublicPath('/assets/work-kotsubo-market.jpg'),
+  toPublicPath('/assets/work-shimouma-residence.jpg'),
 ];
+const mediaByTitle = new Map(
+  [
+    ['The Super Yacht Club', toPublicPath('/assets/work-yacht-club.jpg')],
+    ['KOTSUBO Jacaranda Market Place', toPublicPath('/assets/work-kotsubo-market.jpg')],
+    ['下馬賃貸マンション', toPublicPath('/assets/work-shimouma-residence.jpg')],
+  ] as const,
+);
 const narratives = [
   {
     code: '01',
@@ -56,7 +63,7 @@ const narratives = [
 
 const stories = highlight.map((item, index) => ({
   ...item,
-  media: mediaPool[index % mediaPool.length],
+  media: mediaByTitle.get(item.title) ?? mediaPool[index % mediaPool.length],
   ...narratives[index % narratives.length],
 }));
 
