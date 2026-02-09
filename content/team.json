@@ -12,9 +12,13 @@
       "license": "一級 建築士（国土交通大臣登録 第75397号）",
       "image": "/assets/team-nakamura-sho.jpg"
     },
-    { "name": "近藤 旭", "role": "スタッフ", "image": "/assets/team-kondo-akira.jpg" },
     { "name": "鈴木 海人", "role": "スタッフ", "image": "/assets/team-suzuki-kaito.jpg" },
-    { "name": "藤本 晃世", "role": "スタッフ", "image": "/assets/team-fujimoto-kosei.jpg" }
+    {
+      "name": "藤本 晃世",
+      "role": "スタッフ",
+      "license": "二級建築士",
+      "image": "/assets/team-fujimoto-kosei.jpg"
+    }
   ],
   "advisory_legacy": [
     { "name": "尾ケ井 正敏", "role": "Advisory & Legacy", "notes": "MD設計・Archi-Prisma Ltd. London の代表。歴史と知見で若手を支援。" },

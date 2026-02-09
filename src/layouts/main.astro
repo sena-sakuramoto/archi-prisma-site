@@ -36,6 +36,7 @@ const resolvedOgImage =
       : undefined;
 
 const faviconHref = toPublicPath('/favicon.svg');
+const apdwLogo = toPublicPath('/assets/branding/apdw-logo.png');
 
 const navItems = [
   { href: '#hero', label: 'ホーム', sub: 'Home' },
@@ -92,11 +93,9 @@ const footerItems = [
     <header class="sticky top-0 z-40 border-b border-surface-200/85 bg-white/95 backdrop-blur">
       <div class="site-container flex items-center justify-between gap-6 py-4">
         <a href="#hero" class="flex items-center gap-3 text-surface-900">
-          <span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-surface-300 text-sm font-semibold tracking-[0.18em]">
-            AP
-          </span>
+          <img src={apdwLogo} alt="APDWロゴ" class="h-10 w-auto object-contain" />
           <span class="hidden min-[420px]:flex flex-col leading-tight">
-            <span class="text-sm font-semibold">Archi-Prisma Design Works</span>
+            <span class="text-sm font-semibold">Archi-Prisma Design works</span>
             <span class="text-[10px] uppercase tracking-[0.2em] text-surface-500">Tokyo / London</span>
           </span>
         </a>
@@ -135,6 +134,10 @@ const footerItems = [
       </div>
     </header>
 
+    <div class="scroll-progress" aria-hidden="true">
+      <span data-scroll-progress-indicator></span>
+    </div>
+
     <main>
       <slot />
     </main>
@@ -143,7 +146,7 @@ const footerItems = [
       <div class="site-container section-space !py-12">
         <div class="grid gap-8 lg:grid-cols-[1.2fr,0.8fr]">
           <div class="space-y-4">
-            <p class="text-lg font-semibold">Archi-Prisma Design Works 株式会社</p>
+            <p class="text-lg font-semibold">Archi-Prisma Design works株式会社</p>
             <p class="text-sm leading-relaxed text-surface-600">
               一級建築士事務所 東京都知事登録 第6108号<br />
               東京都品川区上大崎2-6-7 SMA白金長者丸301
@@ -158,7 +161,7 @@ const footerItems = [
         </div>
 
         <div class="mt-10 flex flex-col gap-3 border-t border-surface-200 pt-6 text-xs text-surface-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Archi-Prisma Design Works 株式会社</p>
+          <p>© {new Date().getFullYear()} Archi-Prisma Design works株式会社</p>
           <a href="/security-policy" class="hover:text-surface-900">情報セキュリティ基本方針</a>
         </div>
       </div>
@@ -167,6 +170,9 @@ const footerItems = [
     <script is:inline>
       const toggle = document.querySelector('[data-nav-toggle]');
       const panel = document.querySelector('[data-nav-panel]');
+      const root = document.documentElement;
+      const body = document.body;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       if (toggle && panel) {
         toggle.addEventListener('click', () => {
@@ -186,6 +192,81 @@ const footerItems = [
             toggle.setAttribute('aria-expanded', 'false');
           }
         });
+      }
+
+      if (!reduceMotion) {
+        body.classList.add('motion-ready');
+
+        const autoRevealTargets = [
+          ...document.querySelectorAll('.section-eyebrow'),
+          ...document.querySelectorAll('.section-title'),
+          ...document.querySelectorAll('.section-summary'),
+          ...document.querySelectorAll('.soft-card'),
+          ...document.querySelectorAll('.photo-frame'),
+          ...document.querySelectorAll('#hero .site-container > *'),
+        ];
+
+        autoRevealTargets.forEach((node, index) => {
+          if (!(node instanceof HTMLElement)) return;
+          if (!node.dataset.reveal) {
+            node.dataset.reveal = 'up';
+          }
+          if (!node.style.transitionDelay) {
+            const delay = Math.min((index % 6) * 70, 280);
+            node.style.transitionDelay = `${delay}ms`;
+          }
+        });
+
+        const revealNodes = Array.from(document.querySelectorAll('[data-reveal]'));
+        const revealObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                revealObserver.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.14, rootMargin: '0px 0px -10% 0px' },
+        );
+
+        revealNodes.forEach((node) => revealObserver.observe(node));
+
+        const parallaxNodes = Array.from(document.querySelectorAll('[data-parallax]'));
+        const progressIndicator = document.querySelector('[data-scroll-progress-indicator]');
+
+        const updateScrollMotion = () => {
+          const scrollTop = window.scrollY || window.pageYOffset;
+          const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
+          const progress = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
+          root.style.setProperty('--scroll-progress', progress.toFixed(4));
+
+          if (progressIndicator instanceof HTMLElement) {
+            progressIndicator.style.transform = `scaleY(${progress})`;
+          }
+
+          parallaxNodes.forEach((node) => {
+            if (!(node instanceof HTMLElement)) return;
+            const speed = Number(node.dataset.parallaxSpeed || '0.12');
+            const rect = node.getBoundingClientRect();
+            const offset = (window.innerHeight - rect.top) * speed - rect.height * speed * 0.5;
+            node.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+          });
+        };
+
+        let ticking = false;
+        const requestUpdate = () => {
+          if (ticking) return;
+          ticking = true;
+          window.requestAnimationFrame(() => {
+            updateScrollMotion();
+            ticking = false;
+          });
+        };
+
+        updateScrollMotion();
+        window.addEventListener('scroll', requestUpdate, { passive: true });
+        window.addEventListener('resize', requestUpdate, { passive: true });
       }
     </script>
   </body>

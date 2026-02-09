@@ -51,6 +51,8 @@ const imageSrc = (path?: string) => (path ? toPublicPath(path) : '');
             src={imageSrc(work.image)}
             alt={`${work.title} の写真`}
             class={`w-full object-cover ${index === 0 ? 'aspect-[16/9]' : 'aspect-[4/3]'}`}
+            data-parallax
+            data-parallax-speed={index === 0 ? '0.1' : '0.07'}
             loading="lazy"
           />
           <div class="p-5 sm:p-6">

@@ -1,8 +1,7 @@
 {
   "companies": [
-    { "name": "archisoft", "area": "BIMソリューション販売・導入支援" },
-    { "name": "LANDCOLOR", "area": "3Dビジュアライゼーション事業" },
-    { "name": "ASOLABO", "area": "建築教育・人材育成支援" },
-    { "name": "建築構造研究所（BSI）", "area": "構造設計・耐震診断・解析・3D模型・産業連携" }
+    { "name": "archisoft株式会社", "area": "BIMソリューション販売・導入支援" },
+    { "name": "株式会社ランドカラー", "area": "3Dビジュアライゼーション事業" },
+    { "name": "株式会社建築構造研究所（BSI）", "area": "構造設計・耐震診断・解析・3D模型・産業連携" }
   ]
 }

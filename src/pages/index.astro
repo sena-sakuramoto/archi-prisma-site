@@ -28,11 +28,11 @@ const [about, services, works, team, partners, contact, licenses] = await Promis
   loadLicenses(),
 ]);
 
-const pageTitle = 'Archi-Prisma Design Works | AI × 建築で心を動かす設計事務所';
+const pageTitle = 'Archi-Prisma Design works | AI × 建築で心を動かす設計事務所';
 const pageDescription =
-  'Archi-Prisma Design Works は、AIとBIMを活用した建築設計事務所です。都市開発・商業施設・ホテル・住宅の設計・監理を手掛けます。東京都品川区。一級建築士事務所。';
+  'Archi-Prisma Design works は、AIとBIMを活用した建築設計事務所です。都市開発・商業施設・ホテル・住宅の設計・監理を手掛けます。東京都品川区。一級建築士事務所。';
 
-const companyName = 'Archi-Prisma Design Works 株式会社';
+const companyName = 'Archi-Prisma Design works株式会社';
 const canonicalUrl = 'https://archi-prisma.co.jp/';
 const address = {
   '@type': 'PostalAddress',
@@ -83,7 +83,9 @@ const liveProducts = [
     href: 'https://kakome.archi-prisma.co.jp/',
     linkLabel: 'KAKOMEを見る',
     target: '設計事務所・施工管理者',
-    logo: '/assets/products/kakome-logo-black.webp',
+    logo: '/assets/products/kakome-mark.jpg',
+    brandWordmark: 'KAKOME',
+    logoIncludesName: true,
   },
   {
     name: 'Compass',
@@ -93,26 +95,34 @@ const liveProducts = [
     linkLabel: 'Compassを見る',
     target: '設計事務所・PM',
     logo: '/assets/products/compass-logo.png',
+    logoIncludesName: true,
   },
 ];
 
 const communityProduct = {
   name: 'AI建築サークル',
   description:
-    '実務特化型の有料コミュニティ。省エネ計算・構造計算ツールの利用、月2回の勉強会、会員限定Discordをワンパッケージで提供。',
+    '2025年4月施行の法改正（4号特例縮小・省エネ適合義務化）に備える、実務特化型コミュニティ。計算・申請・運用の実務フローを、ツールと勉強会で継続支援。',
   href: 'https://ai-archi-circle.archi-prisma.co.jp/',
   linkLabel: 'AI建築サークルの詳細',
   target: '建築士・設計事務所',
   logo: '/assets/products/ai-archi-circle-logo.webp',
-  points: ['実務特化の勉強会（定期開催）', '会員限定Discordで相談・共有', '会員向けに各種AIツールを提供'],
+  points: [
+    '月額¥5,000（年額¥50,000）で実務ツールとコミュニティを提供',
+    '月2回のライブ勉強会とアーカイブ視聴',
+    '会員限定Discordで相談・レビュー',
+    'KOKOME / KOZO / KAKOME / Compass など会員向けツール連携',
+  ],
 };
 
 const upcomingProducts = [
   {
-    name: 'KOUZOU',
+    name: 'KOZO',
     description: 'AI構造計算ツール。4号特例縮小に対応した構造関係図書の自動作成を目指して開発中。',
     status: '開発中',
     logo: '/assets/products/kozo-logo.webp',
+    logoIncludesName: true,
+    logoScale: 4,
   },
   {
     name: '楽々省エネ計算',

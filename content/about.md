@@ -1,8 +1,8 @@
-# Archi-Prisma Design Works — About
+# Archi-Prisma Design works — About
 MOVE HEARTS. — 心を動かせ
 AI × 建築で、人生と街に “わくわく” の火を灯す。
 
-Archi-Prisma Design Works 株式会社は、2001年に英国で設立された Archi-Prisma Ltd. London、
+Archi-Prisma Design works株式会社は、2001年に英国で設立された Archi-Prisma Ltd. London、
 および日本法人として設立されたアーキプリズマインターナショナル株式会社の実績と経験を継承し、
 2024年に東京・品川で誕生しました。AIとArchicadの統合、国際的デザイナーとの強固なパートナー体制を軸に、
 都市開発・商業施設・ホテル・住宅までを幅広く手掛けます。

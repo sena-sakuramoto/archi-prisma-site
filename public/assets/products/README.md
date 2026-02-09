@@ -7,9 +7,11 @@
 - `aicommander-icon.png`
 - `aicommander-screen.png`
 - `kakome-logo-black.webp`
+- `kakome-mark.jpg` (KAKOMEロゴマーク)
 - `compass-logo.png`
 - `ai-archi-circle-logo.webp`
 - `kozo-logo.webp`
+- `rakuraku-logo.png`
 
 ## 楽々省エネ計算ロゴ
 

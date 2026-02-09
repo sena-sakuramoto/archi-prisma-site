@@ -15,13 +15,15 @@ const toPublicPath = (path: string) => `${basePath}${path}`;
     src={toPublicPath('/assets/hero-bg.jpg')}
     alt=""
     class="absolute inset-0 h-full w-full object-cover"
+    data-parallax
+    data-parallax-speed="0.18"
     loading="eager"
     fetchpriority="high"
   />
   <div class="absolute inset-0 bg-[linear-gradient(120deg,rgba(27,25,22,0.74),rgba(27,25,22,0.45)_45%,rgba(27,25,22,0.25))]"></div>
 
   <div class="site-container section-space relative flex min-h-[72svh] flex-col justify-center text-white">
-    <p class="text-sm font-medium uppercase tracking-[0.18em] text-accent-300">Archi-Prisma Design Works</p>
+    <p class="text-sm font-medium uppercase tracking-[0.18em] text-accent-300">Archi-Prisma Design works</p>
     <h1 class="mt-5 max-w-4xl text-5xl font-semibold leading-[1.05] sm:text-6xl lg:text-7xl">{tagline}</h1>
     <p class="mt-6 max-w-2xl text-base leading-relaxed text-white/90 sm:text-lg">{subheading}</p>
 
