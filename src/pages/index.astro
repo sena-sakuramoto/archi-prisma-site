@@ -1,11 +1,12 @@
 ---
 import Layout from '../layouts/main.astro';
 import Hero from '../components/Hero.astro';
-import BrandPanel from '../components/BrandPanel.astro';
+import About from '../components/About.astro';
+import Works from '../components/Works.astro';
+import Products from '../components/Products.astro';
 import Services from '../components/Services.astro';
-import WorksTimeline from '../components/WorksTimeline.astro';
-import Partners from '../components/Partners.astro';
 import Team from '../components/Team.astro';
+import Partners from '../components/Partners.astro';
 import Contact from '../components/Contact.astro';
 import {
   loadAbout,
@@ -27,60 +28,121 @@ const [about, services, works, team, partners, contact, licenses] = await Promis
   loadLicenses(),
 ]);
 
-const ctaMatch = contact.cta.match(/^(.*?)(?:（(.*)）)?$/);
-const ctaLabel = ctaMatch?.[1]?.trim() ?? contact.cta;
-const ctaNote = ctaMatch?.[2]?.trim();
-
-const pageTitle = 'Archi-Prisma Design Works | AI × 建築で心を動かす';
+const pageTitle = 'Archi-Prisma Design Works | AI × 建築で心を動かす設計事務所';
 const pageDescription =
-  'Archi-Prisma Design Works 株式会社は、AIとArchicadを統合した設計・可視化で都市開発から住宅までの体験を刷新する建築デザインファームです。';
+  'Archi-Prisma Design Works は、AIとBIMを活用した建築設計事務所です。都市開発・商業施設・ホテル・住宅の設計・監理を手掛けます。東京都品川区。一級建築士事務所。';
 
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const toPublicPath = (path: string) => `${basePath}${path}`;
-const siteUrl = Astro.site;
-const siteOrigin = siteUrl ? siteUrl.origin : '';
-const sitePathname = siteUrl ? siteUrl.pathname.replace(/\/$/, '') : '';
-const siteBase = `${siteOrigin}${sitePathname}`;
-const publicBase = `${siteBase}${basePath}`;
-const homeUrl = siteBase ? `${publicBase || siteBase}/` : undefined;
-const toAbsoluteUrl = (path: string) => (siteBase ? `${publicBase}${path}` : toPublicPath(path));
-
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'Archi-Prisma Design Works 株式会社',
-  description: pageDescription,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: '東京都品川区上大崎2-6-7 SMA白金長者丸301',
-    postalCode: '141-0021',
-    addressLocality: '品川区',
-    addressRegion: '東京都',
-    addressCountry: 'JP',
-  },
-  url: homeUrl,
-  logo: toAbsoluteUrl('/favicon.svg'),
+const companyName = 'Archi-Prisma Design Works 株式会社';
+const canonicalUrl = 'https://archi-prisma.co.jp/';
+const address = {
+  '@type': 'PostalAddress',
+  streetAddress: '東京都品川区上大崎2-6-7 SMA白金長者丸301',
+  postalCode: '141-0021',
+  addressLocality: '品川区',
+  addressRegion: '東京都',
+  addressCountry: 'JP',
 };
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: companyName,
+    description: pageDescription,
+    url: canonicalUrl,
+    logo: 'https://archi-prisma.co.jp/og-image.png',
+    address,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ArchitectureFirm',
+    name: companyName,
+    description: pageDescription,
+    url: canonicalUrl,
+    logo: 'https://archi-prisma.co.jp/og-image.png',
+    address,
+  },
+];
+
+const liveProducts = [
+  {
+    name: 'AICommander',
+    description:
+      'Archicad用AIアドオン。自然言語でのモデリング操作、法規3D評価、日影・天空率解析、図書自動生成を支援。',
+    href: 'https://archi-prisma.co.jp/#contact',
+    linkLabel: 'ベータ配布について問い合わせる',
+    target: 'Archicadユーザー',
+    logo: '/assets/products/aicommander-icon.png',
+    visual: '/assets/products/aicommander-screen.png',
+    featured: true,
+  },
+  {
+    name: 'KAKOME',
+    description:
+      '現場写真に矢印・囲み・テキストを追加し、指示書を短時間で作成できる実務向けツール。',
+    href: 'https://kakome.archi-prisma.co.jp/',
+    linkLabel: 'KAKOMEを見る',
+    target: '設計事務所・施工管理者',
+    logo: '/assets/products/kakome-logo-black.webp',
+  },
+  {
+    name: 'Compass',
+    description:
+      '建築業界向けの工程・タスク管理。ガントチャートとGoogle連携で進捗を可視化。',
+    href: 'https://compass-31e9e.web.app',
+    linkLabel: 'Compassを見る',
+    target: '設計事務所・PM',
+    logo: '/assets/products/compass-logo.png',
+  },
+];
+
+const communityProduct = {
+  name: 'AI建築サークル',
+  description:
+    '実務特化型の有料コミュニティ。省エネ計算・構造計算ツールの利用、月2回の勉強会、会員限定Discordをワンパッケージで提供。',
+  href: 'https://ai-archi-circle.archi-prisma.co.jp/',
+  linkLabel: 'AI建築サークルの詳細',
+  target: '建築士・設計事務所',
+  logo: '/assets/products/ai-archi-circle-logo.webp',
+  points: ['実務特化の勉強会（定期開催）', '会員限定Discordで相談・共有', '会員向けに各種AIツールを提供'],
+};
+
+const upcomingProducts = [
+  {
+    name: 'KOUZOU',
+    description: 'AI構造計算ツール。4号特例縮小に対応した構造関係図書の自動作成を目指して開発中。',
+    status: '開発中',
+    logo: '/assets/products/kozo-logo.webp',
+  },
+  {
+    name: '楽々省エネ計算',
+    description: 'モデル建物法BEI計算を行い、国交省v3.8 API連携による公式PDF出力に対応予定。',
+    status: '開発中',
+    logo: '/assets/products/rakuraku-logo.png',
+  },
+];
 ---
 
-<Layout title={pageTitle} description={pageDescription} structuredData={structuredData}>
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonical={canonicalUrl}
+  structuredData={structuredData}
+>
   <Hero
-    title={about.title}
-    tagline={about.tagline}
-    subheading={about.subheading}
-    paragraphs={about.paragraphs}
-    cta={{ label: ctaLabel, href: '#contact', note: ctaNote ?? undefined }}
+    tagline={about.tagline ?? 'MOVE HEARTS. — 心を動かせ'}
+    subheading={about.subheading ?? 'AI × 建築で、人生と街にわくわくの火を灯す'}
+    registration="一級建築士事務所 東京都知事登録 第6108号"
   />
-  <BrandPanel />
-  <Services title="Strategic Service Lines" services={services} />
-  <WorksTimeline title="Project Timeline" works={works} />
-  <Partners title="Allied Creators" partners={partners.companies} />
-  <Team title="Global & Hybrid Team" team={team} />
-  <Contact
-    title="Connect with Archi-Prisma"
-    address={contact.address}
-    ctaLabel={ctaLabel}
-    ctaNote={ctaNote}
-    licenses={licenses}
+  <About paragraphs={about.paragraphs} />
+  <Works works={works} />
+  <Products
+    liveProducts={liveProducts}
+    communityProduct={communityProduct}
+    upcomingProducts={upcomingProducts}
   />
+  <Services services={services} />
+  <Team team={team} />
+  <Partners partners={partners.companies} />
+  <Contact address={contact.address} licenses={licenses} ctaText={contact.cta} />
 </Layout>

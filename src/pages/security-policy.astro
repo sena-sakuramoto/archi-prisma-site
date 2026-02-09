@@ -2,67 +2,51 @@
 import Layout from '../layouts/main.astro';
 
 const pageTitle = '情報セキュリティ基本方針 | Archi-Prisma Design Works';
-const pageDescription = 'Archi-Prisma Design Works株式会社の情報セキュリティ基本方針について';
+const pageDescription =
+  'Archi-Prisma Design Works 株式会社の情報セキュリティ基本方針。情報資産の保護と継続的改善に関する基本方針を記載しています。';
 ---
 
-<Layout title={pageTitle} description={pageDescription}>
-  <section class="mx-auto max-w-3xl px-6 py-24 sm:px-8 lg:px-12">
-    <div class="mb-12">
-      <span class="text-[11px] font-semibold uppercase tracking-[0.45em] text-primary-500">Security Policy</span>
-      <h1 class="mt-4 text-3xl font-semibold leading-tight text-surface-900 sm:text-4xl">
-        情報セキュリティ基本方針
-      </h1>
-    </div>
-
-    <div class="prose prose-slate max-w-none space-y-8 text-surface-700">
-      <p class="text-base leading-relaxed">
-        Archi-Prisma Design Works株式会社（以下「当社」）は、お客様からお預かりした情報資産を事故・災害・犯罪などの脅威から守り、お客様ならびに社会の信頼に応えるべく、以下の方針に基づき全社で情報セキュリティに取り組みます。
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonical="https://archi-prisma.co.jp/security-policy"
+>
+  <section class="section-space bg-white">
+    <div class="site-container max-w-4xl">
+      <p class="section-eyebrow">Security Policy</p>
+      <h1 class="section-title">情報セキュリティ基本方針</h1>
+      <p class="section-summary">
+        Archi-Prisma Design Works株式会社（以下「当社」）は、お客様からお預かりした情報資産を事故・災害・犯罪などの脅威から守り、
+        お客様ならびに社会の信頼に応えるべく、以下の方針に基づき全社で情報セキュリティに取り組みます。
       </p>
 
-      <div class="rounded-2xl border border-surface-200 bg-surface-50 p-8 space-y-6">
-        <div class="flex items-start gap-4">
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-300 text-sm font-bold text-surface-950">1</span>
-          <p class="text-sm leading-relaxed">
-            当社は、情報セキュリティに関する法令、規制、規範、契約上の義務を遵守します。
-          </p>
-        </div>
-        <div class="flex items-start gap-4">
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-300 text-sm font-bold text-surface-950">2</span>
-          <p class="text-sm leading-relaxed">
-            当社は、情報セキュリティに関する責任体制を明確にし、情報資産の適切な管理と保護のための対策を組織的・技術的に実施します。
-          </p>
-        </div>
-        <div class="flex items-start gap-4">
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-300 text-sm font-bold text-surface-950">3</span>
-          <p class="text-sm leading-relaxed">
-            当社は、情報セキュリティに対する取り組みを定期的に見直し、継続的に改善します。
-          </p>
-        </div>
-        <div class="flex items-start gap-4">
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-300 text-sm font-bold text-surface-950">4</span>
-          <p class="text-sm leading-relaxed">
-            当社は、すべての従業者に対して、情報セキュリティに関する教育・啓発を行い、意識の向上を図ります。
-          </p>
-        </div>
-        <div class="flex items-start gap-4">
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-300 text-sm font-bold text-surface-950">5</span>
-          <p class="text-sm leading-relaxed">
-            当社は、情報セキュリティインシデントが発生した場合、迅速に対応し、被害の拡大を防止するとともに、再発防止に努めます。
-          </p>
-        </div>
+      <ol class="mt-10 space-y-4">
+        <li class="soft-card p-5 text-sm text-surface-700">
+          当社は、情報セキュリティに関する法令、規制、規範、契約上の義務を遵守します。
+        </li>
+        <li class="soft-card p-5 text-sm text-surface-700">
+          当社は、情報セキュリティに関する責任体制を明確にし、情報資産の適切な管理と保護のための対策を組織的・技術的に実施します。
+        </li>
+        <li class="soft-card p-5 text-sm text-surface-700">
+          当社は、情報セキュリティに対する取り組みを定期的に見直し、継続的に改善します。
+        </li>
+        <li class="soft-card p-5 text-sm text-surface-700">
+          当社は、すべての従業者に対して、情報セキュリティに関する教育・啓発を行い、意識の向上を図ります。
+        </li>
+        <li class="soft-card p-5 text-sm text-surface-700">
+          当社は、情報セキュリティインシデントが発生した場合、迅速に対応し、被害の拡大を防止するとともに、再発防止に努めます。
+        </li>
+      </ol>
+
+      <div class="mt-10 border-t border-surface-200 pt-6 text-sm text-surface-600">
+        <p>制定日: 2026年2月9日</p>
+        <p class="mt-1 font-medium text-surface-800">Archi-Prisma Design Works株式会社</p>
+        <p>代表取締役 櫻本 聖成</p>
       </div>
 
-      <div class="mt-12 border-t border-surface-200 pt-8">
-        <p class="text-sm text-surface-500">制定日: 2026年2月9日</p>
-        <p class="mt-2 text-sm font-semibold text-surface-700">Archi-Prisma Design Works株式会社</p>
-        <p class="text-sm text-surface-600">代表取締役 櫻本 聖成</p>
-      </div>
-
-      <div class="mt-8">
-        <a href="/" class="inline-flex items-center gap-2 text-sm font-semibold text-primary-500 transition hover:text-primary-600">
-          <span>&larr;</span> トップページに戻る
-        </a>
-      </div>
+      <a href="/" class="mt-6 inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-500">
+        トップページに戻る
+      </a>
     </div>
   </section>
 </Layout>

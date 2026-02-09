@@ -19,28 +19,37 @@ const {
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const toPublicPath = (path: string) => `${basePath}${path}`;
+
 const siteUrl = Astro.site;
 const siteOrigin = siteUrl ? siteUrl.origin : '';
 const sitePathname = siteUrl ? siteUrl.pathname.replace(/\/$/, '') : '';
 const siteBase = `${siteOrigin}${sitePathname}`;
+
 const pageUrl = canonical ?? (siteBase ? `${siteBase}${Astro.url.pathname}` : undefined);
 const resolvedOgImage =
   ogImage && /^https?:\/\//.test(ogImage)
     ? ogImage
     : ogImage
-    ? siteBase
-      ? `${siteBase}${toPublicPath(ogImage)}`
-      : toPublicPath(ogImage)
-    : undefined;
+      ? siteBase
+        ? `${siteBase}${toPublicPath(ogImage)}`
+        : toPublicPath(ogImage)
+      : undefined;
+
 const faviconHref = toPublicPath('/favicon.svg');
+
 const navItems = [
-  { href: '#about', label: 'About' },
-  { href: '#brand', label: 'Brand' },
-  { href: '#services', label: 'Services' },
-  { href: '#works', label: 'Works' },
-  { href: '#partners', label: 'Partners' },
-  { href: '#team', label: 'Team' },
-  { href: '#contact', label: 'Contact' },
+  { href: '#hero', label: 'ホーム', sub: 'Home' },
+  { href: '#about', label: '私たちについて', sub: 'About' },
+  { href: '#works', label: '実績', sub: 'Works' },
+  { href: '#products', label: 'AIプロダクト', sub: 'Products' },
+  { href: '#services', label: 'サービス', sub: 'Services' },
+  { href: '#team', label: 'チーム', sub: 'Team' },
+  { href: '#contact', label: 'お問い合わせ', sub: 'Contact' },
+];
+
+const footerItems = [
+  ...navItems,
+  { href: '#partners', label: 'パートナー', sub: 'Partners' },
 ];
 ---
 
@@ -49,75 +58,79 @@ const navItems = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href={faviconHref} />
-    <link rel="mask-icon" href={faviconHref} color="#1d1d1f" />
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="theme-color" content="#faf8f4" />
+
     <title>{title}</title>
     <meta name="description" content={description} />
+
+    {pageUrl && <link rel="canonical" href={pageUrl} />}
+
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {pageUrl && <meta property="og:url" content={pageUrl} />}
     {resolvedOgImage && <meta property="og:image" content={resolvedOgImage} />}
+
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
     {resolvedOgImage && <meta name="twitter:image" content={resolvedOgImage} />}
-    {pageUrl && <link rel="canonical" href={pageUrl} />}
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&display=swap"
     />
+
     {structuredData && (
       <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     )}
   </head>
-  <body class="bg-surface-50 text-surface-900">
-    <header class="sticky top-0 z-30 w-full border-b border-surface-200/70 bg-white/80 backdrop-blur-xl">
-      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4 sm:px-8 lg:px-12">
-        <a href="#about" class="flex items-center gap-3">
-          <span class="flex h-10 w-10 items-center justify-center rounded-full bg-surface-900 text-sm font-semibold uppercase tracking-[0.3em] text-surface-50">
+
+  <body class="bg-surface-50 text-surface-900 antialiased">
+    <header class="sticky top-0 z-40 border-b border-surface-200/85 bg-white/95 backdrop-blur">
+      <div class="site-container flex items-center justify-between gap-6 py-4">
+        <a href="#hero" class="flex items-center gap-3 text-surface-900">
+          <span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-surface-300 text-sm font-semibold tracking-[0.18em]">
             AP
           </span>
-          <span class="hidden flex-col text-xs font-semibold uppercase tracking-[0.35em] text-surface-600 sm:flex">
-            Archi-Prisma
-            <span class="text-[10px] font-normal tracking-[0.4em] text-primary-500">Design Works</span>
+          <span class="hidden min-[420px]:flex flex-col leading-tight">
+            <span class="text-sm font-semibold">Archi-Prisma Design Works</span>
+            <span class="text-[10px] uppercase tracking-[0.2em] text-surface-500">Tokyo / London</span>
           </span>
         </a>
-        <nav class="hidden items-center gap-8 text-[11px] font-semibold uppercase tracking-[0.28em] text-surface-500 lg:flex">
+
+        <nav class="hidden items-center gap-5 lg:flex">
           {navItems.map((item) => (
-            <a href={item.href} class="nav-link transition-colors hover:text-primary-500">{item.label}</a>
-          ))}
-        </nav>
-        <div class="flex items-center gap-2">
-          <a
-            href="#contact"
-            class="hidden items-center gap-2 rounded-full border border-primary-400/60 bg-primary-300 px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-surface-950 transition hover:bg-primary-200 sm:inline-flex"
-          >
-            Project Desk
-          </a>
-          <button
-            class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-surface-200 text-xs uppercase tracking-[0.25em] text-surface-600 lg:hidden"
-            type="button"
-            data-nav-toggle
-            aria-label="メニューを開く"
-          >
-            ☰
-          </button>
-        </div>
-      </div>
-      <div class="lg:hidden" data-nav-panel hidden>
-        <nav class="space-y-2 border-t border-surface-200/70 bg-white px-6 py-5 text-[11px] font-semibold uppercase tracking-[0.3em] text-surface-500">
-          {navItems.map((item) => (
-            <a href={item.href} class="block rounded-full border border-transparent px-3 py-2 transition hover:border-primary-200 hover:text-primary-500">
-              {item.label}
+            <a href={item.href} class="group flex flex-col leading-tight text-surface-700 hover:text-surface-900">
+              <span class="text-sm font-medium">{item.label}</span>
+              <span class="text-[10px] uppercase tracking-[0.12em] text-surface-400 group-hover:text-accent-600">
+                {item.sub}
+              </span>
             </a>
           ))}
-          <a
-            href="#contact"
-            class="mt-4 flex items-center justify-center gap-2 rounded-full border border-primary-300/60 bg-primary-300 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-surface-950"
-          >
-            Project Desk
-          </a>
+        </nav>
+
+        <button
+          type="button"
+          class="inline-flex h-10 items-center justify-center rounded-full border border-surface-300 px-4 text-xs font-medium text-surface-700 lg:hidden"
+          aria-label="メニューを開く"
+          aria-expanded="false"
+          data-nav-toggle
+        >
+          メニュー
+        </button>
+      </div>
+
+      <div class="border-t border-surface-200 bg-white lg:hidden" data-nav-panel hidden>
+        <nav class="site-container flex flex-col py-4">
+          {navItems.map((item) => (
+            <a href={item.href} class="flex items-center justify-between border-b border-surface-100 py-3 text-sm font-medium text-surface-700">
+              <span>{item.label}</span>
+              <span class="text-[10px] uppercase tracking-[0.12em] text-surface-400">{item.sub}</span>
+            </a>
+          ))}
         </nav>
       </div>
     </header>
@@ -126,24 +139,35 @@ const navItems = [
       <slot />
     </main>
 
-    <footer class="bg-surface-900 py-16 text-surface-300">
-      <div class="mx-auto flex max-w-6xl flex-col gap-6 px-6 sm:px-8 lg:px-12">
-        <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <p class="text-sm uppercase tracking-[0.25em] text-primary-200">Archi-Prisma Design Works</p>
-          <div class="flex flex-wrap items-center gap-4 text-[11px] uppercase tracking-[0.3em] text-surface-500">
-            {navItems.map((item) => (
-              <a href={item.href} class="transition hover:text-primary-200">{item.label}</a>
-            ))}
-            <span class="hidden font-light text-surface-600 sm:inline">Tokyo · London</span>
+    <footer class="border-t border-surface-200 bg-white">
+      <div class="site-container section-space !py-12">
+        <div class="grid gap-8 lg:grid-cols-[1.2fr,0.8fr]">
+          <div class="space-y-4">
+            <p class="text-lg font-semibold">Archi-Prisma Design Works 株式会社</p>
+            <p class="text-sm leading-relaxed text-surface-600">
+              一級建築士事務所 東京都知事登録 第6108号<br />
+              東京都品川区上大崎2-6-7 SMA白金長者丸301
+            </p>
           </div>
+
+          <nav class="grid grid-cols-2 gap-3 text-sm text-surface-600 sm:grid-cols-3">
+            {footerItems.map((item) => (
+              <a href={item.href} class="hover:text-surface-900">{item.label}</a>
+            ))}
+          </nav>
         </div>
-        <p class="text-xs text-surface-500">© {new Date().getFullYear()} Archi-Prisma Design Works 株式会社. All rights reserved.</p>
+
+        <div class="mt-10 flex flex-col gap-3 border-t border-surface-200 pt-6 text-xs text-surface-500 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} Archi-Prisma Design Works 株式会社</p>
+          <a href="/security-policy" class="hover:text-surface-900">情報セキュリティ基本方針</a>
+        </div>
       </div>
     </footer>
 
     <script is:inline>
       const toggle = document.querySelector('[data-nav-toggle]');
       const panel = document.querySelector('[data-nav-panel]');
+
       if (toggle && panel) {
         toggle.addEventListener('click', () => {
           const isHidden = panel.hasAttribute('hidden');
@@ -155,6 +179,7 @@ const navItems = [
             toggle.setAttribute('aria-expanded', 'false');
           }
         });
+
         panel.addEventListener('click', (event) => {
           if (event.target instanceof HTMLAnchorElement) {
             panel.setAttribute('hidden', '');

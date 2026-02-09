@@ -1,124 +1,67 @@
 ---
-import SectionHeading from './SectionHeading.astro';
 import type { TeamData } from '../lib/content';
 
 interface Props {
-  title: string;
   team: TeamData;
 }
 
-const { title, team } = Astro.props;
+const { team } = Astro.props as Props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const toPublicPath = (path: string) => `${basePath}${path}`;
-const portrait = toPublicPath('/assets/team-culture.jpg');
-const avatarUrl = (path?: string) => (path ? toPublicPath(path) : undefined);
+const imageSrc = (path?: string) => (path ? toPublicPath(path) : undefined);
 ---
 
-<section id="team" class="bg-white py-24 sm:py-32">
-  <div class="mx-auto flex max-w-6xl flex-col gap-12 px-6 sm:px-8 lg:px-12">
-    <SectionHeading
-      kicker="Collective"
-      highlight="Hybrid Team Grid"
-      title={title}
-      summary="レガシーを継承するコアメンバーと、国際的なコラボレーターが混ざり合うハイブリッドチーム。差し替え可能なプレースホルダーポートレートで視覚的に紹介できます。"
-      cta={{ label: 'チームと話す', href: '#contact' }}
-    />
+<section id="team" class="section-space bg-white">
+  <div class="site-container">
+    <p class="section-eyebrow">Team</p>
+    <h2 class="section-title">チーム</h2>
+    <p class="section-summary">
+      コアメンバーを中心に、顧問・協力デザイナーと連携しながらプロジェクトを推進します。
+    </p>
 
-    <div class="grid gap-10 lg:grid-cols-[1.05fr,0.95fr] lg:items-start">
-      <article class="interactive-card relative overflow-hidden rounded-[32px] border border-surface-200/70 bg-surface-50 shadow-xl">
-        <img src={portrait} alt="チームカルチャーのイメージ" class="h-full w-full object-cover" loading="lazy" />
-        <div class="absolute inset-0 bg-gradient-to-br from-surface-950/65 via-surface-900/25 to-transparent"></div>
-        <div class="absolute inset-0 flex flex-col justify-end gap-4 px-8 pb-10 text-surface-50">
-          <span class="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em]">
-            Core × Legacy
-          </span>
-          <p class="max-w-xl text-lg font-medium">
-            若手とレジェンドが同じプロジェクトで学び合うメンバーシップ。ワークショップやリモート連携に最適化されたチーム構造です。
-          </p>
-        </div>
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
+      {team.core.map((member) => {
+        const portrait = imageSrc(member.image);
+        return (
+          <article class="soft-card overflow-hidden">
+            {portrait && (
+              <img src={portrait} alt={`${member.name}の写真`} class="aspect-[4/5] w-full object-cover" loading="lazy" />
+            )}
+            <div class="p-5">
+              <h3 class="text-2xl font-semibold text-surface-900">{member.name}</h3>
+              <p class="mt-1 text-sm text-surface-500">{member.role}</p>
+              {member.license && <p class="mt-3 text-xs text-surface-600">{member.license}</p>}
+              {member.notes && <p class="mt-3 text-sm text-surface-700">{member.notes}</p>}
+            </div>
+          </article>
+        );
+      })}
+    </div>
+
+    <div class="mt-10 grid gap-6 lg:grid-cols-2">
+      <article class="soft-card p-6">
+        <h3 class="text-2xl font-semibold text-surface-900">顧問</h3>
+        <ul class="mt-4 space-y-4">
+          {team.advisory_legacy.map((member) => (
+            <li class="border-t border-surface-200 pt-4">
+              <p class="text-lg font-medium text-surface-900">{member.name}</p>
+              <p class="text-sm text-surface-600">{member.notes ?? member.role}</p>
+            </li>
+          ))}
+        </ul>
       </article>
 
-      <div class="grid gap-8">
-        <div>
-          <h3 class="text-xs uppercase tracking-[0.3em] text-surface-400">Core Team</h3>
-          <div class="mt-4 grid gap-4 sm:grid-cols-2">
-            {team.core.map((member) => {
-              const imageSrc = avatarUrl(member.image);
-              return (
-                <article class="interactive-card flex flex-col gap-3 rounded-3xl border border-surface-200/70 bg-surface-50 p-5 shadow-sm">
-                  <div class="flex items-center gap-3">
-                    <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-primary-200 to-primary-500 text-base font-semibold text-surface-900 overflow-hidden">
-                      {imageSrc ? (
-                        <img src={imageSrc} alt={`${member.name}のポートレート`} class="h-full w-full object-cover" loading="lazy" />
-                      ) : (
-                        member.name.slice(0, 2)
-                      )}
-                    </div>
-                    <div>
-                      <h4 class="text-base font-semibold text-surface-900">{member.name}</h4>
-                      <p class="text-[11px] uppercase tracking-[0.3em] text-primary-500">{member.role}</p>
-                    </div>
-                  </div>
-                  {member.license && <p class="text-xs text-surface-500">{member.license}</p>}
-                  {member.notes && <p class="text-sm text-surface-600">{member.notes}</p>}
-                </article>
-              );
-            })}
-          </div>
-        </div>
-
-        <div class="grid gap-8">
-          <div>
-            <h3 class="text-xs uppercase tracking-[0.3em] text-surface-400">Advisory & Legacy</h3>
-            <div class="mt-4 grid gap-4 sm:grid-cols-2">
-              {team.advisory_legacy.map((member) => {
-                const imageSrc = avatarUrl(member.image);
-                return (
-                  <article class="interactive-card flex flex-col gap-3 rounded-3xl border border-surface-200/70 bg-surface-50 p-5 shadow-sm">
-                    <div class="flex items-center gap-3">
-                      <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-surface-200 via-surface-400 to-surface-900 text-base font-semibold text-surface-900 overflow-hidden">
-                        {imageSrc ? (
-                          <img src={imageSrc} alt={`${member.name}のポートレート`} class="h-full w-full object-cover" loading="lazy" />
-                        ) : (
-                          member.name.slice(0, 2)
-                        )}
-                      </div>
-                      <div>
-                        <h4 class="text-base font-semibold text-surface-900">{member.name}</h4>
-                        <p class="text-[11px] uppercase tracking-[0.3em] text-primary-500">{member.role}</p>
-                      </div>
-                    </div>
-                    {member.notes && <p class="text-sm text-surface-600">{member.notes}</p>}
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-
-          <div>
-            <h3 class="text-xs uppercase tracking-[0.3em] text-surface-400">Collaborators</h3>
-            <div class="mt-4 -mx-2 flex snap-x gap-4 overflow-x-auto px-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible">
-              {team.collaborators.map((member) => {
-                const imageSrc = avatarUrl(member.image);
-                return (
-                   <article class="interactive-card group relative w-[220px] shrink-0 snap-center overflow-hidden rounded-3xl border border-surface-200/80 bg-surface-50 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg sm:w-full">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-200 via-primary-400 to-surface-900 text-sm font-semibold text-surface-900 overflow-hidden">
-                      {imageSrc ? (
-                        <img src={imageSrc} alt={`${member.name}のポートレート`} class="h-full w-full object-cover" loading="lazy" />
-                      ) : (
-                        member.name.slice(0, 2)
-                      )}
-                    </div>
-                    <h4 class="mt-4 text-sm font-semibold text-surface-900">{member.name}</h4>
-                    <p class="text-xs text-surface-600">{member.role}</p>
-                    {member.notes && <p class="mt-2 text-xs text-surface-500">{member.notes}</p>}
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
+      <article class="soft-card p-6">
+        <h3 class="text-2xl font-semibold text-surface-900">協力デザイナー</h3>
+        <ul class="mt-4 space-y-4">
+          {team.collaborators.map((member) => (
+            <li class="border-t border-surface-200 pt-4">
+              <p class="text-lg font-medium text-surface-900">{member.name}</p>
+              <p class="text-sm text-surface-600">{member.role}</p>
+            </li>
+          ))}
+        </ul>
+      </article>
     </div>
   </div>
 </section>

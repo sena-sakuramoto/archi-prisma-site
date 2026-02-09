@@ -1,0 +1,50 @@
+---
+interface Props {
+  paragraphs: string[];
+}
+
+const { paragraphs } = Astro.props as Props;
+
+const strengths = [
+  {
+    title: 'AI × BIM',
+    text: 'Archicadのアドオン開発から設計プロセス改善まで、一貫して実務に組み込む体制があります。',
+  },
+  {
+    title: '国際ネットワーク',
+    text: 'London発の歴史を背景に、海外デザイナーとの協働で多様な提案力を確保しています。',
+  },
+  {
+    title: '幅広い実績',
+    text: '都市開発・商業施設・ホテル・住宅を横断し、40年近い蓄積を次世代へ接続しています。',
+  },
+];
+---
+
+<section id="about" class="section-space bg-white">
+  <div class="site-container">
+    <p class="section-eyebrow">About</p>
+    <h2 class="section-title">私たちについて</h2>
+    <div class="section-summary space-y-4">
+      {paragraphs.map((paragraph) => (
+        <p>{paragraph}</p>
+      ))}
+    </div>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-3">
+      {strengths.map((strength) => (
+        <article class="soft-card p-6 sm:p-7">
+          <p class="text-xs uppercase tracking-[0.14em] text-accent-600">Strength</p>
+          <h3 class="mt-3 text-2xl font-semibold text-surface-900">{strength.title}</h3>
+          <p class="mt-4 text-sm text-surface-600">{strength.text}</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="mt-10 grid gap-4 border-t border-surface-200 pt-8 text-sm text-surface-600 sm:grid-cols-3">
+      <p><span class="font-semibold text-surface-900">2001年</span> Londonで創業</p>
+      <p><span class="font-semibold text-surface-900">2024年</span> 東京・品川で再始動</p>
+      <p><span class="font-semibold text-surface-900">代表</span> 櫻本 聖成</p>
+    </div>
+  </div>
+</section>

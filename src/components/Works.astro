@@ -1,0 +1,86 @@
+---
+import type { WorkItem } from '../lib/content';
+
+interface Props {
+  works: WorkItem[];
+}
+
+const { works } = Astro.props as Props;
+const sortedWorks = [...works].sort((a, b) => b.year - a.year || a.title.localeCompare(b.title, 'ja'));
+
+const featured = sortedWorks.filter((item) => item.image).slice(0, 3);
+const featuredKeys = new Set(featured.map((item) => `${item.year}-${item.title}`));
+const archive = sortedWorks.filter((item) => !featuredKeys.has(`${item.year}-${item.title}`));
+
+const years = sortedWorks.map((item) => item.year);
+const rangeStart = Math.min(...years);
+const rangeEnd = Math.max(...years);
+
+const groupedByYear = new Map<number, WorkItem[]>();
+for (const item of archive) {
+  if (!groupedByYear.has(item.year)) {
+    groupedByYear.set(item.year, []);
+  }
+  groupedByYear.get(item.year)!.push(item);
+}
+
+const archiveRows = Array.from(groupedByYear.entries()).sort((a, b) => b[0] - a[0]);
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path: string) => `${basePath}${path}`;
+const imageSrc = (path?: string) => (path ? toPublicPath(path) : '');
+---
+
+<section id="works" class="section-space bg-surface-50">
+  <div class="site-container">
+    <div class="flex flex-wrap items-end justify-between gap-5">
+      <div>
+        <p class="section-eyebrow">Works</p>
+        <h2 class="section-title">実績</h2>
+        <p class="section-summary">
+          プロジェクト写真と実績名を軸に、{rangeStart} — {rangeEnd} のアーカイブを公開しています。
+        </p>
+      </div>
+      <p class="text-sm font-medium text-surface-600">掲載案件: {works.length}件</p>
+    </div>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-3">
+      {featured.map((work, index) => (
+        <article class={`soft-card overflow-hidden ${index === 0 ? 'lg:col-span-2' : ''}`}>
+          <img
+            src={imageSrc(work.image)}
+            alt={`${work.title} の写真`}
+            class={`w-full object-cover ${index === 0 ? 'aspect-[16/9]' : 'aspect-[4/3]'}`}
+            loading="lazy"
+          />
+          <div class="p-5 sm:p-6">
+            <p class="text-xs uppercase tracking-[0.14em] text-accent-600">{work.year} / {work.type}</p>
+            <h3 class="mt-2 text-2xl font-semibold text-surface-900">{work.title}</h3>
+            <p class="mt-2 text-sm text-surface-600">{work.region} / {work.phase}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="soft-card mt-12 p-6 sm:p-8">
+      <h3 class="text-2xl font-semibold text-surface-900">プロジェクト一覧</h3>
+      <p class="mt-2 text-sm text-surface-600">掲載画像のない実績も含めて、年代順で全件を掲載しています。</p>
+
+      <div class="mt-8 space-y-7">
+        {archiveRows.map(([year, items]) => (
+          <div class="grid gap-4 border-t border-surface-200 pt-5 sm:grid-cols-[90px,1fr] sm:pt-6">
+            <p class="text-2xl font-semibold text-surface-900">{year}</p>
+            <ul class="grid gap-3 sm:grid-cols-2">
+              {items.map((work) => (
+                <li class="rounded-2xl border border-surface-200 bg-surface-50 px-4 py-3 text-sm text-surface-700">
+                  <p class="font-medium text-surface-900">{work.title}</p>
+                  <p class="mt-1 text-xs text-surface-500">{work.type} / {work.region} / {work.phase}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
