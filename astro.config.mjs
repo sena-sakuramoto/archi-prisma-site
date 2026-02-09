@@ -5,8 +5,8 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://sena-sakuramoto.github.io',
-	base: '/archi-prisma-site',
+	site: 'https://archi-prisma.co.jp',
+	base: '/',
 	vite: {
 		plugins: [tailwindcss()],
 	},
