@@ -1,158 +1,303 @@
 ---
-import Layout from '../layouts/main.astro';
-import Hero from '../components/Hero.astro';
-import About from '../components/About.astro';
-import Works from '../components/Works.astro';
-import Products from '../components/Products.astro';
-import Services from '../components/Services.astro';
-import Team from '../components/Team.astro';
-import Partners from '../components/Partners.astro';
-import Contact from '../components/Contact.astro';
-import {
-  loadAbout,
-  loadServices,
-  loadWorks,
-  loadTeam,
-  loadPartners,
-  loadContact,
-  loadLicenses,
-} from '../lib/content';
-
-const [about, services, works, team, partners, contact, licenses] = await Promise.all([
-  loadAbout(),
-  loadServices(),
-  loadWorks(),
-  loadTeam(),
-  loadPartners(),
-  loadContact(),
-  loadLicenses(),
-]);
-
-const pageTitle = 'Archi-Prisma Design works | AI × 建築で心を動かす設計事務所';
-const pageDescription =
-  'Archi-Prisma Design works は、AIとBIMを活用した建築設計事務所です。都市開発・商業施設・ホテル・住宅の設計・監理を手掛けます。東京都品川区。一級建築士事務所。';
-
-const companyName = 'Archi-Prisma Design works株式会社';
-const canonicalUrl = 'https://archi-prisma.co.jp/';
-const address = {
-  '@type': 'PostalAddress',
-  streetAddress: '東京都品川区上大崎2-6-7 SMA白金長者丸301',
-  postalCode: '141-0021',
-  addressLocality: '品川区',
-  addressRegion: '東京都',
-  addressCountry: 'JP',
-};
-
-const structuredData = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: companyName,
-    description: pageDescription,
-    url: canonicalUrl,
-    logo: 'https://archi-prisma.co.jp/og-image.png',
-    address,
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'ArchitectureFirm',
-    name: companyName,
-    description: pageDescription,
-    url: canonicalUrl,
-    logo: 'https://archi-prisma.co.jp/og-image.png',
-    address,
-  },
-];
-
-const liveProducts = [
-  {
-    name: 'AICommander',
-    description:
-      'Archicad用AIアドオン。自然言語でのモデリング操作、法規3D評価、日影・天空率解析、図書自動生成を支援。',
-    href: 'https://archi-prisma.co.jp/#contact',
-    linkLabel: 'ベータ配布について問い合わせる',
-    target: 'Archicadユーザー',
-    logo: '/assets/products/aicommander-icon.png',
-    visual: '/assets/products/aicommander-screen.png',
-    featured: true,
-  },
-  {
-    name: 'KAKOME',
-    description:
-      '現場写真に矢印・囲み・テキストを追加し、指示書を短時間で作成できる実務向けツール。',
-    href: 'https://kakome.archi-prisma.co.jp/',
-    linkLabel: 'KAKOMEを見る',
-    target: '設計事務所・施工管理者',
-    logo: '/assets/products/kakome-mark.jpg',
-    brandWordmark: 'KAKOME',
-    logoIncludesName: true,
-  },
-  {
-    name: 'Compass',
-    description:
-      '建築業界向けの工程・タスク管理。ガントチャートとGoogle連携で進捗を可視化。',
-    href: 'https://compass-31e9e.web.app',
-    linkLabel: 'Compassを見る',
-    target: '設計事務所・PM',
-    logo: '/assets/products/compass-logo.png',
-    logoIncludesName: true,
-  },
-];
-
-const communityProduct = {
-  name: 'AI建築サークル',
-  description:
-    '2025年4月施行の法改正（4号特例縮小・省エネ適合義務化）に備える、実務特化型コミュニティ。計算・申請・運用の実務フローを、ツールと勉強会で継続支援。',
-  href: 'https://ai-archi-circle.archi-prisma.co.jp/',
-  linkLabel: 'AI建築サークルの詳細',
-  target: '建築士・設計事務所',
-  logo: '/assets/products/ai-archi-circle-logo.webp',
-  points: [
-    '月額¥5,000（年額¥50,000）で実務ツールとコミュニティを提供',
-    '月2回のライブ勉強会とアーカイブ視聴',
-    '会員限定Discordで相談・レビュー',
-    'KOKOME / KOZO / KAKOME / Compass など会員向けツール連携',
-  ],
-};
-
-const upcomingProducts = [
-  {
-    name: 'KOZO',
-    description: 'AI構造計算ツール。4号特例縮小に対応した構造関係図書の自動作成を目指して開発中。',
-    status: '開発中',
-    logo: '/assets/products/kozo-logo.webp',
-    logoIncludesName: true,
-    logoScale: 4,
-  },
-  {
-    name: '楽々省エネ計算',
-    description: 'モデル建物法BEI計算を行い、国交省v3.8 API連携による公式PDF出力に対応予定。',
-    status: '開発中',
-    logo: '/assets/products/rakuraku-logo.png',
-  },
-];
+const contactEmail = 'contact@archi-prisma.co.jp';
 ---
 
-<Layout
-  title={pageTitle}
-  description={pageDescription}
-  canonical={canonicalUrl}
-  structuredData={structuredData}
->
-  <Hero
-    tagline={about.tagline ?? 'MOVE HEARTS. — 心を動かせ'}
-    subheading={about.subheading ?? 'AI × 建築で、人生と街にわくわくの火を灯す'}
-    registration="一級建築士事務所 東京都知事登録 第6108号"
-  />
-  <About paragraphs={about.paragraphs} />
-  <Works works={works} />
-  <Products
-    liveProducts={liveProducts}
-    communityProduct={communityProduct}
-    upcomingProducts={upcomingProducts}
-  />
-  <Services services={services} />
-  <Team team={team} />
-  <Partners partners={partners.companies} />
-  <Contact address={contact.address} licenses={licenses} ctaText={contact.cta} />
-</Layout>
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Archi-Prisma | Renewal in Progress</title>
+    <meta
+      name="description"
+      content="Archi-Prisma のホームページは現在改装中です。お問い合わせはメールにて受け付けています。"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #070707;
+        --panel: rgba(255, 255, 255, 0.06);
+        --line: rgba(255, 255, 255, 0.12);
+        --text: rgba(255, 255, 255, 0.96);
+        --muted: rgba(255, 255, 255, 0.62);
+        --accent: #8ff1ff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background:
+          radial-gradient(circle at top left, rgba(255, 255, 255, 0.14), transparent 28%),
+          radial-gradient(circle at 82% 16%, rgba(143, 241, 255, 0.18), transparent 18%),
+          linear-gradient(135deg, #040404 0%, #0c0c0c 48%, #141414 100%);
+        color: var(--text);
+        font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      }
+
+      body {
+        padding: 24px;
+      }
+
+      main {
+        max-width: 1320px;
+        min-height: calc(100vh - 48px);
+        margin: 0 auto;
+        display: grid;
+        align-items: center;
+      }
+
+      .shell {
+        display: grid;
+        gap: 32px;
+        grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 28px;
+        padding: 10px 16px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--panel);
+        color: var(--muted);
+        font-size: 11px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 0 18px rgba(143, 241, 255, 0.7);
+      }
+
+      .copy {
+        max-width: 760px;
+      }
+
+      .logo-band {
+        display: inline-flex;
+        max-width: 520px;
+        margin-bottom: 28px;
+        padding: 18px 22px;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .logo-band img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(3rem, 8vw, 6.8rem);
+        line-height: 0.92;
+        letter-spacing: -0.05em;
+      }
+
+      p.lead {
+        margin: 24px 0 0;
+        max-width: 40rem;
+        color: var(--muted);
+        font-size: clamp(1rem, 1.8vw, 1.15rem);
+        line-height: 1.9;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 36px;
+      }
+
+      .button,
+      .ghost {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 50px;
+        padding: 0 24px;
+        border-radius: 999px;
+        text-decoration: none;
+        transition:
+          border-color 180ms ease,
+          background-color 180ms ease,
+          color 180ms ease,
+          transform 180ms ease;
+      }
+
+      .button {
+        background: #ffffff;
+        color: #0c0c0c;
+        font-weight: 600;
+      }
+
+      .button:hover {
+        background: var(--accent);
+        transform: translateY(-1px);
+      }
+
+      .ghost {
+        border: 1px solid var(--line);
+        color: var(--text);
+      }
+
+      .ghost:hover {
+        border-color: rgba(255, 255, 255, 0.28);
+        transform: translateY(-1px);
+      }
+
+      .note {
+        margin-top: 18px;
+        color: rgba(255, 255, 255, 0.48);
+        font-size: 14px;
+        line-height: 1.8;
+      }
+
+      .cards {
+        display: grid;
+        gap: 18px;
+      }
+
+      .card {
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: var(--panel);
+        backdrop-filter: blur(10px);
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .card-title {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.56);
+        font-size: 11px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+      }
+
+      .badge {
+        padding: 6px 10px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: rgba(255, 255, 255, 0.44);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .logo-surface {
+        display: grid;
+        place-items: center;
+        min-height: 190px;
+        padding: 18px;
+        border-radius: 22px;
+        background: #efefef;
+      }
+
+      .logo-surface.warm {
+        background: #f4f1eb;
+      }
+
+      .logo-surface img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      @media (max-width: 960px) {
+        body {
+          padding: 18px;
+        }
+
+        main {
+          min-height: calc(100vh - 36px);
+        }
+
+        .shell {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="shell">
+        <div class="copy">
+          <div class="eyebrow">Website Renewal in Progress</div>
+
+          <div class="logo-band">
+            <img src="/assets/branding/apdw-logo.png" alt="Archi-Prisma Design Works logo" />
+          </div>
+
+          <h1>
+            ただいま
+            <br />
+            サイトを改装中です。
+          </h1>
+
+          <p class="lead">
+            Archi-Prisma の新しいホームページを準備しています。
+            <br />
+            公開まで、もう少しだけお待ちください。
+          </p>
+
+          <div class="actions">
+            <a class="button" href={`mailto:${contactEmail}`}>お問い合わせはこちら</a>
+            <a class="ghost" href={`mailto:${contactEmail}`}>{contactEmail}</a>
+          </div>
+
+          <p class="note">
+            プロジェクト相談、協業のご連絡、取材のお問い合わせはメールで受け付けています。
+          </p>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <p class="card-title">Official Logo</p>
+            <div class="logo-surface warm">
+              <img src="/assets/branding/apdw-logo.png" alt="APDW official logo" />
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-header">
+              <p class="card-title">Development Logo</p>
+              <span class="badge">Internal Build</span>
+            </div>
+            <div class="logo-surface">
+              <img src="/assets/branding/apdw-dev-logo.png" alt="APDW development logo" />
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
