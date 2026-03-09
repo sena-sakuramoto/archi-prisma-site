@@ -186,6 +186,33 @@ const contactEmail = 'info@archi-prisma.co.jp';
         line-height: 1.8;
       }
 
+      .submark {
+        margin-top: 32px;
+        padding-top: 18px;
+        border-top: 1px solid var(--rule);
+      }
+
+      .submark-label {
+        margin: 0 0 12px;
+        color: var(--muted);
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .submark-frame {
+        display: inline-flex;
+        max-width: 100%;
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.34);
+      }
+
+      .submark-frame img {
+        display: block;
+        width: min(100%, 220px);
+        height: auto;
+      }
+
       .footer {
         display: flex;
         justify-content: space-between;
@@ -284,6 +311,13 @@ const contactEmail = 'info@archi-prisma.co.jp';
             <a class="contact-link" href={`mailto:${contactEmail}`}>お問い合わせ</a>
             <a class="mail" href={`mailto:${contactEmail}`}>{contactEmail}</a>
             <p class="note">Design consultation / collaboration / press inquiries</p>
+
+            <div class="submark">
+              <p class="submark-label">AI Development</p>
+              <div class="submark-frame">
+                <img src="/assets/branding/apdw-dev-logo.png" alt="Archi-Prisma AI development mark" />
+              </div>
+            </div>
           </div>
         </aside>
       </section>
