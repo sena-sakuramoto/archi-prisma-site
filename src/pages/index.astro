@@ -9,10 +9,7 @@ const contactEmail = 'contact@archi-prisma.co.jp';
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Archi-Prisma | Renewal in Progress</title>
-    <meta
-      name="description"
-      content="Archi-Prisma のホームページは現在改装中です。お問い合わせはメールにて受け付けています。"
-    />
+    <meta name="description" content="Archi-Prisma website renewal in progress." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -98,8 +95,7 @@ const contactEmail = 'contact@archi-prisma.co.jp';
         margin-top: 34px;
       }
 
-      .button,
-      .mail {
+      .button {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -124,18 +120,8 @@ const contactEmail = 'contact@archi-prisma.co.jp';
         transform: translateY(-1px);
       }
 
-      .mail {
-        border: 1px solid var(--line);
-        color: var(--text);
-      }
-
-      .mail:hover {
-        border-color: rgba(245, 245, 242, 0.28);
-        transform: translateY(-1px);
-      }
-
       .note {
-        margin-top: 14px;
+        margin-top: 18px;
         color: rgba(245, 245, 242, 0.45);
         font-size: 14px;
         line-height: 1.8;
@@ -160,8 +146,7 @@ const contactEmail = 'contact@archi-prisma.co.jp';
           align-items: stretch;
         }
 
-        .button,
-        .mail {
+        .button {
           width: 100%;
         }
       }
@@ -175,23 +160,26 @@ const contactEmail = 'contact@archi-prisma.co.jp';
         </div>
 
         <h1>
-          ただいま
+          &#12383;&#12384;&#12356;&#12414;
           <br />
-          サイトを改装中です。
+          &#12469;&#12452;&#12488;&#12434;&#25913;&#35013;&#20013;&#12391;&#12377;&#12290;
         </h1>
 
         <p class="lead">
-          新しいホームページを準備しています。
+          &#26032;&#12375;&#12356;&#12507;&#12540;&#12512;&#12506;&#12540;&#12472;&#12434;&#28310;&#20633;&#12375;&#12390;&#12356;&#12414;&#12377;&#12290;
           <br />
-          公開まで、もう少しだけお待ちください。
+          &#20844;&#38283;&#12414;&#12391;&#12289;&#12418;&#12358;&#23569;&#12375;&#12384;&#12369;&#12362;&#24453;&#12385;&#12367;&#12384;&#12373;&#12356;&#12290;
         </p>
 
         <div class="actions">
-          <a class="button" href={`mailto:${contactEmail}`}>お問い合わせ</a>
-          <a class="mail" href={`mailto:${contactEmail}`}>{contactEmail}</a>
+          <a class="button" href={`mailto:${contactEmail}`}>&#12362;&#21839;&#12356;&#21512;&#12431;&#12379;</a>
         </div>
 
-        <p class="note">ご相談やご連絡はメールで受け付けています。</p>
+        <p class="note">
+          <a href={`mailto:${contactEmail}`} style="color: inherit; text-decoration: none;">{contactEmail}</a>
+          <br />
+          &#12372;&#30456;&#35527;&#12420;&#12372;&#36899;&#32097;&#12399;&#12513;&#12540;&#12523;&#12391;&#21463;&#12369;&#20184;&#12369;&#12390;&#12356;&#12414;&#12377;&#12290;
+        </p>
       </section>
     </main>
   </body>
