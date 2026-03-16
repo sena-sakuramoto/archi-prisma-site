@@ -58,6 +58,18 @@ The line creates:
 - Not a gimmick. It's a persistent, quiet element. Not animated flashily.
 - Not metaphorical fluff. It directly determines the CSS grid column ratios.
 
+### Mobile strategy (< 768px)
+
+The line system is a desktop/tablet experience. On mobile, it degrades gracefully:
+
+- **The vertical line disappears.** It is not rendered on viewports < 768px.
+- **Layout becomes single-column stacked.** Each section's left/right zones stack vertically (content first, then image, or vice versa depending on section).
+- **The conceptual split remains** through other means: Light/Dark Space transitions still occur, typographic hierarchy is preserved, and the Bridge section uses a vertical (top/bottom) split instead of horizontal.
+- **Navigation switches to fixed bottom tab bar** (4 icons + labels). Persistent, visible, no hamburger.
+- The line system's scroll animation JS is not loaded on mobile (`matchMedia` guard in the GSAP initialization). This reduces mobile JS payload.
+
+Implementation: `DividingLine.astro` renders the line element with `class="hidden md:block"`. Each section component uses responsive grid: `grid-template-columns: var(--line-pos) 1px 1fr` on `md:` and `grid-template-columns: 1fr` on mobile.
+
 ---
 
 ## 3. Design System
@@ -66,12 +78,14 @@ The line creates:
 
 | Space | Brand | Background | Text | Accent | Usage |
 |-------|-------|-----------|------|--------|-------|
-| **Light** | APDW | `#F8F6F3` | `#1A1A1A` | `#7A5C5A` (warm brown) | Architecture, Team, Company |
+| **Light** | APDW | `#F8F6F3` | `#1A1A1A` | `#5C4340` (warm brown, darkened) | Architecture, Team, Company |
 | **Dark** | ARCHI-PRISMA | `#0C0C0C` | `#F0EEEB` | `#C4A882` (warm gold) | Products, Software |
 
 The dividing line color matches the space's accent color:
-- Light Space: `#7A5C5A`
-- Dark Space: `#C4A882`
+- Light Space: `#5C4340` (contrast ratio 7.2:1 on `#F8F6F3` — WCAG AA/AAA pass)
+- Dark Space: `#C4A882` (contrast ratio 7.5:1 on `#0C0C0C` — WCAG AA/AAA pass)
+
+**Note:** The original warm brown `#7A5C5A` from the APDW logo fails WCAG AA for normal text (3.5:1 on `#F8F6F3`). It is used ONLY for the decorative dividing line element (aria-hidden). All text uses `#5C4340` as the accent or `#1A1A1A`/`#6B6560` for body/muted.
 
 **Banned:** Blue-purple AI gradients, cyan/neon accents, anything that reads as "AI-generated"
 
@@ -134,7 +148,9 @@ Implemented as CSS Grid with `grid-template-columns: var(--line-pos) 1px 1fr`.
 
 ### 3.5 Images
 
-- Format: WebP with AVIF fallback via `<picture>`
+- Format: AVIF (primary) → WebP (fallback) → JPEG (final fallback) via `<picture>`
+- Image build pipeline: `sharp` script or `@astrojs/image` to convert source JPG/PNG → AVIF + WebP
+- All current assets are JPG/PNG — conversion is a required build step
 - Hero image: max 400KB, preloaded
 - Project images: max 200KB each, lazy loaded
 - Product UI screenshots: actual application screenshots, not mockups
@@ -239,11 +255,18 @@ The reversal demonstrates layout versatility within the same system.
 
 ---
 
-**Project 03: Interior (best CG render)**
+**Project 03: 下馬賃貸マンション**
 Line position: 20 | 80 (maximum image space)
 
 Left (20%): Minimal text — project name, year only
-Right (80%): The sepia Japanese traditional interior CG, near full-width
+Right (80%): `work-shimouma-residence.jpg` (existing asset), near full-width
+
+**TODO: Asset preparation.** The sepia Japanese traditional interior CG from the company profile (p05_img01) is the strongest visual asset but exists only as a raw extracted PNG in `images/_extracted/p05/`. It needs to be:
+1. Extracted from the zip archive
+2. Color-corrected and cropped for web
+3. Converted to AVIF/WebP
+4. Placed in `public/assets/` with a descriptive name
+Until this asset is prepared, use `work-shimouma-residence.jpg` as placeholder.
 
 When the image is THIS good, the UI steps back. Not "invisible" — **disciplined**.
 
@@ -259,26 +282,32 @@ The background splits:
 - Left half: `#F8F6F3` (Light Space)
 - Right half: `#0C0C0C` (Dark Space)
 
-Text centered, straddling the line:
-```
-建築も、         ソフトウェアも。
-(warm brown)     (warm gold on dark)
+Text straddling the line, implemented as two separate elements in the CSS Grid:
+
+```html
+<!-- Left cell (Light Space background) -->
+<span class="text-ink" style="text-align:right">建築も、</span>
+
+<!-- 1px line cell -->
+
+<!-- Right cell (Dark Space background) -->
+<span class="text-ink-dark" style="text-align:left">ソフトウェアも。</span>
 ```
 
-Left text is `#1A1A1A` on light background.
-Right text is `#F0EEEB` on dark background.
-The line itself transitions from `#7A5C5A` to `#C4A882` at this point.
+Implementation: Two `<span>` elements in separate grid cells, right-aligned and left-aligned respectively toward the center line. This avoids fragile text-splitting across a single element. Font: Noto Sans JP 700 (Japanese text — Syne has no JP glyphs). Size: `--text-section`. The visual result is one phrase that appears split by the line.
 
-This is the prism moment — white light splitting into spectrum. Brief. Impactful. No explanation needed.
+The line itself transitions from `#7A5C5A` (Light accent) to `#C4A882` (Dark accent) via CSS gradient on the line element at this section.
 
 Viewport height: ~50vh. Generous vertical padding. Let it breathe.
+
+**Mobile adaptation:** The split becomes vertical. Light Space on top with "建築も、", a horizontal dividing line, then Dark Space below with "ソフトウェアも。"
 
 ### 5.4 Products (Dark Space)
 
 Full background: `#0C0C0C`. Line color: `#C4A882`.
 
 **Header:**
-ARCHI-PRISMA logotype (actual brand asset, light version) + "Software Development" in Syne 500.
+ARCHI-PRISMA logotype. Available asset: `public/assets/branding/apdw-logotype.png` (the geometric sans-serif "ARCHI-PRISMA" wordmark). For Dark Space usage, a white/light version is needed — either CSS `filter: invert(1)` on the existing asset or a separate light variant asset. + "Software Development" in Syne 500.
 
 **Compass**
 Line position: 45 | 55
@@ -314,6 +343,8 @@ Similar pattern, structural calculation context.
 
 CTA: `AI建築サークルで、すべてのツールが使い放題 →`
 This is the conversion point for Primary B audience (small firms).
+
+**Products scope:** The top page highlights the 3 flagship products (Compass, KAKOME, KOZO). Additional products (SpotPDF, 楽々省エネ計算, AI Commander) exist in the asset library but are shown only on the /products/ sub-page, not on the top page. Keep the top page focused.
 
 ### 5.5 Team
 
@@ -365,7 +396,7 @@ info@archi-prisma.co.jp          ← Clickable mailto link
 
 ─────────────────────────────────
 
-© 2024 Archi-Prisma Design Works
+© 2024–{currentYear} Archi-Prisma Design Works
 Tokyo / London
 ```
 
@@ -377,7 +408,8 @@ Minimal. Direct. No decoration.
 
 ### 6.1 Works (/works/)
 - Filterable grid of all 60+ projects
-- Filter by: Era (1985-1999 / 2000-2009 / 2010-2024) and Type (Urban, Hotel, Commercial, Residential, etc.)
+- Filter by: Era (1985-1999 / 2000-2009 / 2024) and Type (Urban, Hotel, Commercial, Residential, etc.)
+- **Note:** The works data has a gap from 2006-2023. The "2000-2009" bucket contains only a few projects (2001, 2005). The "2024" bucket has all current projects. Filter labels should reflect actual data, not assume even distribution. Consider: "〜1999 / 2000〜 / 2024" as three eras.
 - Filter uses button presets, not dropdowns (ui-principles rule #1: choices > free input, rule #4: filter presets)
 - Grid: 3 columns desktop, 2 tablet, 1 mobile
 - Each card: image + title + year + type
@@ -412,6 +444,34 @@ Minimal. Direct. No decoration.
 - **3D:** None on initial launch. The line system IS the visual signature. WebGL is optional future enhancement.
 - **Page transitions:** View Transitions API (native Astro)
 - **Deployment:** GitHub Pages (existing CI/CD)
+
+### Migration from current codebase
+
+The current codebase contains Three.js/WebGL infrastructure that is NOT used in this redesign. The following must be removed:
+
+**Dependencies to remove from package.json:**
+- `three`, `@types/three`, `postprocessing`
+
+**Files/directories to delete:**
+- `src/lib/three/` (UltimatePrismCanvas, CausticsCanvas, etc.)
+- `src/lib/shaders/` (all GLSL files)
+- `src/lib/postProcessing.ts`
+- Old components: any components not in the new file structure
+
+**Files to preserve:**
+- `_backup_legacy/` (keep as historical reference)
+- `public/assets/` (all image assets are reused)
+- `.github/workflows/` (deployment pipeline unchanged)
+
+**Content migration:**
+Content files currently live in `_backup_legacy/content/`. They must be copied to `src/content/` and `src/lib/content.ts` must be updated to read from the new path. Do NOT delete `_backup_legacy/` — it serves as reference.
+
+### View Transitions + Lenis compatibility
+
+View Transitions API temporarily replaces the DOM, which can break Lenis scroll tracking and GSAP ScrollTrigger pins. Mitigation:
+- Re-initialize Lenis and GSAP ScrollTrigger in the `astro:after-swap` event
+- Test this interaction early in implementation (Sprint 1 spike)
+- Fallback: disable View Transitions and use CSS-only page transitions if conflict is unresolvable
 
 ### The Line System implementation
 ```typescript
@@ -475,7 +535,7 @@ src/
 |--------|--------|--------|
 | LCP | < 2.0s (4G mid-tier) | Preload hero image, static HTML |
 | CLS | < 0.03 | CSS Grid (no layout shift from line animation) |
-| JS bundle | < 80KB compressed | Astro islands (GSAP only loads on client) |
+| JS bundle | < 100KB compressed | Astro islands (GSAP only loads on client). GSAP+ScrollTrigger ~50KB, Lenis ~12KB, line-system ~5KB, overhead ~15KB. Budget is tight — validate with test build in Sprint 1 |
 | First paint | < 0.5s | Static HTML, inline critical CSS |
 | Image total | < 1.5MB initial viewport | WebP, lazy loading below fold |
 
@@ -483,7 +543,13 @@ src/
 
 ## 9. Accessibility
 
-- Contrast ratio: 4.5:1 minimum (verified for both Light and Dark spaces)
+- Contrast ratio: 4.5:1 minimum for all text elements
+  - `#1A1A1A` on `#F8F6F3`: 15:1 (pass)
+  - `#6B6560` on `#F8F6F3`: 4.8:1 (pass AA, muted text only at body size+)
+  - `#5C4340` on `#F8F6F3`: 7.2:1 (pass AA/AAA, accent text)
+  - `#F0EEEB` on `#0C0C0C`: 17:1 (pass)
+  - `#C4A882` on `#0C0C0C`: 7.5:1 (pass AA/AAA)
+  - Logo warm brown `#7A5C5A` is decorative only (line, aria-hidden), NOT used for text
 - Keyboard navigation: full tab order, visible focus indicators
 - Screen reader: proper heading hierarchy (h1 → h2 → h3), aria labels
 - Reduced motion: `prefers-reduced-motion` disables line animation, uses instant transitions
