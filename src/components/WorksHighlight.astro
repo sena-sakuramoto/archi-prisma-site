@@ -1,0 +1,272 @@
+---
+/**
+ * WorksHighlight — Task 10
+ * Three featured projects with different line positions and layouts.
+ * Each project uses data-line-pos to control the dividing line.
+ */
+import { loadFeaturedWorks } from '../lib/content';
+
+const works = loadFeaturedWorks();
+
+const projects = [
+  {
+    id: 'works-01',
+    linePos: '40%',
+    num: '01',
+    layout: 'text-left',
+    image: '/assets/work-yacht-club.jpg',
+    title: works.find((w) => w.title === 'The Super Yacht Club')?.title ?? 'The Super Yacht Club',
+    type: works.find((w) => w.title === 'The Super Yacht Club')?.type ?? 'Hospitality/Club',
+    region: works.find((w) => w.title === 'The Super Yacht Club')?.region ?? 'Japan',
+    year: works.find((w) => w.title === 'The Super Yacht Club')?.year ?? 2024,
+    phase: works.find((w) => w.title === 'The Super Yacht Club')?.phase ?? 'Planning/Design',
+    storyline: works.find((w) => w.title === 'The Super Yacht Club')?.storyline ?? '',
+  },
+  {
+    id: 'works-02',
+    linePos: '65%',
+    num: '02',
+    layout: 'image-left',
+    image: '/assets/work-kotsubo-market.jpg',
+    title: works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place')?.title ?? 'KOTSUBO Jacaranda Market Place',
+    type: works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place')?.type ?? 'Urban/Commercial',
+    region: works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place')?.region ?? 'Japan',
+    year: works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place')?.year ?? 2024,
+    phase: works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place')?.phase ?? 'Planning/Design',
+    storyline: works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place')?.storyline ?? '',
+  },
+  {
+    id: 'works-03',
+    linePos: '20%',
+    num: '03',
+    layout: 'image-dominant',
+    image: '/assets/work-shimouma-residence.jpg',
+    title: works.find((w) => w.title === '下馬賃貸マンション')?.title ?? '下馬賃貸マンション',
+    type: works.find((w) => w.title === '下馬賃貸マンション')?.type ?? 'Residential',
+    region: works.find((w) => w.title === '下馬賃貸マンション')?.region ?? 'Japan',
+    year: works.find((w) => w.title === '下馬賃貸マンション')?.year ?? 2024,
+    phase: works.find((w) => w.title === '下馬賃貸マンション')?.phase ?? 'Design',
+    storyline: works.find((w) => w.title === '下馬賃貸マンション')?.storyline ?? '',
+  },
+];
+---
+
+<div>
+  {
+    projects.map((p) => (
+      <section
+        id={p.id}
+        data-line-pos={p.linePos}
+        style={`--line-pos: ${p.linePos}; border-top: 1px solid var(--color-rule);`}
+      >
+        {/* === text-left layout: 40|60 — left text, right image === */}
+        {p.layout === 'text-left' && (
+          <div class="line-section" style="align-items: stretch;">
+            {/* Left: text content */}
+            <div
+              style="padding: clamp(48px, 7vw, 96px) 40px clamp(48px, 7vw, 96px) 0; display: flex; flex-direction: column; justify-content: space-between;"
+            >
+              <div>
+                <p
+                  style="font-family: var(--font-display); font-size: 5rem; font-weight: 700; line-height: 1; color: var(--color-rule); margin: 0 0 32px; letter-spacing: -0.04em;"
+                  aria-hidden="true"
+                >
+                  {p.num}
+                </p>
+                <h2
+                  style="font-family: var(--font-display); font-size: var(--text-project); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: var(--color-ink); margin: 0 0 24px;"
+                >
+                  {p.title}
+                </h2>
+                <ul
+                  style="list-style: none; padding: 0; margin: 0 0 32px; display: flex; flex-wrap: wrap; gap: 8px 16px;"
+                >
+                  <li
+                    style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted);"
+                  >
+                    {p.type}
+                  </li>
+                  <li style="color: var(--color-rule);" aria-hidden="true">
+                    /
+                  </li>
+                  <li
+                    style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted);"
+                  >
+                    {p.region}
+                  </li>
+                  <li style="color: var(--color-rule);" aria-hidden="true">
+                    /
+                  </li>
+                  <li
+                    style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted);"
+                  >
+                    {p.year}
+                  </li>
+                  <li style="color: var(--color-rule);" aria-hidden="true">
+                    /
+                  </li>
+                  <li
+                    style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted);"
+                  >
+                    {p.phase}
+                  </li>
+                </ul>
+                {p.storyline && (
+                  <p
+                    style="font-family: var(--font-jp); font-size: var(--text-body); line-height: 1.9; color: var(--color-ink-muted);"
+                  >
+                    {p.storyline}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div class="dividing-line" aria-hidden="true" />
+
+            {/* Right: image */}
+            <div style="overflow: hidden; min-height: 320px;" data-works-image>
+              <img
+                src={p.image}
+                alt={p.title}
+                loading="lazy"
+                style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.6s var(--ease);"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* === image-left layout: 65|35 — image left, text right === */}
+        {p.layout === 'image-left' && (
+          <div class="line-section" style="align-items: stretch;">
+            {/* Left: image dominates (65%) */}
+            <div style="overflow: hidden; min-height: 360px;" data-works-image>
+              <img
+                src={p.image}
+                alt={p.title}
+                loading="lazy"
+                style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.6s var(--ease);"
+              />
+            </div>
+
+            <div class="dividing-line" aria-hidden="true" />
+
+            {/* Right: text (35%) */}
+            <div
+              style="padding: clamp(48px, 7vw, 96px) 0 clamp(48px, 7vw, 96px) 40px; display: flex; flex-direction: column; justify-content: flex-end;"
+            >
+              <p
+                style="font-family: var(--font-display); font-size: 5rem; font-weight: 700; line-height: 1; color: var(--color-rule); margin: 0 0 32px; letter-spacing: -0.04em;"
+                aria-hidden="true"
+              >
+                {p.num}
+              </p>
+              <h2
+                style="font-family: var(--font-display); font-size: var(--text-project); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: var(--color-ink); margin: 0 0 24px;"
+              >
+                {p.title}
+              </h2>
+              <ul
+                style="list-style: none; padding: 0; margin: 0 0 32px; display: flex; flex-direction: column; gap: 6px;"
+              >
+                {[p.type, p.region, String(p.year), p.phase].map((meta) => (
+                  <li
+                    style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted);"
+                  >
+                    {meta}
+                  </li>
+                ))}
+              </ul>
+              {p.storyline && (
+                <p
+                  style="font-family: var(--font-jp); font-size: var(--text-body); line-height: 1.9; color: var(--color-ink-muted);"
+                >
+                  {p.storyline}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* === image-dominant layout: 20|80 — small label left, full image right === */}
+        {p.layout === 'image-dominant' && (
+          <div class="line-section" style="align-items: stretch;">
+            {/* Left: rotated label / number (20%) */}
+            <div
+              style="padding: clamp(48px, 7vw, 96px) 40px clamp(48px, 7vw, 96px) 0; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start;"
+            >
+              <p
+                style="font-family: var(--font-display); font-size: 5rem; font-weight: 700; line-height: 1; color: var(--color-rule); margin: 0; letter-spacing: -0.04em;"
+                aria-hidden="true"
+              >
+                {p.num}
+              </p>
+              <div>
+                <p
+                  style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-muted); margin: 0 0 8px; writing-mode: vertical-rl; transform: rotate(180deg);"
+                >
+                  {p.year} — {p.type}
+                </p>
+              </div>
+            </div>
+
+            <div class="dividing-line" aria-hidden="true" />
+
+            {/* Right: image (80%) with text overlay */}
+            <div style="position: relative; overflow: hidden; min-height: 480px;" data-works-image>
+              <img
+                src={p.image}
+                alt={p.title}
+                loading="lazy"
+                style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.6s var(--ease);"
+              />
+              {/* Text overlay */}
+              <div
+                style="position: absolute; bottom: 0; left: 0; right: 0; padding: 40px; background: linear-gradient(to top, rgba(10,10,10,0.75) 0%, transparent 100%);"
+              >
+                <h2
+                  style="font-family: var(--font-display); font-size: var(--text-project); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: #F0EEEB; margin: 0 0 12px;"
+                >
+                  {p.title}
+                </h2>
+                {p.storyline && (
+                  <p
+                    style="font-family: var(--font-jp); font-size: var(--text-body); line-height: 1.7; color: rgba(240,238,235,0.75); margin: 0;"
+                  >
+                    {p.storyline}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
+    ))
+  }
+
+  <!-- CTA -->
+  <div
+    style="border-top: 1px solid var(--color-rule); padding: clamp(40px, 5vw, 64px) var(--content-padding-x); max-width: var(--max-width); margin: 0 auto; display: flex; justify-content: flex-end;"
+  >
+    <a
+      href="/works/"
+      class="link-animated"
+      style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-ink); text-decoration: none;"
+    >
+      すべての作品を見る →
+    </a>
+  </div>
+</div>
+
+<script>
+  // Subtle image scale on hover
+  document.querySelectorAll<HTMLElement>('[data-works-image]').forEach((wrap) => {
+    const img = wrap.querySelector('img');
+    if (!img) return;
+    wrap.addEventListener('mouseenter', () => {
+      img.style.transform = 'scale(1.03)';
+    });
+    wrap.addEventListener('mouseleave', () => {
+      img.style.transform = 'scale(1)';
+    });
+  });
+</script>
