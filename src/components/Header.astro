@@ -1,0 +1,119 @@
+---
+const navItems = [
+  { label: 'Works',    href: '/works/' },
+  { label: 'Products', href: '/products/' },
+  { label: 'About',    href: '/about/' },
+  { label: 'Contact',  href: '#contact' },
+];
+---
+
+<!-- Desktop: fixed top header -->
+<header
+  id="site-header"
+  data-space="light"
+  style="position: fixed; top: 0; left: 0; width: 100%; z-index: 100; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background-color: rgba(248, 246, 243, 0.85); border-bottom: 1px solid var(--color-rule); transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease);"
+  class="hidden md:block"
+>
+  <div style="max-width: var(--max-width); margin: 0 auto; padding: 0 var(--content-padding-x); height: 64px; display: flex; align-items: center; justify-content: space-between;">
+    <!-- Logo -->
+    <a href="/" aria-label="Archi-Prisma Design Works — home">
+      <img
+        src="/assets/branding/apdw-logotype.png"
+        alt="APDW"
+        height="28"
+        style="height: 28px; width: auto; display: block;"
+      />
+    </a>
+
+    <!-- Nav items -->
+    <nav aria-label="Primary navigation">
+      <ul style="display: flex; gap: 2.5rem; list-style: none; margin: 0; padding: 0;">
+        {navItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="link-animated"
+              style={`font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-ink); text-decoration: none;`}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Mobile: fixed bottom tab bar -->
+<nav
+  id="mobile-tab-bar"
+  aria-label="Mobile navigation"
+  data-space="light"
+  style="position: fixed; bottom: 0; left: 0; width: 100%; z-index: 100; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background-color: rgba(248, 246, 243, 0.92); border-top: 1px solid var(--color-rule);"
+  class="md:hidden"
+>
+  <ul style="display: flex; justify-content: space-around; align-items: stretch; list-style: none; margin: 0; padding: 0; height: 56px;">
+    {navItems.map((item) => (
+      <li style="flex: 1; display: flex;">
+        <a
+          href={item.href}
+          style={`display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; font-family: var(--font-display); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ink); text-decoration: none; gap: 2px; padding: 6px 4px;`}
+        >
+          {item.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<script>
+  // Space-aware header: switch to dark variant when scrolling over .dark-space sections
+  const header = document.getElementById('site-header');
+  const mobileNav = document.getElementById('mobile-tab-bar');
+
+  function updateSpaceMode(isDark: boolean) {
+    const targets = [header, mobileNav];
+    targets.forEach((el) => {
+      if (!el) return;
+      el.dataset.space = isDark ? 'dark' : 'light';
+      if (isDark) {
+        el.style.backgroundColor = 'rgba(12, 12, 12, 0.85)';
+        el.style.borderColor = 'rgba(196, 168, 130, 0.2)';
+        // Update nav link colours
+        el.querySelectorAll('a').forEach((a) => {
+          (a as HTMLElement).style.color = 'var(--color-ink-dark)';
+        });
+      } else {
+        el.style.backgroundColor =
+          el === header
+            ? 'rgba(248, 246, 243, 0.85)'
+            : 'rgba(248, 246, 243, 0.92)';
+        el.style.borderColor = 'var(--color-rule)';
+        el.querySelectorAll('a').forEach((a) => {
+          (a as HTMLElement).style.color = 'var(--color-ink)';
+        });
+      }
+    });
+  }
+
+  const darkSections = Array.from(
+    document.querySelectorAll<HTMLElement>('.dark-space')
+  );
+
+  if (darkSections.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const anyDark = entries.some((e) => e.isIntersecting);
+        // Re-check all sections on every tick for accuracy
+        const currentlyDark = darkSections.some((section) => {
+          const rect = section.getBoundingClientRect();
+          return rect.top <= 0 && rect.bottom >= 0;
+        });
+        updateSpaceMode(currentlyDark);
+      },
+      { threshold: [0, 0.01], rootMargin: '0px 0px 0px 0px' }
+    );
+
+    darkSections.forEach((section) => observer.observe(section));
+  }
+</script>
