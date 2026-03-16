@@ -1,67 +1,186 @@
 ---
-import type { TeamData } from '../lib/content';
+/**
+ * Team — Task 13
+ * id="team". Line position 35|65.
+ * Left (35%): CEO portrait, full color, aspect 3/4.
+ * Right (65%): CEO name (Syne 700), role, notes.
+ * Below: 3-col grid other members (B&W photos), collaborators, advisory.
+ */
+import { loadTeam } from '../lib/content';
 
-interface Props {
-  team: TeamData;
-}
-
-const { team } = Astro.props as Props;
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const toPublicPath = (path: string) => `${basePath}${path}`;
-const imageSrc = (path?: string) => (path ? toPublicPath(path) : undefined);
+const { core, advisory_legacy, collaborators } = loadTeam();
+const [ceo, ...otherMembers] = core;
 ---
 
-<section id="team" class="section-space bg-white">
-  <div class="site-container">
-    <p class="section-eyebrow">Team</p>
-    <h2 class="section-title">チーム</h2>
-    <p class="section-summary">
-      コアメンバーを中心に、顧問・協力デザイナーと連携しながらプロジェクトを推進します。
+<section
+  id="team"
+  style="--line-pos: 35%; border-top: 1px solid var(--color-rule); padding-bottom: clamp(64px, 8vw, 120px);"
+>
+  <!-- Section label -->
+  <div
+    style="max-width: var(--max-width); margin: 0 auto; padding: clamp(48px, 6vw, 80px) var(--content-padding-x) 0;"
+  >
+    <p
+      style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-muted); margin: 0 0 40px;"
+    >
+      Team
     </p>
+  </div>
 
-    <div class="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
-      {team.core.map((member) => {
-        const portrait = imageSrc(member.image);
-        return (
-          <article class="soft-card overflow-hidden">
-            {portrait && (
-              <img src={portrait} alt={`${member.name}の写真`} class="aspect-[4/5] w-full object-cover" loading="lazy" />
-            )}
-            <div class="p-5">
-              <h3 class="text-2xl font-semibold text-surface-900">{member.name}</h3>
-              <p class="mt-1 text-sm text-surface-500">{member.role}</p>
-              {member.license && <p class="mt-3 text-xs text-surface-600">{member.license}</p>}
-              {member.notes && <p class="mt-3 text-sm text-surface-700">{member.notes}</p>}
-            </div>
-          </article>
-        );
-      })}
+  <!-- CEO row -->
+  <div class="line-section" style="align-items: stretch;">
+    <!-- Left: CEO portrait -->
+    <div
+      style="padding: 0 40px clamp(40px, 5vw, 64px) 0;"
+    >
+      <div
+        style="aspect-ratio: 3/4; overflow: hidden; width: 100%; max-width: 320px;"
+      >
+        <img
+          src={ceo.image}
+          alt={ceo.name}
+          loading="lazy"
+          style="width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block;"
+        />
+      </div>
     </div>
 
-    <div class="mt-10 grid gap-6 lg:grid-cols-2">
-      <article class="soft-card p-6">
-        <h3 class="text-2xl font-semibold text-surface-900">顧問</h3>
-        <ul class="mt-4 space-y-4">
-          {team.advisory_legacy.map((member) => (
-            <li class="border-t border-surface-200 pt-4">
-              <p class="text-lg font-medium text-surface-900">{member.name}</p>
-              <p class="text-sm text-surface-600">{member.notes ?? member.role}</p>
-            </li>
-          ))}
-        </ul>
-      </article>
+    <div class="dividing-line" aria-hidden="true" />
 
-      <article class="soft-card p-6">
-        <h3 class="text-2xl font-semibold text-surface-900">協力デザイナー</h3>
-        <ul class="mt-4 space-y-4">
-          {team.collaborators.map((member) => (
-            <li class="border-t border-surface-200 pt-4">
-              <p class="text-lg font-medium text-surface-900">{member.name}</p>
-              <p class="text-sm text-surface-600">{member.role}</p>
-            </li>
-          ))}
-        </ul>
-      </article>
+    <!-- Right: CEO info -->
+    <div
+      style="padding: 0 0 clamp(40px, 5vw, 64px) 40px; display: flex; flex-direction: column; justify-content: flex-end;"
+    >
+      <h2
+        style="font-family: var(--font-display); font-size: var(--text-section); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: var(--color-ink); margin: 0 0 12px;"
+      >
+        {ceo.name}
+      </h2>
+      <p
+        style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted); margin: 0 0 24px;"
+      >
+        {ceo.role}
+      </p>
+      {
+        ceo.notes && (
+          <p
+            style="font-family: var(--font-jp); font-size: var(--text-body); line-height: 1.9; color: var(--color-ink-muted); max-width: 48ch; margin: 0;"
+          >
+            {ceo.notes}
+          </p>
+        )
+      }
     </div>
   </div>
+
+  <!-- Other core members — 3-col grid, B&W -->
+  <div
+    style="max-width: var(--max-width); margin: 0 auto; padding: clamp(40px, 5vw, 64px) var(--content-padding-x) 0; border-top: 1px solid var(--color-rule);"
+  >
+    <div
+      style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 32px 24px;"
+    >
+      {
+        otherMembers.map((member) => (
+          <div>
+            {member.image && (
+              <div
+                style="aspect-ratio: 3/4; overflow: hidden; margin-bottom: 16px;"
+              >
+                <img
+                  src={member.image}
+                  alt={member.name}
+                  loading="lazy"
+                  style="width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; filter: grayscale(100%);"
+                />
+              </div>
+            )}
+            <p
+              style="font-family: var(--font-display); font-size: var(--text-body); font-weight: 700; color: var(--color-ink); margin: 0 0 4px;"
+            >
+              {member.name}
+            </p>
+            <p
+              style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ink-muted); margin: 0;"
+            >
+              {member.role}
+            </p>
+            {member.license && (
+              <p
+                style="font-family: var(--font-jp); font-size: var(--text-caption); color: var(--color-ink-muted); margin: 6px 0 0; line-height: 1.6;"
+              >
+                {member.license}
+              </p>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- International collaborators -->
+  {
+    collaborators.length > 0 && (
+      <div
+        style="max-width: var(--max-width); margin: 0 auto; padding: clamp(40px, 5vw, 64px) var(--content-padding-x) 0; border-top: 1px solid var(--color-rule); margin-top: clamp(40px, 5vw, 64px);"
+      >
+        <p
+          style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-muted); margin: 0 0 24px;"
+        >
+          International Collaborators
+        </p>
+        <ul
+          style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 32px;"
+        >
+          {collaborators.map((c) => (
+            <li>
+              <span
+                style="font-family: var(--font-display); font-size: var(--text-body); font-weight: 600; color: var(--color-ink);"
+              >
+                {c.name}
+              </span>
+              <span
+                style="font-family: var(--font-display); font-size: var(--text-caption); color: var(--color-ink-muted); margin-left: 8px;"
+              >
+                {c.role}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  <!-- Advisory -->
+  {
+    advisory_legacy.length > 0 && (
+      <div
+        style="max-width: var(--max-width); margin: clamp(32px, 4vw, 48px) auto 0; padding: 0 var(--content-padding-x);"
+      >
+        <p
+          style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-muted); margin: 0 0 16px;"
+        >
+          Advisory &amp; Legacy
+        </p>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+          {advisory_legacy.map((a) => (
+            <li>
+              <span
+                style="font-family: var(--font-jp); font-size: var(--text-caption); color: var(--color-ink); font-weight: 500;"
+              >
+                {a.name}
+              </span>
+              {a.notes && (
+                <span
+                  style="font-family: var(--font-jp); font-size: var(--text-caption); color: var(--color-ink-muted); margin-left: 12px;"
+                >
+                  — {a.notes}
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
 </section>
