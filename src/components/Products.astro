@@ -1,234 +1,210 @@
 ---
-import { existsSync } from 'node:fs';
+/**
+ * Products — Task 12
+ * Dark Space section (.dark-space). Three products with line-section layouts.
+ * COMPASS 45|55, KAKOME 60|40 reversed, KOZO 40|60.
+ */
 
-interface LiveProduct {
-  name: string;
-  description: string;
-  href: string;
-  linkLabel: string;
-  target: string;
-  logo?: string;
-  brandWordmark?: string;
-  visual?: string;
-  featured?: boolean;
-  logoIncludesName?: boolean;
-}
-
-interface UpcomingProduct {
-  name: string;
-  description: string;
-  status: string;
-  logo?: string;
-  logoIncludesName?: boolean;
-  logoScale?: number;
-}
-
-interface CommunityProduct {
-  name: string;
-  description: string;
-  href: string;
-  linkLabel: string;
-  target: string;
-  logo?: string;
-  points: string[];
-}
-
-interface Props {
-  liveProducts: LiveProduct[];
-  communityProduct: CommunityProduct;
-  upcomingProducts: UpcomingProduct[];
-}
-
-const { liveProducts, communityProduct, upcomingProducts } = Astro.props as Props;
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const toPublicPath = (path?: string) => (path ? `${basePath}${path}` : undefined);
-const hasPublicAsset = (path?: string) => {
-  if (!path) return false;
-  const normalized = path.replace(/^\//, '');
-  return existsSync(new URL(`../../public/${normalized}`, import.meta.url));
-};
-
-const featured =
-  liveProducts.find((item) => item.featured) ??
-  liveProducts[0] ?? {
-    name: 'AIプロダクト',
-    description: 'プロダクト情報を準備中です。',
-    href: '#contact',
-    linkLabel: 'お問い合わせ',
-    target: '建築実務者',
-  };
-const standardProducts = liveProducts.filter((item) => item.name !== featured.name);
-const featuredLogo = hasPublicAsset(featured.logo) ? toPublicPath(featured.logo) : undefined;
-const featuredVisual = hasPublicAsset(featured.visual) ? toPublicPath(featured.visual) : undefined;
-const developmentLogoPath = '/assets/branding/apdw-dev-logo.png';
-const developmentLogo = hasPublicAsset(developmentLogoPath) ? toPublicPath(developmentLogoPath) : undefined;
+const products = [
+  {
+    id: 'products-compass',
+    linePos: '45%',
+    logo: '/assets/products/compass-logo.png',
+    logoAlt: 'COMPASS',
+    screenshot: '/assets/curated/compass-gantt-ui.png',
+    tagline: '工程管理',
+    name: 'COMPASS',
+    description: '建設プロジェクトの工程管理をシンプルに。AI補助で予定立案から進捗追跡まで、現場と設計室をつなぐ。',
+    layout: 'normal',
+  },
+  {
+    id: 'products-kakome',
+    linePos: '60%',
+    logo: '/assets/products/kakome-logo-black.png',
+    logoAlt: 'KAKOME',
+    screenshot: null,
+    tagline: '写真指示書',
+    name: 'KAKOME',
+    description: '現場写真に指示を重ねて共有。口頭では伝わらないニュアンスを、ビジュアルで確実に届ける。',
+    layout: 'reversed',
+  },
+  {
+    id: 'products-kozo',
+    linePos: '40%',
+    logo: '/assets/products/kozo-logo.png',
+    logoAlt: 'KOZO',
+    screenshot: null,
+    tagline: '構造計算AI',
+    name: 'KOZO',
+    description: '構造計算の煩雑な作業をAIがアシスト。法改正にも素早く対応、設計事務所の負担を根本から減らす。',
+    layout: 'normal',
+  },
+];
 ---
 
-<section id="products" class="section-space bg-white">
-  <div class="site-container">
-    <p class="section-eyebrow">AI × 建築</p>
-    <h2 class="section-title">AIプロダクト</h2>
-    <p class="section-summary">
-      建築実務の課題に対して、運用中プロダクトと開発中プロダクトを公開しています。
-      AI建築サークルは、ツール提供を含む会員制コミュニティとして別枠で案内します。
-    </p>
-    {developmentLogo && (
-      <div class="mt-5 inline-flex items-center gap-3 rounded-full border border-surface-200 bg-surface-50 px-4 py-2">
-        <img src={developmentLogo} alt="AI開発ロゴ" class="h-7 w-auto object-contain" loading="lazy" />
-        <span class="text-xs font-medium tracking-[0.12em] text-surface-700">AI DEVELOPMENT</span>
-      </div>
-    )}
+<section
+  class="dark-space"
+  aria-label="Software Products"
+  style="padding-top: clamp(64px, 8vw, 120px);"
+>
+  <!-- Section header -->
+  <div
+    style="max-width: var(--max-width); margin: 0 auto; padding: 0 var(--content-padding-x) clamp(40px, 6vw, 80px);"
+  >
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 24px;">
+      <img
+        src="/assets/branding/apdw-logotype.png"
+        alt="Archi-Prisma Design Works"
+        class="invert"
+        style="height: 32px; width: auto; display: block;"
+      />
+      <p
+        style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-muted-dark); margin: 0;"
+      >
+        Software Development
+      </p>
+    </div>
+  </div>
 
-    <article class="soft-card mt-12 overflow-hidden border-accent-300 bg-surface-50">
-      <div class="grid gap-6 p-7 sm:p-8 lg:grid-cols-[1.1fr,0.9fr] lg:items-center">
-        <div>
-          <p class="text-xs uppercase tracking-[0.14em] text-accent-600">Featured Product</p>
-          <h3 class="mt-2 text-4xl font-semibold text-surface-900 sm:text-5xl">{featured.name}</h3>
-          {featuredLogo && (
-            <img
-              src={featuredLogo}
-              alt={`${featured.name} ロゴ`}
-              class="mt-4 h-10 w-auto max-w-full object-contain"
-              loading="lazy"
-            />
-          )}
-          <p class="mt-4 text-base text-surface-700">{featured.description}</p>
-        </div>
-
-        <div class="rounded-3xl border border-surface-200 bg-white p-6">
-          {featuredVisual && (
-            <img
-              src={featuredVisual}
-              alt={`${featured.name}の画面イメージ`}
-              class="mb-5 h-44 w-full rounded-2xl border border-surface-200 object-cover"
-              loading="lazy"
-            />
-          )}
-          <p class="text-xs uppercase tracking-[0.14em] text-surface-500">対象ユーザー</p>
-          <p class="mt-2 text-sm font-medium text-surface-800">{featured.target}</p>
-          <a
-            href={featured.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="mt-5 inline-flex items-center justify-center rounded-full bg-surface-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-surface-700"
+  <!-- Products -->
+  {
+    products.map((p) => (
+      <div
+        id={p.id}
+        style={`--line-pos: ${p.linePos}; border-top: 1px solid rgba(196, 168, 130, 0.2);`}
+      >
+        {p.layout === 'normal' && (
+          <div
+            class="line-section"
+            style="align-items: stretch;"
           >
-            {featured.linkLabel}
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <div class="mt-8 grid gap-5 md:grid-cols-2">
-      {standardProducts.map((product) => {
-        const hasLogo = hasPublicAsset(product.logo);
-        const hideNameText = product.logoIncludesName && hasLogo;
-        return (
-          <article class="soft-card p-6">
-            {hasLogo && product.brandWordmark ? (
-              <div class="mb-4 flex items-center gap-3">
-                <img
-                  src={toPublicPath(product.logo)}
-                  alt={`${product.name} ロゴマーク`}
-                  class="h-12 w-12 rounded-lg object-contain"
-                  loading="lazy"
-                />
-                <span class="text-2xl font-semibold tracking-[0.08em] text-surface-900">{product.brandWordmark}</span>
-              </div>
-            ) : hasLogo ? (
+            {/* Left: product info */}
+            <div
+              style="padding: clamp(48px, 7vw, 96px) 40px clamp(48px, 7vw, 96px) 0; display: flex; flex-direction: column; justify-content: center; gap: 24px;"
+            >
               <img
-                src={toPublicPath(product.logo)}
-                alt={`${product.name} ロゴ`}
-                class="mb-4 h-10 w-auto max-w-full object-contain"
+                src={p.logo}
+                alt={p.logoAlt}
+                class="invert"
+                style="height: 40px; width: auto; display: block; object-fit: contain; object-position: left center;"
                 loading="lazy"
               />
-            ) : null}
-            {!hideNameText && <h3 class="text-2xl font-semibold text-surface-900">{product.name}</h3>}
-            <p class:list={['text-sm text-surface-600', hideNameText ? 'mt-2' : 'mt-3']}>{product.description}</p>
-            <p class="mt-4 text-xs text-surface-500">対象: {product.target}</p>
-            <a
-              href={product.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="mt-5 inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-500"
+              <p
+                style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent-dark); margin: 0;"
+              >
+                {p.tagline}
+              </p>
+              <p
+                style="font-family: var(--font-jp); font-size: var(--text-body); line-height: 1.9; color: var(--color-ink-muted-dark); margin: 0; max-width: 36ch;"
+              >
+                {p.description}
+              </p>
+            </div>
+
+            <div class="dividing-line" aria-hidden="true" />
+
+            {/* Right: screenshot or placeholder */}
+            <div
+              style="min-height: 280px; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: clamp(40px, 5vw, 64px) 0 clamp(40px, 5vw, 64px) 40px;"
             >
-              {product.linkLabel}
-            </a>
-          </article>
-        );
-      })}
-    </div>
-
-    <article class="soft-card mt-10 border-accent-300/60 bg-accent-300/10 p-6 sm:p-8">
-      <div class="grid gap-6 lg:grid-cols-[0.95fr,1.05fr] lg:items-center">
-        <div>
-          <p class="text-xs uppercase tracking-[0.14em] text-accent-600">Community with Tools</p>
-          <h3 class="mt-2 text-3xl font-semibold text-surface-900 sm:text-4xl">{communityProduct.name}</h3>
-          {hasPublicAsset(communityProduct.logo) && (
-            <img
-              src={toPublicPath(communityProduct.logo)}
-              alt={`${communityProduct.name} ロゴ`}
-              class="mt-4 h-16 w-auto rounded-xl object-contain"
-              loading="lazy"
-            />
-          )}
-          <p class="mt-4 text-sm text-surface-700">{communityProduct.description}</p>
-        </div>
-
-        <div class="rounded-2xl border border-surface-200 bg-white p-5">
-          <p class="text-xs uppercase tracking-[0.14em] text-surface-500">対象</p>
-          <p class="mt-1 text-sm font-medium text-surface-800">{communityProduct.target}</p>
-          <ul class="mt-4 space-y-2 text-sm text-surface-700">
-            {communityProduct.points.map((point) => (
-              <li class="flex items-start gap-2">
-                <span class="mt-2 h-1.5 w-1.5 rounded-full bg-accent-500"></span>
-                <span>{point}</span>
-              </li>
-            ))}
-          </ul>
-          <a
-            href={communityProduct.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="mt-5 inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-500"
-          >
-            {communityProduct.linkLabel}
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <div class="mt-10 rounded-3xl border border-surface-200 bg-surface-50 p-6 sm:p-8">
-      <p class="text-xs uppercase tracking-[0.14em] text-accent-600">Coming Soon</p>
-      <div class="mt-5 grid gap-4 md:grid-cols-2">
-        {upcomingProducts.map((product) => {
-          const hasLogo = hasPublicAsset(product.logo);
-          const logoScale = product.logoScale ?? 1;
-          const logoHeightRem = `${2.5 * logoScale}rem`;
-          const hideNameText = product.logoIncludesName && hasLogo;
-
-          return (
-            <article class="rounded-2xl border border-surface-200 bg-white p-5">
-              {hasLogo && (
+              {p.screenshot ? (
                 <img
-                  src={toPublicPath(product.logo)}
-                  alt={`${product.name} ロゴ`}
-                  class="mb-4 w-auto max-w-full object-contain"
-                  style={`height: ${logoHeightRem};`}
+                  src={p.screenshot}
+                  alt={`${p.name} screenshot`}
                   loading="lazy"
+                  style="width: 100%; height: auto; display: block; border-radius: 4px; opacity: 0.9;"
                 />
+              ) : (
+                <div
+                  style="width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(196,168,130,0.15); display: flex; align-items: center; justify-content: center; border-radius: 4px;"
+                >
+                  <p
+                    style="font-family: var(--font-display); font-size: var(--text-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-muted-dark); margin: 0;"
+                  >
+                    Coming Soon
+                  </p>
+                </div>
               )}
-              <div class="flex items-center justify-between gap-4">
-                {!hideNameText && <h3 class="text-2xl font-semibold text-surface-900">{product.name}</h3>}
-                <span class="rounded-full border border-accent-300 bg-accent-300/20 px-3 py-1 text-xs font-medium text-accent-600">
-                  {product.status}
-                </span>
-              </div>
-              <p class:list={['text-sm text-surface-600', hideNameText ? 'mt-2' : 'mt-3']}>{product.description}</p>
-              {!hasLogo && <p class="mt-2 text-xs text-surface-500">ロゴ整備中</p>}
-            </article>
-          );
-        })}
+            </div>
+          </div>
+        )}
+
+        {p.layout === 'reversed' && (
+          <div
+            class="line-section"
+            style="align-items: stretch;"
+          >
+            {/* Left: screenshot/placeholder (60%) */}
+            <div
+              style="min-height: 280px; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: clamp(40px, 5vw, 64px) 40px clamp(40px, 5vw, 64px) 0;"
+            >
+              {p.screenshot ? (
+                <img
+                  src={p.screenshot}
+                  alt={`${p.name} screenshot`}
+                  loading="lazy"
+                  style="width: 100%; height: auto; display: block; border-radius: 4px; opacity: 0.9;"
+                />
+              ) : (
+                <div
+                  style="width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(196,168,130,0.15); display: flex; align-items: center; justify-content: center; border-radius: 4px;"
+                >
+                  <p
+                    style="font-family: var(--font-display); font-size: var(--text-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-muted-dark); margin: 0;"
+                  >
+                    Coming Soon
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div class="dividing-line" aria-hidden="true" />
+
+            {/* Right: product info (40%) */}
+            <div
+              style="padding: clamp(48px, 7vw, 96px) 0 clamp(48px, 7vw, 96px) 40px; display: flex; flex-direction: column; justify-content: center; gap: 24px;"
+            >
+              <img
+                src={p.logo}
+                alt={p.logoAlt}
+                class="invert"
+                style="height: 40px; width: auto; display: block; object-fit: contain; object-position: left center;"
+                loading="lazy"
+              />
+              <p
+                style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent-dark); margin: 0;"
+              >
+                {p.tagline}
+              </p>
+              <p
+                style="font-family: var(--font-jp); font-size: var(--text-body); line-height: 1.9; color: var(--color-ink-muted-dark); margin: 0; max-width: 36ch;"
+              >
+                {p.description}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
+    ))
+  }
+
+  <!-- CTA -->
+  <div
+    style="border-top: 1px solid rgba(196, 168, 130, 0.2); padding: clamp(40px, 5vw, 64px) var(--content-padding-x); max-width: var(--max-width); margin: 0 auto; text-align: center;"
+  >
+    <p
+      style="font-family: var(--font-jp); font-size: var(--text-body); line-height: 1.9; color: var(--color-ink-muted-dark); max-width: 48ch; margin: 0 auto 32px;"
+    >
+      AI建築サークルに入れば、すべてのツールが使い放題。
+    </p>
+    <a
+      href="https://ai-archi-circle.jp"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="link-animated"
+      style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ink-dark); text-decoration: none;"
+    >
+      AI建築サークルで、すべてのツールが使い放題 →
+    </a>
   </div>
 </section>
