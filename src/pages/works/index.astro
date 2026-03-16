@@ -1,0 +1,214 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { loadWorks } from '../../lib/content';
+
+const works = loadWorks();
+
+/**
+ * Era grouping logic:
+ * year <= 1999 → "〜1999"
+ * year <= 2009 → "2000〜"
+ * else → "2024"
+ */
+function getEra(year: number): string {
+  if (year <= 1999) return '〜1999';
+  if (year <= 2009) return '2000〜';
+  return '2024';
+}
+
+const eras = ['All', '〜1999', '2000〜', '2024'] as const;
+---
+
+<Layout
+  title="Works | Archi-Prisma Design Works"
+  description="Archi-Prisma Design Worksの実績・作品一覧。建築設計・都市開発・商業施設・住宅など、国内外のプロジェクト。"
+>
+  <Header />
+
+  <main style="padding-top: 64px;">
+    <!-- Page header -->
+    <div
+      style="max-width: var(--max-width); margin: 0 auto; padding: clamp(48px, 7vw, 96px) var(--content-padding-x) 0; border-bottom: 1px solid var(--color-rule);"
+    >
+      <h1
+        style="font-family: var(--font-display); font-size: var(--text-section); font-weight: 700; letter-spacing: -0.03em; line-height: 1; color: var(--color-ink); margin: 0 0 clamp(32px, 4vw, 48px);"
+      >
+        Works
+      </h1>
+
+      <!-- Era filter buttons -->
+      <div
+        id="era-filters"
+        style="display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: clamp(32px, 4vw, 48px);"
+        role="group"
+        aria-label="年代フィルター"
+      >
+        {eras.map((era) => (
+          <button
+            type="button"
+            data-era={era}
+            class="era-btn"
+            aria-pressed={era === 'All' ? 'true' : 'false'}
+            style={`
+              font-family: var(--font-display);
+              font-size: var(--text-caption);
+              font-weight: 600;
+              letter-spacing: 0.08em;
+              text-transform: uppercase;
+              padding: 8px 20px;
+              border: 1px solid var(--color-rule);
+              background: transparent;
+              color: var(--color-ink-muted);
+              cursor: pointer;
+              transition: background-color 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
+            `}
+          >
+            {era}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Works grid -->
+    <div
+      id="works-grid"
+      style="max-width: var(--max-width); margin: 0 auto; padding: clamp(40px, 5vw, 64px) var(--content-padding-x);"
+    >
+      <div
+        style="display: grid; grid-template-columns: 1fr; gap: 32px;"
+        class="works-grid-inner"
+      >
+        {works.map((work) => (
+          <article
+            data-work-era={getEra(work.year)}
+            style="border-top: 1px solid var(--color-rule); padding-top: 24px;"
+          >
+            {work.image ? (
+              <div
+                style="overflow: hidden; margin-bottom: 20px; aspect-ratio: 16/9;"
+              >
+                <img
+                  src={work.image}
+                  alt={work.title}
+                  loading="lazy"
+                  style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.5s var(--ease);"
+                  class="work-card-img"
+                />
+              </div>
+            ) : (
+              <div
+                style="margin-bottom: 20px; aspect-ratio: 16/9; background-color: var(--color-rule); display: flex; align-items: center; justify-content: center;"
+              >
+                <span
+                  style="font-family: var(--font-display); font-size: var(--text-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-muted);"
+                >
+                  {work.year}
+                </span>
+              </div>
+            )}
+
+            <h2
+              style="font-family: var(--font-display); font-size: var(--text-body); font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; color: var(--color-ink); margin: 0 0 10px;"
+            >
+              {work.title}
+            </h2>
+
+            <ul
+              style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 4px 12px;"
+            >
+              <li
+                style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ink-muted);"
+              >
+                {work.type}
+              </li>
+              <li
+                style="color: var(--color-rule);"
+                aria-hidden="true"
+              >/</li>
+              <li
+                style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ink-muted);"
+              >
+                {work.region}
+              </li>
+              <li
+                style="color: var(--color-rule);"
+                aria-hidden="true"
+              >/</li>
+              <li
+                style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ink-muted);"
+              >
+                {work.year}
+              </li>
+            </ul>
+
+            {work.storyline && (
+              <p
+                style="font-family: var(--font-jp); font-size: var(--text-caption); line-height: 1.8; color: var(--color-ink-muted); margin: 10px 0 0;"
+              >
+                {work.storyline}
+              </p>
+            )}
+          </article>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  /* Responsive grid */
+  @media (min-width: 640px) {
+    .works-grid-inner {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+  @media (min-width: 1024px) {
+    .works-grid-inner {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
+  }
+
+  /* Active filter button */
+  .era-btn[aria-pressed='true'] {
+    background-color: var(--color-ink);
+    color: var(--color-surface);
+    border-color: var(--color-ink);
+  }
+
+  /* Hover for non-active buttons */
+  .era-btn:not([aria-pressed='true']):hover {
+    border-color: var(--color-ink-muted);
+    color: var(--color-ink);
+  }
+
+  /* Image hover */
+  article:hover .work-card-img {
+    transform: scale(1.04);
+  }
+</style>
+
+<script>
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>('.era-btn');
+  const workCards = document.querySelectorAll<HTMLElement>('[data-work-era]');
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const era = btn.dataset.era ?? 'All';
+
+      // Update button states
+      filterBtns.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+
+      // Show/hide cards
+      workCards.forEach((card) => {
+        const cardEra = card.dataset.workEra;
+        const visible = era === 'All' || cardEra === era;
+        card.style.display = visible ? '' : 'none';
+      });
+    });
+  });
+</script>
