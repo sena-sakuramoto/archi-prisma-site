@@ -1,49 +1,146 @@
 ---
-interface Props {
-  tagline: string;
-  subheading: string;
-  registration: string;
-}
-
-const { tagline, subheading, registration } = Astro.props as Props;
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const toPublicPath = (path: string) => `${basePath}${path}`;
+/**
+ * Hero — Task 9
+ * Line position: 30|70
+ * Left: ARCHI-PRISMA logotype, Est. 2024, Tokyo / London, tagline
+ * Right: hero-poster.webp bleeding right
+ * Staggered reveal on load; image via clip-path
+ */
 ---
 
-<section id="hero" class="relative overflow-hidden border-b border-surface-200">
-  <img
-    src={toPublicPath('/assets/hero-bg.jpg')}
-    alt=""
-    class="absolute inset-0 h-full w-full object-cover"
-    data-parallax
-    data-parallax-speed="0.18"
-    loading="eager"
-    fetchpriority="high"
-  />
-  <div class="absolute inset-0 bg-[linear-gradient(120deg,rgba(27,25,22,0.74),rgba(27,25,22,0.45)_45%,rgba(27,25,22,0.25))]"></div>
+<section
+  id="hero"
+  class="relative overflow-hidden"
+  style="min-height: 100svh; padding-top: 64px;"
+>
+  <div
+    class="line-section"
+    style="--line-pos: 30%; min-height: calc(100svh - 64px); align-items: stretch;"
+  >
+    <!-- Left zone -->
+    <div
+      style="display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(40px, 6vw, 80px) 40px clamp(48px, 6vw, 80px) 0;"
+    >
+      <!-- Logotype -->
+      <div data-hero-item style="opacity: 0; transform: translateY(24px);">
+        <img
+          src="/assets/branding/apdw-logotype.png"
+          alt="Archi-Prisma Design Works"
+          style="height: 36px; width: auto; display: block;"
+        />
+      </div>
 
-  <div class="site-container section-space relative flex min-h-[72svh] flex-col justify-center text-white">
-    <p class="text-sm font-medium uppercase tracking-[0.18em] text-accent-300">Archi-Prisma Design works</p>
-    <h1 class="mt-5 max-w-4xl text-5xl font-semibold leading-[1.05] sm:text-6xl lg:text-7xl">{tagline}</h1>
-    <p class="mt-6 max-w-2xl text-base leading-relaxed text-white/90 sm:text-lg">{subheading}</p>
+      <!-- Meta stack -->
+      <div
+        data-hero-item
+        style="opacity: 0; transform: translateY(24px); margin-top: 40px;"
+      >
+        <p
+          style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-muted); margin: 0 0 8px;"
+        >
+          Est. 2024
+        </p>
+        <p
+          style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted); margin: 0;"
+        >
+          Tokyo / London
+        </p>
+      </div>
 
-    <div class="mt-10 flex flex-wrap items-center gap-4">
-      <a
-        href="#contact"
-        class="inline-flex items-center justify-center rounded-full bg-white px-7 py-3 text-sm font-semibold text-surface-900 hover:bg-surface-100"
+      <!-- Tagline -->
+      <div
+        data-hero-item
+        style="opacity: 0; transform: translateY(24px); margin-top: 32px;"
       >
-        お問い合わせ
-      </a>
-      <a
-        href="#works"
-        class="inline-flex items-center justify-center rounded-full border border-white/45 px-7 py-3 text-sm font-medium text-white hover:border-accent-300 hover:text-accent-300"
-      >
-        実績を見る
-      </a>
+        <p
+          style="font-family: var(--font-body); font-size: var(--text-body); color: var(--color-ink); line-height: 1.7; margin: 0; max-width: 280px;"
+        >
+          Architecture × Software
+        </p>
+      </div>
+
+      <!-- Bottom rule -->
+      <div
+        data-hero-item
+        style="opacity: 0; margin-top: 48px; height: 1px; background-color: var(--color-rule);"
+      ></div>
     </div>
 
-    <p class="mt-12 max-w-xl border-l-2 border-accent-300 pl-4 text-sm leading-relaxed text-white/85">
-      {registration}
-    </p>
+    <!-- Dividing line -->
+    <div class="dividing-line" aria-hidden="true"></div>
+
+    <!-- Right zone — hero image bleeds right -->
+    <div
+      style="position: relative; overflow: hidden; min-height: 320px;"
+    >
+      <div
+        data-hero-image
+        style="clip-path: inset(0 100% 0 0); height: 100%; width: 100%;"
+      >
+        <img
+          src="/assets/hero-poster.webp"
+          alt="Archi-Prisma Design Works — architectural photography"
+          style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Large display heading — overlaid bottom-left of right zone on desktop -->
+  <div
+    style="position: absolute; bottom: clamp(32px, 5vw, 72px); left: 0; width: 100%; pointer-events: none; padding: 0 var(--content-padding-x); max-width: var(--max-width); margin: 0 auto;"
+  >
+    <h1
+      data-hero-heading
+      style="
+        opacity: 0;
+        font-family: var(--font-display);
+        font-size: var(--text-hero);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        color: var(--color-ink);
+        margin: 0;
+      "
+    >
+      ARCHI-PRISMA
+    </h1>
   </div>
 </section>
+
+<script>
+  import { gsap } from 'gsap';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+    // Stagger meta items
+    tl.to('[data-hero-item]', {
+      opacity: 1,
+      y: 0,
+      duration: 0.9,
+      stagger: 0.15,
+      delay: 0.2,
+    });
+
+    // Heading fades in
+    tl.to(
+      '[data-hero-heading]',
+      { opacity: 1, duration: 1.2, ease: 'power2.out' },
+      '-=0.5'
+    );
+
+    // Image clip-path reveal
+    tl.to(
+      '[data-hero-image]',
+      {
+        clipPath: 'inset(0 0% 0 0)',
+        duration: 1.4,
+        ease: 'power4.inOut',
+      },
+      '-=1.0'
+    );
+  });
+</script>
