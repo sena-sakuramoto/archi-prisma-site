@@ -1,0 +1,130 @@
+---
+/**
+ * CompanyInfo — Task 14
+ * id="company". Line position 50|50.
+ * Left: heading "会社概要"
+ * Right: definition list (company details)
+ * Partners section with logos (grayscale → hover full color)
+ */
+import { loadPartners, loadTeam } from '../lib/content';
+
+const partners = loadPartners();
+const { core } = loadTeam();
+const architect = core.find((m) => m.role === '管理建築士');
+---
+
+<section
+  id="company"
+  style="--line-pos: 50%; border-top: 1px solid var(--color-rule); padding-bottom: clamp(64px, 8vw, 120px);"
+>
+  <!-- Company overview row -->
+  <div class="line-section" style="align-items: start; padding-top: clamp(48px, 7vw, 96px);">
+    <!-- Left: heading -->
+    <div style="padding-right: 40px; padding-bottom: clamp(40px, 5vw, 64px);">
+      <h2
+        style="font-family: var(--font-display); font-size: var(--text-section); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: var(--color-ink); margin: 0;"
+      >
+        会社概要
+      </h2>
+    </div>
+
+    <div class="dividing-line" aria-hidden="true" />
+
+    <!-- Right: definition list -->
+    <div style="padding-left: 40px; padding-bottom: clamp(40px, 5vw, 64px);">
+      <dl
+        style="margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0;"
+      >
+        {
+          [
+            { term: '社名', detail: 'Archi-Prisma Design Works 株式会社' },
+            { term: '英名', detail: 'Archi-Prisma Design Works K.K.' },
+            { term: '所在地', detail: '東京都' },
+            { term: '設立', detail: '2024年' },
+            { term: '免許', detail: '一級建築士事務所（東京都知事登録）' },
+            {
+              term: '管理建築士',
+              detail: architect
+                ? `${architect.name}（${architect.license ?? '一級建築士'}）`
+                : '中村 奨（一級建築士 国土交通大臣登録 第75397号）',
+            },
+            { term: '国際拠点', detail: 'Archi-Prisma Ltd. London（提携）' },
+          ].map((item) => (
+            <>
+              <dt
+                style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted); padding: 14px 24px 14px 0; border-bottom: 1px solid var(--color-rule); white-space: nowrap;"
+              >
+                {item.term}
+              </dt>
+              <dd
+                style="font-family: var(--font-jp); font-size: var(--text-body); color: var(--color-ink); padding: 14px 0; border-bottom: 1px solid var(--color-rule); margin: 0; line-height: 1.6;"
+              >
+                {item.detail}
+              </dd>
+            </>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+
+  <!-- Partners section -->
+  {
+    partners.length > 0 && (
+      <div
+        style="max-width: var(--max-width); margin: 0 auto; padding: clamp(40px, 5vw, 64px) var(--content-padding-x) 0; border-top: 1px solid var(--color-rule);"
+      >
+        <p
+          style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-muted); margin: 0 0 32px;"
+        >
+          Partners
+        </p>
+
+        <ul
+          style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 40px 56px;"
+        >
+          {partners.map((partner) => (
+            <li style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+              {partner.logo ? (
+                <img
+                  src={partner.logo}
+                  alt={partner.logoAlt ?? partner.name}
+                  loading="lazy"
+                  style={`
+                    height: ${partner.logoScale ? Math.round(40 * partner.logoScale) : 40}px;
+                    width: auto;
+                    max-width: 140px;
+                    display: block;
+                    object-fit: contain;
+                    filter: grayscale(100%);
+                    opacity: 0.6;
+                    transition: filter 0.3s var(--ease), opacity 0.3s var(--ease);
+                  `}
+                  class="partner-logo"
+                />
+              ) : (
+                <span
+                  style="font-family: var(--font-jp); font-size: var(--text-caption); color: var(--color-ink); font-weight: 500;"
+                >
+                  {partner.name}
+                </span>
+              )}
+              <span
+                style="font-family: var(--font-jp); font-size: var(--text-caption); color: var(--color-ink-muted); text-align: center; max-width: 140px; line-height: 1.5;"
+              >
+                {partner.area}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .partner-logo:hover {
+    filter: grayscale(0%) !important;
+    opacity: 1 !important;
+  }
+</style>
