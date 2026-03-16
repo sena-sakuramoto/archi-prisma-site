@@ -1,0 +1,16 @@
+---
+/**
+ * DividingLine — The structural signature of the site.
+ * A 1px vertical line that runs through the page.
+ * Position controlled by --line-pos CSS variable, driven by GSAP ScrollTrigger.
+ * Hidden on mobile (< 768px).
+ */
+---
+
+<div
+  id="dividing-line"
+  class="hidden md:block fixed top-0 w-px h-screen z-10 pointer-events-none"
+  style="left: var(--line-pos, 30%); background-color: var(--color-accent-decorative);"
+  aria-hidden="true"
+  data-line-opacity="1"
+></div>
