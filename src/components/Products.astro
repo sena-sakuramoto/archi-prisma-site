@@ -71,6 +71,7 @@ const products = [
     products.map((p) => (
       <div
         id={p.id}
+        class="reveal"
         style={`--line-pos: ${p.linePos}; border-top: 1px solid rgba(196, 168, 130, 0.2);`}
       >
         {p.layout === 'normal' && (

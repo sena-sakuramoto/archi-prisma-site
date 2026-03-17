@@ -61,7 +61,7 @@ const projects = [
       >
         {/* === text-left layout: 40|60 — left text, right image === */}
         {p.layout === 'text-left' && (
-          <div class="line-section" style="align-items: stretch;">
+          <div class="line-section reveal" style="align-items: stretch;">
             {/* Left: text content */}
             <div
               style="padding: clamp(48px, 7vw, 96px) 40px clamp(48px, 7vw, 96px) 0; display: flex; flex-direction: column; justify-content: space-between;"
@@ -137,7 +137,7 @@ const projects = [
 
         {/* === image-left layout: 65|35 — image left, text right === */}
         {p.layout === 'image-left' && (
-          <div class="line-section" style="align-items: stretch;">
+          <div class="line-section reveal" style="align-items: stretch;">
             {/* Left: image dominates (65%) */}
             <div style="overflow: hidden; min-height: 360px;" data-works-image>
               <img
@@ -189,7 +189,7 @@ const projects = [
 
         {/* === image-dominant layout: 20|80 — small label left, full image right === */}
         {p.layout === 'image-dominant' && (
-          <div class="line-section" style="align-items: stretch;">
+          <div class="line-section reveal" style="align-items: stretch;">
             {/* Left: rotated label / number (20%) */}
             <div
               style="padding: clamp(48px, 7vw, 96px) 40px clamp(48px, 7vw, 96px) 0; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start;"

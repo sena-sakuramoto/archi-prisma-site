@@ -107,3 +107,24 @@ h1, h2, h3, h4 {
 }
 
 .link-animated:hover::after { width: 100%; }
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--duration-normal) var(--ease),
+              transform var(--duration-normal) var(--ease);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
