@@ -30,25 +30,36 @@ export function initLineSystem(sections: SectionConfig[] = DEFAULT_SECTIONS) {
   const line = document.getElementById('dividing-line');
   if (!line) return;
 
+  // Ensure each section's .line-section has its OWN --line-pos locked in.
+  // The grid columns never change — only the fixed overlay line animates.
   sections.forEach((section) => {
     const el = document.getElementById(section.id);
     if (!el) return;
+
+    // Lock this section's grid to its own line position
+    const lineSection = el.querySelector('.line-section') ?? el.closest('.line-section');
+    if (lineSection instanceof HTMLElement) {
+      lineSection.style.setProperty('--line-pos', section.linePos);
+    }
 
     ScrollTrigger.create({
       trigger: el,
       start: 'top center',
       end: 'bottom center',
-      onEnter: () => applyLineState(line, section),
-      onEnterBack: () => applyLineState(line, section),
+      onEnter: () => animateLine(line, section),
+      onEnterBack: () => animateLine(line, section),
     });
   });
 
   // Initial state
-  applyLineState(line, sections[0]);
+  animateLine(line, sections[0]);
 }
 
-function applyLineState(line: HTMLElement, section: SectionConfig) {
-  // Animate the fixed overlay line position
+/**
+ * Only animates the fixed overlay line.
+ * Does NOT touch any section's grid columns — those are locked per-section.
+ */
+function animateLine(line: HTMLElement, section: SectionConfig) {
   gsap.to(line, {
     left: section.linePos,
     opacity: section.lineOpacity ?? 1,
@@ -62,14 +73,6 @@ function applyLineState(line: HTMLElement, section: SectionConfig) {
       duration: 0.4,
     });
   }
-
-  // Update ALL visible .line-section elements to match.
-  // This keeps the CSS Grid columns in sync with the animated fixed line.
-  document.querySelectorAll('.line-section').forEach((el) => {
-    if (el instanceof HTMLElement) {
-      el.style.setProperty('--line-pos', section.linePos);
-    }
-  });
 }
 
 export function destroyLineSystem() {
