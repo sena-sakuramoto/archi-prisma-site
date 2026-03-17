@@ -16,7 +16,6 @@
     style="
       display: flex;
       flex-direction: column;
-      min-height: 50vh;
     "
     class="bridge-inner"
   >
@@ -37,12 +36,13 @@
         class="bridge-text"
         style="
           font-family: var(--font-jp);
-          font-size: var(--text-section);
+          font-size: clamp(3rem, 8vw, 9rem);
           font-weight: 700;
-          line-height: 1.2;
+          line-height: 1.1;
           color: var(--color-ink);
           margin: 0;
           text-align: right;
+          letter-spacing: -0.02em;
         "
       >
         建築も、
@@ -80,12 +80,13 @@
         class="bridge-text"
         style="
           font-family: var(--font-jp);
-          font-size: var(--text-section);
+          font-size: clamp(3rem, 8vw, 9rem);
           font-weight: 700;
-          line-height: 1.2;
+          line-height: 1.1;
           color: var(--color-ink-dark);
           margin: 0;
           text-align: left;
+          letter-spacing: -0.02em;
         "
       >
         ソフトウェアも。
@@ -98,7 +99,6 @@
   /* Mobile: vertical stack (column) — light top, dark bottom, h-rule between */
   .bridge-inner {
     flex-direction: column;
-    min-height: 50vh;
   }
 
   .bridge-rule {
@@ -110,7 +110,6 @@
   @media (min-width: 768px) {
     .bridge-inner {
       flex-direction: row;
-      min-height: 50vh;
     }
 
     .bridge-half {

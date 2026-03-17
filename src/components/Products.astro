@@ -22,7 +22,7 @@ const products = [
     linePos: '60%',
     logo: '/assets/products/kakome-logo-black.png',
     logoAlt: 'KAKOME',
-    screenshot: null,
+    screenshot: '/assets/curated/kakome-report-ui.jpg',
     tagline: '写真指示書',
     name: 'KAKOME',
     description: '現場写真に指示を重ねて共有。口頭では伝わらないニュアンスを、ビジュアルで確実に届ける。',
@@ -51,19 +51,16 @@ const products = [
   <div
     style="max-width: var(--max-width); margin: 0 auto; padding: 0 var(--content-padding-x) clamp(40px, 6vw, 80px);"
   >
-    <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 24px;">
-      <img
-        src="/assets/branding/apdw-dev-logo.png"
-        alt="ARCHI-PRISMA Software Development"
-        class="invert"
-        style="height: 32px; width: auto; display: block;"
-      />
-      <p
-        style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-muted-dark); margin: 0;"
-      >
-        Software Development
-      </p>
-    </div>
+    <p
+      style="font-family: var(--font-display); font-size: var(--text-section); font-weight: 700; letter-spacing: -0.02em; color: var(--color-ink-dark); margin: 0 0 12px; line-height: 1.15;"
+    >
+      Products
+    </p>
+    <p
+      style="font-family: var(--font-jp); font-size: var(--text-body); line-height: 1.9; color: var(--color-ink-muted-dark); margin: 0; max-width: 40ch;"
+    >
+      建築のためのソフトウェアを、自分たちでつくる。
+    </p>
   </div>
 
   <!-- Products -->
@@ -117,15 +114,20 @@ const products = [
                 />
               ) : (
                 <div
-                  style="width: 100%; aspect-ratio: 16/9; background: rgba(196,168,130,0.04); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; border-radius: 4px;"
+                  style="width: 100%; aspect-ratio: 16/9; background: rgba(196,168,130,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 4px; border: 1px solid rgba(196,168,130,0.1);"
                 >
                   <img
                     src={p.logo}
                     alt=""
                     class="invert"
-                    style="height: 32px; width: auto; opacity: 0.15;"
+                    style="height: 36px; width: auto; opacity: 0.3;"
                     aria-hidden="true"
                   />
+                  <span
+                    style="font-family: var(--font-display); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(196,168,130,0.4);"
+                  >
+                    Coming Soon
+                  </span>
                 </div>
               )}
             </div>
@@ -150,15 +152,20 @@ const products = [
                 />
               ) : (
                 <div
-                  style="width: 100%; aspect-ratio: 16/9; background: rgba(196,168,130,0.04); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; border-radius: 4px;"
+                  style="width: 100%; aspect-ratio: 16/9; background: rgba(196,168,130,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 4px; border: 1px solid rgba(196,168,130,0.1);"
                 >
                   <img
                     src={p.logo}
                     alt=""
                     class="invert"
-                    style="height: 32px; width: auto; opacity: 0.15;"
+                    style="height: 36px; width: auto; opacity: 0.3;"
                     aria-hidden="true"
                   />
+                  <span
+                    style="font-family: var(--font-display); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(196,168,130,0.4);"
+                  >
+                    Coming Soon
+                  </span>
                 </div>
               )}
             </div>

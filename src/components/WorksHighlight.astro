@@ -10,15 +10,16 @@ const works = loadFeaturedWorks();
 
 const yachtClub = works.find((w) => w.title === 'The Super Yacht Club');
 const kotsubo = works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place');
-const shimouma = works.find((w) => w.title === '下馬賃貸マンション');
+const wmeguro = works.find((w) => w.title === 'W.MEGURO店舗ビル');
 
 const projects = [
   {
     id: 'works-01',
     linePos: '40%',
     num: '01',
-    layout: 'text-left' as const,
-    image: '/assets/work-yacht-club.jpg',
+    layout: 'day-night' as const,
+    image: '/assets/curated/yacht-club-aerial-day.jpg',
+    imageNight: '/assets/curated/yacht-club-aerial-night.jpg',
     title: yachtClub?.title ?? 'The Super Yacht Club',
     type: yachtClub?.type ?? 'Hospitality/Club',
     region: yachtClub?.region ?? 'Japan',
@@ -30,8 +31,9 @@ const projects = [
     id: 'works-02',
     linePos: '65%',
     num: '02',
-    layout: 'image-left' as const,
-    image: '/assets/work-kotsubo-market.jpg',
+    layout: 'day-night-reverse' as const,
+    image: '/assets/curated/kotsubo-jacaranda.jpg',
+    imageNight: '/assets/curated/kotsubo-jacaranda-night.jpg',
     title: kotsubo?.title ?? 'KOTSUBO Jacaranda Market Place',
     type: kotsubo?.type ?? 'Urban/Commercial',
     region: kotsubo?.region ?? 'Japan',
@@ -44,13 +46,13 @@ const projects = [
     linePos: '20%',
     num: '03',
     layout: 'image-dominant' as const,
-    image: '/assets/work-shimouma-residence.jpg',
-    title: shimouma?.title ?? '下馬賃貸マンション',
-    type: shimouma?.type ?? 'Residential',
-    region: shimouma?.region ?? 'Japan',
-    year: shimouma?.year ?? 2024,
-    phase: shimouma?.phase ?? 'Design',
-    storyline: shimouma?.storyline ?? '',
+    image: '/assets/curated/about-exterior.jpg',
+    title: wmeguro?.title ?? 'W.MEGURO店舗ビル',
+    type: wmeguro?.type ?? 'Commercial',
+    region: wmeguro?.region ?? 'Japan',
+    year: wmeguro?.year ?? 2024,
+    phase: wmeguro?.phase ?? 'Design',
+    storyline: wmeguro?.storyline ?? '',
   },
 ];
 ---
@@ -63,6 +65,63 @@ const projects = [
         data-line-pos={p.linePos}
         style={`--line-pos: ${p.linePos}; border-top: 1px solid var(--color-rule);`}
       >
+        {/* === day-night layout: 40|60 — scroll-driven day→night crossfade === */}
+        {p.layout === 'day-night' && (
+          <div
+            class="line-section"
+            style="align-items: stretch;"
+            data-day-night-section
+          >
+            {/* Left: text content */}
+            <div
+              style="padding: clamp(48px, 7vw, 96px) 40px clamp(48px, 7vw, 96px) 0; display: flex; flex-direction: column; justify-content: space-between; position: relative; z-index: 2;"
+            >
+              <div>
+                <p class="project-num" aria-hidden="true" data-dn-text>
+                  {p.num}
+                </p>
+                <h2 class="project-title" data-dn-text>
+                  {p.title}
+                </h2>
+                <ul
+                  style="list-style: none; padding: 0; margin: 0 0 32px; display: flex; flex-wrap: wrap; gap: 8px 16px;"
+                >
+                  <li class="project-meta" data-dn-text>{p.type}</li>
+                  <li style="color: var(--color-rule);" aria-hidden="true" data-dn-text>/</li>
+                  <li class="project-meta" data-dn-text>{p.region}</li>
+                  <li style="color: var(--color-rule);" aria-hidden="true" data-dn-text>/</li>
+                  <li class="project-meta" data-dn-text>{p.year}</li>
+                  <li style="color: var(--color-rule);" aria-hidden="true" data-dn-text>/</li>
+                  <li class="project-meta" data-dn-text>{p.phase}</li>
+                </ul>
+                {p.storyline && (
+                  <p class="project-storyline" data-dn-text>{p.storyline}</p>
+                )}
+              </div>
+            </div>
+
+            <div class="dividing-line" aria-hidden="true" />
+
+            {/* Right: stacked day/night images */}
+            <div class="project-image" style="min-height: 480px;" data-works-image>
+              <img
+                src={p.image}
+                alt={`${p.title} — Day`}
+                loading="lazy"
+                data-day-img
+                style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;"
+              />
+              <img
+                src={p.imageNight}
+                alt={`${p.title} — Night`}
+                loading="lazy"
+                data-night-img
+                style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; opacity: 0;"
+              />
+            </div>
+          </div>
+        )}
+
         {/* === text-left layout: 40|60 — left text, right image === */}
         {p.layout === 'text-left' && (
           <div class="line-section reveal" style="align-items: stretch;">
@@ -104,6 +163,57 @@ const projects = [
                 loading="lazy"
                 style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.6s var(--ease);"
               />
+            </div>
+          </div>
+        )}
+
+        {/* === day-night-reverse layout: 65|35 — image left (day→night), text right === */}
+        {p.layout === 'day-night-reverse' && (
+          <div
+            class="line-section"
+            style="align-items: stretch;"
+            data-day-night-section
+          >
+            {/* Left: stacked day/night images (65%) */}
+            <div class="project-image" style="min-height: 480px;" data-works-image>
+              <img
+                src={p.image}
+                alt={`${p.title} — Day`}
+                loading="lazy"
+                data-day-img
+                style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;"
+              />
+              <img
+                src={p.imageNight}
+                alt={`${p.title} — Night`}
+                loading="lazy"
+                data-night-img
+                style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; opacity: 0;"
+              />
+            </div>
+
+            <div class="dividing-line" aria-hidden="true" />
+
+            {/* Right: text (35%) */}
+            <div
+              style="padding: clamp(48px, 7vw, 96px) 0 clamp(48px, 7vw, 96px) 40px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; z-index: 2;"
+            >
+              <p class="project-num" aria-hidden="true" data-dn-text>
+                {p.num}
+              </p>
+              <h2 class="project-title" data-dn-text>
+                {p.title}
+              </h2>
+              <ul
+                style="list-style: none; padding: 0; margin: 0 0 32px; display: flex; flex-direction: column; gap: 6px;"
+              >
+                {[p.type, p.region, String(p.year), p.phase].map((meta) => (
+                  <li class="project-meta" data-dn-text>{meta}</li>
+                ))}
+              </ul>
+              {p.storyline && (
+                <p class="project-storyline" data-dn-text>{p.storyline}</p>
+              )}
             </div>
           </div>
         )}
@@ -196,7 +306,7 @@ const projects = [
 
   <!-- CTA -->
   <div
-    style="border-top: 1px solid var(--color-rule); padding: clamp(40px, 5vw, 64px) var(--content-padding-x); max-width: var(--max-width); margin: 0 auto; display: flex; justify-content: flex-end;"
+    style="border-top: 1px solid var(--color-rule); padding: 24px var(--content-padding-x); max-width: var(--max-width); margin: 0 auto; display: flex; justify-content: flex-end;"
   >
     <a
       href="/works/"
@@ -209,17 +319,50 @@ const projects = [
 </div>
 
 <script>
-  // Subtle image scale on hover
-  document.querySelectorAll<HTMLElement>('[data-works-image]').forEach((wrap) => {
-    const img = wrap.querySelector('img');
-    if (!img) return;
-    wrap.addEventListener('mouseenter', () => {
-      img.style.transform = 'scale(1.03)';
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initWorksEffects() {
+    // Subtle image scale on hover
+    document.querySelectorAll<HTMLElement>('[data-works-image]').forEach((wrap) => {
+      const img = wrap.querySelector('img');
+      if (!img) return;
+      wrap.addEventListener('mouseenter', () => {
+        img.style.transform = 'scale(1.03)';
+      });
+      wrap.addEventListener('mouseleave', () => {
+        img.style.transform = 'scale(1)';
+      });
     });
-    wrap.addEventListener('mouseleave', () => {
-      img.style.transform = 'scale(1)';
+
+    // Day → Night: pin each day-night section and crossfade while stationary
+    document.querySelectorAll('[data-day-night-section]').forEach((section) => {
+      const nightImg = section.querySelector('[data-night-img]') as HTMLElement;
+      const parentSection = section.closest('section') as HTMLElement;
+      if (!nightImg || !parentSection) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: parentSection,
+          start: 'top top',
+          end: '+=100%',
+          pin: true,
+          scrub: 0.8,
+          pinSpacing: true,
+        },
+      });
+
+      tl.to(nightImg, { opacity: 1, ease: 'none', duration: 1 }, 0);
+      tl.to(parentSection, { backgroundColor: '#0C0C0C', ease: 'none', duration: 1 }, 0);
+      tl.to(section.querySelectorAll('[data-dn-text]'), { color: '#F0EEEB', ease: 'none', duration: 1 }, 0);
     });
-  });
+  }
+
+  // Init on load and View Transitions
+  document.addEventListener('DOMContentLoaded', initWorksEffects);
+  document.addEventListener('astro:after-swap', initWorksEffects);
 </script>
 
 <style>

@@ -19,12 +19,12 @@
   },
   {
     "year": 2024,
-    "title": "下馬賃貸マンション",
-    "type": "Residential",
+    "title": "W.MEGURO店舗ビル",
+    "type": "Commercial",
     "region": "Japan",
     "phase": "Design",
-    "image": "/assets/work-shimouma-residence.jpg",
-    "storyline": "住まいの品質を、収益性と両立させる設計。"
+    "image": "/assets/curated/about-exterior.jpg",
+    "storyline": "目黒川沿いに佇む、店舗と都市の接点を再定義するビル。"
   },
   { "year": 2024, "title": "下目黒オフィスビル", "type": "Office", "region": "Japan", "phase": "Design", "storyline": "働く場所を、都市のランドスケープに変える。" },
   { "year": 2024, "title": "小坪漁港屋台村", "type": "Urban/Market", "region": "Japan", "phase": "Planning/Design" },

@@ -1,0 +1,124 @@
+---
+/**
+ * PageLoader — MAKHNO-style dramatic intro animation
+ * Full-screen dark overlay with staggered letter reveal → slide-up exit.
+ * Only shows on first visit per session (sessionStorage).
+ * Skipped entirely on View Transition navigations (astro:after-swap).
+ */
+---
+
+<div
+  id="page-loader"
+  style="position: fixed; inset: 0; z-index: 9999; background: #0C0C0C; display: flex; align-items: center; justify-content: center; pointer-events: all;"
+>
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 0;">
+    <p
+      id="loader-title"
+      style="font-family: var(--font-display); font-size: clamp(2rem, 5vw, 4rem); font-weight: 700; letter-spacing: 0.3em; color: var(--color-ink-dark); margin: 0; white-space: nowrap; text-transform: uppercase; line-height: 1.2;"
+      aria-hidden="true"
+    >
+      <span style="opacity: 0; display: inline-block;">A</span><span style="opacity: 0; display: inline-block;">R</span><span style="opacity: 0; display: inline-block;">C</span><span style="opacity: 0; display: inline-block;">H</span><span style="opacity: 0; display: inline-block;">I</span><span style="opacity: 0; display: inline-block;">-</span><span style="opacity: 0; display: inline-block;">P</span><span style="opacity: 0; display: inline-block;">R</span><span style="opacity: 0; display: inline-block;">I</span><span style="opacity: 0; display: inline-block;">S</span><span style="opacity: 0; display: inline-block;">M</span><span style="opacity: 0; display: inline-block;">A</span>
+    </p>
+
+    <div
+      id="loader-line"
+      style="width: 60%; height: 1px; background-color: var(--color-accent-dark); margin: clamp(12px, 2vw, 24px) 0; transform: scaleX(0);"
+    ></div>
+
+    <p
+      id="loader-subtitle"
+      style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 500; letter-spacing: 0.2em; color: var(--color-ink-dark); margin: 0; opacity: 0; text-transform: uppercase;"
+    >
+      DESIGN WORKS
+    </p>
+  </div>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+
+  function initPageLoader() {
+    const loader = document.getElementById('page-loader');
+    if (!loader) return;
+
+    // Skip loader if already visited this session
+    if (sessionStorage.getItem('apdw-loader-shown')) {
+      loader.remove();
+      return;
+    }
+
+    // Mark as shown
+    sessionStorage.setItem('apdw-loader-shown', '1');
+
+    // Lock body scroll while loader is active
+    document.body.style.overflow = 'hidden';
+
+    const letters = loader.querySelectorAll('#loader-title span');
+    const line = document.getElementById('loader-line');
+    const subtitle = document.getElementById('loader-subtitle');
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        document.body.style.overflow = '';
+        loader.remove();
+      },
+    });
+
+    // 0.3s — Letters of ARCHI-PRISMA stagger in
+    tl.to(letters, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      stagger: 0.04,
+      ease: 'power3.out',
+      delay: 0.3,
+    });
+
+    // Set initial y offset for letters
+    gsap.set(letters, { y: 20 });
+
+    // Line grows from center outward (overlaps with letter animation)
+    tl.to(
+      line,
+      {
+        scaleX: 1,
+        duration: 0.5,
+        ease: 'power2.inOut',
+      },
+      '-=0.2'
+    );
+
+    // 0.8s mark — "DESIGN WORKS" fades in
+    tl.to(
+      subtitle,
+      {
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power2.out',
+      },
+      0.8
+    );
+
+    // 2.0s — Entire overlay slides up
+    tl.to(
+      loader,
+      {
+        y: '-100vh',
+        duration: 0.8,
+        ease: 'power3.inOut',
+      },
+      2.0
+    );
+  }
+
+  // Run on initial page load
+  document.addEventListener('DOMContentLoaded', initPageLoader);
+
+  // On View Transition navigations, remove the loader immediately (don't replay)
+  document.addEventListener('astro:after-swap', () => {
+    const loader = document.getElementById('page-loader');
+    if (loader) {
+      loader.remove();
+    }
+  });
+</script>
