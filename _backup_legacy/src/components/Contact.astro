@@ -1,0 +1,185 @@
+---
+interface Props {
+  address: string;
+}
+
+const { address } = Astro.props as Props;
+const endpoint = (import.meta.env.PUBLIC_CONTACT_FORM_ENDPOINT ?? '').trim();
+const fallbackEmail = (import.meta.env.PUBLIC_CONTACT_EMAIL ?? 'contact@archi-prisma.co.jp').trim();
+---
+
+<section id="contact" class="section-space contact-premium-section">
+  <div class="site-container">
+    <h2 class="contact-heading" data-reveal>
+      <span class="en">LET'S START.</span>
+      <span class="ja">あなたのプロジェクトを、始めよう。</span>
+    </h2>
+
+    <div class="contact-grid">
+      <div class="contact-form-card" data-reveal>
+        <form
+          class="contact-form"
+          data-contact-form
+          data-endpoint={endpoint}
+          data-fallback-email={fallbackEmail}
+          novalidate
+        >
+          <div class="contact-field">
+            <label for="name">お名前</label>
+            <input type="text" id="name" name="name" autocomplete="name" required />
+          </div>
+
+          <div class="contact-field">
+            <label for="email">メール</label>
+            <input type="email" id="email" name="email" autocomplete="email" required />
+          </div>
+
+          <div class="contact-field is-textarea">
+            <label for="message">ご相談内容</label>
+            <textarea id="message" name="message" rows={6} required></textarea>
+          </div>
+
+          <label class="contact-hidden" aria-hidden="true">
+            Website
+            <input type="text" name="website" tabindex="-1" autocomplete="off" />
+          </label>
+
+          <div class="contact-actions">
+            <button type="submit" class="contact-submit" data-form-submit>送信する</button>
+            <p class="contact-status is-idle" data-form-status>まずは気軽にご相談ください。</p>
+          </div>
+        </form>
+
+        <p class="contact-fallback" data-form-fallback hidden>
+          送信に失敗しました。メールでお問い合わせください。<br />
+          <a href={`mailto:${fallbackEmail}`}>{fallbackEmail}</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="contact-meta-footer" data-reveal>
+      <a href={`mailto:${fallbackEmail}`}>{fallbackEmail}</a><br />
+      {address}
+    </div>
+  </div>
+
+  <script is:inline>
+    (() => {
+      const contactForm = document.querySelector('[data-contact-form]');
+      if (!(contactForm instanceof HTMLFormElement)) return;
+
+      const endpoint = (contactForm.dataset.endpoint || '').trim();
+      const fallbackEmail = (contactForm.dataset.fallbackEmail || '').trim();
+      const submitButton = contactForm.querySelector('[data-form-submit]');
+      const status = contactForm.querySelector('[data-form-status]');
+      const fallback = document.querySelector('[data-form-fallback]');
+
+      const setStatus = (message, tone = 'idle') => {
+        if (!(status instanceof HTMLElement)) return;
+        status.textContent = message;
+        status.classList.remove('is-idle', 'is-success', 'is-error');
+        status.classList.add(`is-${tone}`);
+      };
+
+      const setButton = (state) => {
+        if (!(submitButton instanceof HTMLButtonElement)) return;
+        submitButton.classList.remove('is-loading', 'is-success', 'is-error');
+        if (state === 'loading') {
+          submitButton.classList.add('is-loading');
+          submitButton.textContent = '送信中...';
+        } else if (state === 'success') {
+          submitButton.classList.add('is-success');
+          submitButton.textContent = '✓ 送信しました';
+        } else if (state === 'error') {
+          submitButton.classList.add('is-error');
+          submitButton.textContent = '送信失敗';
+        } else {
+          submitButton.textContent = '送信する';
+        }
+      };
+
+      const revealFallback = (show) => {
+        if (!(fallback instanceof HTMLElement)) return;
+        fallback.hidden = !show;
+      };
+
+      contactForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        revealFallback(false);
+
+        if (!contactForm.reportValidity()) {
+          setStatus('入力内容を確認してください。', 'error');
+          setButton('error');
+          setTimeout(() => setButton('idle'), 1000);
+          return;
+        }
+
+        const formData = new FormData(contactForm);
+        if (String(formData.get('website') || '').trim().length > 0) {
+          return;
+        }
+
+        const payload = {
+          name: String(formData.get('name') || '').trim(),
+          email: String(formData.get('email') || '').trim(),
+          message: String(formData.get('message') || '').trim(),
+          source: window.location.href,
+          submittedAt: new Date().toISOString(),
+        };
+
+        if (submitButton instanceof HTMLButtonElement) {
+          submitButton.disabled = true;
+        }
+
+        setButton('loading');
+        setStatus('送信処理を実行しています。', 'idle');
+
+        try {
+          if (endpoint) {
+            const response = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+              throw new Error(`Request failed: ${response.status}`);
+            }
+
+            contactForm.reset();
+            setButton('success');
+            setStatus('✓ 送信しました。24時間以内にご連絡します。', 'success');
+          } else if (fallbackEmail) {
+            const subject = encodeURIComponent(`[APDW] ${payload.name} 様よりお問い合わせ`);
+            const body = encodeURIComponent(
+              [
+                `お名前: ${payload.name}`,
+                `メール: ${payload.email}`,
+                '',
+                payload.message,
+                '',
+                `送信元: ${payload.source}`,
+                `送信時刻: ${payload.submittedAt}`,
+              ].join('\n'),
+            );
+            window.location.href = `mailto:${fallbackEmail}?subject=${subject}&body=${body}`;
+            setButton('success');
+            setStatus('✓ 送信しました。24時間以内にご連絡します。', 'success');
+          } else {
+            throw new Error('No contact destination configured.');
+          }
+        } catch (error) {
+          console.error(error);
+          setButton('error');
+          setStatus('送信に失敗しました。メールでお問い合わせください。', 'error');
+          revealFallback(true);
+          setTimeout(() => setButton('idle'), 1400);
+        } finally {
+          if (submitButton instanceof HTMLButtonElement) {
+            submitButton.disabled = false;
+          }
+        }
+      });
+    })();
+  </script>
+</section>

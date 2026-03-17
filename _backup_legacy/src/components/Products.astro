@@ -1,0 +1,86 @@
+---
+import { existsSync } from 'node:fs';
+
+interface ProductItem {
+  name: string;
+  subtitle: string;
+  description: string;
+  href: string;
+  linkLabel: string;
+  logo?: string;
+  visual?: string;
+  status: string;
+  featured?: boolean;
+}
+
+interface Props {
+  products: ProductItem[];
+}
+
+const { products } = Astro.props as Props;
+
+const featured = products.find((item) => item.featured) ?? products[0];
+const secondary = products.filter((item) => item !== featured).slice(0, 2);
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path?: string) => (path ? `${basePath}${path}` : undefined);
+const hasPublicAsset = (path?: string) => {
+  if (!path) return false;
+  const normalized = path.replace(/^\//, '');
+  return existsSync(new URL(`../../public/${normalized}`, import.meta.url));
+};
+---
+
+<section id="products" class="section-space products-focus-section">
+  <div class="site-container">
+    <h2 class="products-heading" data-reveal>
+      <span class="en">AI PRODUCTS.</span>
+      <span class="ja">自社開発のAIツール。</span>
+    </h2>
+
+    {featured && (
+      <article class="product-featured-card">
+        <div class="product-featured-copy">
+          <p>Featured</p>
+          <h3>{featured.name}</h3>
+          <p>{featured.description}</p>
+          <a href={featured.href} target="_blank" rel="noopener noreferrer">詳しく見る →</a>
+        </div>
+
+        <div class="product-featured-visual">
+          {hasPublicAsset(featured.logo) && (
+            <img
+              src={toPublicPath(featured.logo)}
+              alt={`${featured.name} ロゴ`}
+              class="product-featured-logo"
+              loading="lazy"
+              width="320"
+              height="140"
+            />
+          )}
+          {hasPublicAsset(featured.visual) && (
+            <img
+              src={toPublicPath(featured.visual)}
+              alt={`${featured.name} 画面イメージ`}
+              class="product-featured-screen"
+              loading="lazy"
+              width="1280"
+              height="800"
+            />
+          )}
+        </div>
+      </article>
+    )}
+
+    <div class="product-secondary-grid" data-reveal-stagger>
+      {secondary.map((product) => (
+        <article class="product-secondary-card">
+          <h3>{product.name}</h3>
+          <p>{product.description}</p>
+        </article>
+      ))}
+    </div>
+
+    <p class="products-bridge" data-bridge>テクノロジーを動かすのは、<br />人間だ。</p>
+  </div>
+</section>

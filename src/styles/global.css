@@ -62,11 +62,16 @@ h1, h2, h3, h4 {
   }
 }
 
+/*
+ * Inline .dividing-line elements are structural grid spacers only.
+ * The VISUAL line is the fixed overlay (#dividing-line).
+ * These elements are transparent — they hold the 1px grid column.
+ */
 .dividing-line {
   display: none;
-  background-color: var(--color-accent-decorative);
   width: 1px;
   min-height: 100%;
+  background-color: transparent;
 }
 
 @media (min-width: 768px) {
@@ -76,10 +81,6 @@ h1, h2, h3, h4 {
 .dark-space {
   background-color: var(--color-surface-dark);
   color: var(--color-ink-dark);
-}
-
-.dark-space .dividing-line {
-  background-color: var(--color-accent-dark);
 }
 
 @media (prefers-reduced-motion: reduce) {

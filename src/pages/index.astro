@@ -25,59 +25,71 @@ import Footer from '../components/Footer.astro';
   <Footer />
 
   <script>
-    import { initLineSystem } from '../lib/line-system';
+    import { initLineSystem, destroyLineSystem } from '../lib/line-system';
     import { gsap } from 'gsap';
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
     import Lenis from 'lenis';
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Smooth scroll with Lenis
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    });
+    let lenis: Lenis | null = null;
 
-    // CRITICAL: Connect Lenis to GSAP ScrollTrigger so scroll events fire correctly
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-    gsap.ticker.lagSmoothing(0);
+    function init() {
+      // Clean up previous instances (View Transitions re-entry)
+      if (lenis) { lenis.destroy(); lenis = null; }
+      destroyLineSystem();
 
-    // Line system (desktop only)
-    if (window.matchMedia('(min-width: 768px)').matches) {
-      initLineSystem();
+      // Smooth scroll
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      });
+
+      // Connect Lenis ↔ GSAP ScrollTrigger
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => {
+        lenis!.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
+
+      // Line system (desktop only)
+      if (window.matchMedia('(min-width: 768px)').matches) {
+        initLineSystem();
+      }
+
+      // Header space awareness
+      const header = document.getElementById('site-header');
+      const darkSections = document.querySelectorAll('.dark-space');
+      if (header && darkSections.length > 0) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const isInDark = entries.some(e => e.isIntersecting);
+            header.setAttribute('data-space', isInDark ? 'dark' : 'light');
+          },
+          { rootMargin: '-64px 0px -90% 0px' }
+        );
+        darkSections.forEach(el => observer.observe(el));
+      }
+
+      // Scroll reveals
+      document.querySelectorAll('.reveal').forEach(el => {
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.disconnect();
+            }
+          },
+          { threshold: 0.1 }
+        );
+        observer.observe(el);
+      });
     }
 
-    // Header space awareness
-    const header = document.getElementById('site-header');
-    const darkSections = document.querySelectorAll('.dark-space');
+    // Initial load
+    init();
 
-    if (header && darkSections.length > 0) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          const isInDark = entries.some(e => e.isIntersecting);
-          header.setAttribute('data-space', isInDark ? 'dark' : 'light');
-        },
-        { rootMargin: '-64px 0px -90% 0px' }
-      );
-      darkSections.forEach(el => observer.observe(el));
-    }
-
-    // Scroll reveals
-    const revealElements = document.querySelectorAll('.reveal');
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            revealObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    revealElements.forEach(el => revealObserver.observe(el));
+    // Re-init after View Transitions page swap
+    document.addEventListener('astro:after-swap', init);
   </script>
 </Layout>

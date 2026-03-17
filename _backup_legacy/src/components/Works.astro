@@ -1,0 +1,67 @@
+---
+import type { WorkItem } from '../lib/content';
+
+interface Props {
+  works: WorkItem[];
+}
+
+const { works } = Astro.props as Props;
+
+// Select top 5 works for the featured grid
+const sortedWorks = [...works].sort((a, b) => b.year - a.year || a.title.localeCompare(b.title, 'ja'));
+const selectedWorks = sortedWorks.slice(0, 5);
+
+const fallbackImages = [
+  '/assets/work-yacht-club.jpg',
+  '/assets/work-kotsubo-market.jpg',
+  '/assets/work-shimouma-residence.jpg',
+  '/assets/hero-bg.jpg',
+];
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path: string) => `${basePath}${path}`;
+
+const resolveImage = (item: WorkItem, index: number) => {
+  if (item.image) return toPublicPath(item.image);
+  return toPublicPath(fallbackImages[index % fallbackImages.length]);
+};
+---
+
+<section id="works" class="works-section">
+  <div class="site-container">
+    <div class="works-heading">
+      <h2 data-reveal>
+        <span class="en">SELECTED WORKS.</span>
+        <span class="ja">選ばれた仕事。</span>
+      </h2>
+    </div>
+
+    <div class="works-grid">
+      {selectedWorks.map((work, index) => (
+        <article class="work-card" data-reveal data-reveal-stagger style={`--index: ${index}`}>
+          <img
+            src={resolveImage(work, index)}
+            alt={`${work.title} の写真`}
+            loading="lazy"
+            width="1200"
+            height="800"
+          />
+          <div class="work-overlay">
+            <p>{work.region} / {work.year}</p>
+            <h3>{work.title}</h3>
+            {work.storyline && <span class="work-storyline">{work.storyline}</span>}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="works-bridge">
+      <a href="/works" class="works-cta" data-reveal>すべてのプロジェクトを見る →</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initScrollReveal } from '../lib/scrollReveal';
+  initScrollReveal();
+</script>

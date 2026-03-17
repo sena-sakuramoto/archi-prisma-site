@@ -1,0 +1,40 @@
+---
+import Layout from '../layouts/main.astro';
+import { loadWorks } from '../lib/content';
+
+const works = await loadWorks();
+const sortedWorks = [...works].sort((a, b) => b.year - a.year || a.title.localeCompare(b.title, 'ja'));
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path: string) => `${basePath}${path}`;
+const pageTitle = 'Works | Archi-Prisma Design works';
+const pageDescription = 'Archi-Prisma Design works の全プロジェクト一覧。';
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <section class="section-space bg-bg">
+    <div class="site-container">
+      <p class="section-eyebrow">Works Archive</p>
+      <h1 class="section-title">全プロジェクト一覧</h1>
+      <p class="section-summary">公開可能な案件を年代順に掲載しています。</p>
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {sortedWorks.map((work) => (
+          <article class="rounded-xl border border-surface-200 bg-white p-4">
+            {work.image && (
+              <img
+                src={toPublicPath(work.image)}
+                alt={`${work.title} の写真`}
+                class="mb-4 aspect-[3/2] w-full rounded-lg object-cover"
+                loading="lazy"
+              />
+            )}
+            <p class="text-xs uppercase tracking-[0.12em] text-surface-500">{work.year} / {work.type}</p>
+            <h2 class="mt-2 text-xl font-semibold text-surface-900">{work.title}</h2>
+            <p class="mt-2 text-sm text-surface-600">{work.region} / {work.phase}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

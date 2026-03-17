@@ -1,0 +1,23 @@
+{
+  "companies": [
+    {
+      "name": "archisoft株式会社",
+      "area": "BIMソリューション販売・導入支援",
+      "logo": "/assets/partners/archisoft-logo.jpeg",
+      "logoAlt": "archisoft株式会社 ロゴ",
+      "logoScale": 1.5
+    },
+    {
+      "name": "株式会社ランドカラー",
+      "area": "不動産業",
+      "logo": "/assets/partners/landcolor-logo.gif",
+      "logoAlt": "株式会社ランドカラー ロゴ"
+    },
+    {
+      "name": "株式会社建築構造研究所（BSI）",
+      "area": "構造設計・耐震診断・解析・3D模型・産業連携",
+      "logo": "/assets/partners/bsi-logo.png",
+      "logoAlt": "株式会社建築構造研究所（BSI） ロゴ"
+    }
+  ]
+}

@@ -1,0 +1,609 @@
+---
+import { existsSync } from 'node:fs';
+import '../styles/global.css';
+import { primaryNavItems, footerNavItems, fullscreenNavItems } from '../lib/navigation.mjs';
+
+interface PartnerLogo {
+  name: string;
+  logo?: string;
+  logoAlt?: string;
+  logoScale?: number;
+}
+
+interface LayoutProps {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
+  partnerLogos?: PartnerLogo[];
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage = '/og-image.png',
+  structuredData,
+  partnerLogos = [],
+} = Astro.props as LayoutProps;
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path: string) => `${basePath}${path}`;
+
+const siteUrl = Astro.site;
+const siteOrigin = siteUrl ? siteUrl.origin : '';
+const sitePathname = siteUrl ? siteUrl.pathname.replace(/\/$/, '') : '';
+const siteBase = `${siteOrigin}${sitePathname}`;
+
+const pageUrl = canonical ?? (siteBase ? `${siteBase}${Astro.url.pathname}` : undefined);
+const resolvedOgImage =
+  ogImage && /^https?:\/\//.test(ogImage)
+    ? ogImage
+    : ogImage
+      ? siteBase
+        ? `${siteBase}${toPublicPath(ogImage)}`
+        : toPublicPath(ogImage)
+      : undefined;
+
+const faviconHref = toPublicPath('/favicon.svg');
+const heroPosterHref = toPublicPath('/assets/hero-poster.webp');
+
+const hasPublicAsset = (path?: string) => {
+  if (!path) return false;
+  const normalized = path.replace(/^\//, '');
+  return existsSync(new URL(`../../public/${normalized}`, import.meta.url));
+};
+
+const footerPartners = partnerLogos
+  .filter((partner) => hasPublicAsset(partner.logo))
+  .map((partner) => ({
+    ...partner,
+    logo: partner.logo ? toPublicPath(partner.logo) : undefined,
+  }));
+
+const menuItems = fullscreenNavItems.map((item) => ({
+  ...item,
+  previewSrc: item.preview && hasPublicAsset(item.preview) ? toPublicPath(item.preview) : undefined,
+}));
+
+const initialMenuPreview = menuItems.find((item) => item.previewSrc) ?? menuItems[0];
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href={faviconHref} />
+    <meta name="theme-color" content="#0f0f0e" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    {pageUrl && <link rel="canonical" href={pageUrl} />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {pageUrl && <meta property="og:url" content={pageUrl} />}
+    {resolvedOgImage && <meta property="og:image" content={resolvedOgImage} />}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {resolvedOgImage && <meta name="twitter:image" content={resolvedOgImage} />}
+
+    <style>
+      html {
+        background: var(--color-bg, #FAF8F4);
+        color: var(--color-text, #1B1916);
+      }
+      .loader {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-bg, #FAF8F4);
+      }
+      .loader-mark {
+        font-size: 32px;
+        letter-spacing: 0.15em;
+        font-family: "Playfair Display", serif;
+        color: var(--color-text, #1B1916);
+        animation: loader-breathe 1.5s ease-in-out infinite;
+      }
+      @keyframes loader-breathe {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      .loader.is-done {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 400ms ease;
+      }
+    </style>
+
+    <noscript>
+      <style>
+        .loader {
+          display: none !important;
+        }
+        .site-body.is-loading .hero-title-en,
+        .site-body.is-loading .hero-title-ja,
+        .site-body.is-loading .hero-sub,
+        .site-body.is-loading .hero-cta {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
+
+    <link rel="preload" href={heroPosterHref} as="image" fetchpriority="high" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap"
+    />
+
+    {structuredData && (
+      <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    )}
+  </head>
+
+  <body class="site-body is-loading bg-bg text-text antialiased">
+    <div class="loader" id="loader" data-poster={heroPosterHref}>
+      <span class="loader-mark">AP</span>
+    </div>
+
+    <header class="site-header" data-site-header>
+      <div class="site-container site-header-row">
+        <a href="#hero" class="site-monogram" aria-label="Archi-Prisma Design works ホームへ">
+          AP
+        </a>
+
+        <nav class="site-primary-nav" aria-label="主要ナビゲーション">
+          {primaryNavItems.map((item) => (
+            <a href={item.href}>{item.label}</a>
+          ))}
+        </nav>
+
+        <button
+          type="button"
+          class="site-menu-toggle"
+          aria-label="メニューを開く"
+          aria-expanded="false"
+          aria-controls="fullscreen-menu"
+          data-menu-toggle
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <div id="fullscreen-menu" class="fullscreen-menu" aria-hidden="true" data-fullscreen-menu>
+      <button class="menu-close" type="button" aria-label="メニューを閉じる" data-menu-close>✕</button>
+      <nav class="menu-nav" aria-label="フルスクリーンナビゲーション">
+        {menuItems.map((item, index) => (
+          <a
+            href={item.href}
+            style={`--index:${index};`}
+            data-menu-link
+            data-menu-preview-src={item.previewSrc}
+            data-menu-preview-title={item.label}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <div class="menu-preview" aria-hidden="true">
+        {initialMenuPreview?.previewSrc && (
+          <img
+            src={initialMenuPreview.previewSrc}
+            alt={`${initialMenuPreview.label} preview`}
+            width="1200"
+            height="800"
+            data-menu-preview-image
+          />
+        )}
+        <p data-menu-preview-title>{initialMenuPreview?.label ?? ''}</p>
+      </div>
+
+      <div class="menu-footer">
+        <a href="mailto:contact@archi-prisma.co.jp">contact@archi-prisma.co.jp</a>
+        <div class="menu-social">
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://x.com/" target="_blank" rel="noopener noreferrer">X</a>
+        </div>
+        <small class="menu-copyright">© {new Date().getFullYear()} Archi-Prisma Design works</small>
+        <small class="menu-license">一級建築士事務所 東京都知事登録 第6108号</small>
+      </div>
+    </div>
+
+    <main>
+      <slot />
+    </main>
+
+    <button class="mobile-sticky-cta" type="button" data-mobile-cta hidden>お問い合わせ →</button>
+
+    <div class="custom-cursor" aria-hidden="true" data-custom-cursor hidden>
+      <span data-cursor-label></span>
+    </div>
+
+    <footer class="site-footer">
+      <div class="site-container section-space footer-shell">
+        <div class="footer-grid">
+          <div class="footer-company">
+            <p class="footer-company-mark">AP</p>
+            <p class="footer-company-name">Archi-Prisma Design works</p>
+            <a class="footer-contact-link" href="mailto:contact@archi-prisma.co.jp">
+              contact@archi-prisma.co.jp
+            </a>
+            <div class="footer-social">
+              <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="https://x.com/" target="_blank" rel="noopener noreferrer">X</a>
+            </div>
+            <p class="footer-license">一級建築士事務所 東京都知事登録 第6108号</p>
+          </div>
+
+          <nav class="footer-nav" aria-label="フッターナビゲーション">
+            {footerNavItems.map((item) => (
+              <a href={item.href}>{item.label}</a>
+            ))}
+          </nav>
+        </div>
+
+        {footerPartners.length > 0 && (
+          <div class="footer-partners" aria-label="パートナー企業">
+            {footerPartners.map((partner) => (
+              <figure class="footer-partner-logo">
+                <img
+                  src={partner.logo}
+                  alt={partner.logoAlt ?? `${partner.name} ロゴ`}
+                  loading="lazy"
+                  style={partner.logoScale ? `--logo-scale:${partner.logoScale};` : undefined}
+                />
+              </figure>
+            ))}
+          </div>
+        )}
+
+        <div class="footer-bottom">
+          <p>© {new Date().getFullYear()} Archi-Prisma Design works</p>
+          <a href="/security-policy">情報セキュリティ基本方針</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      import { initSmoothScroll } from '../lib/smoothScroll';
+      import { initScrollAnimations } from '../lib/scrollAnimations';
+      import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+      (() => {
+        const smoothScroll = initSmoothScroll();
+        void initScrollAnimations().catch((error) => {
+          console.error('[layout] scroll animation init failed', error);
+        });
+
+        // Refresh pin calculations after all images/assets have loaded
+        window.addEventListener('load', () => {
+          ScrollTrigger.refresh();
+        });
+
+        const loader = document.getElementById('loader');
+        const heroPosterSrc = loader instanceof HTMLElement ? (loader.dataset.poster ?? '') : '';
+        let pageReady = false;
+
+        const markPageReady = () => {
+          if (pageReady) return;
+          pageReady = true;
+          loader?.classList.add('is-done');
+          document.body.classList.remove('is-loading');
+          document.body.classList.add('site-ready');
+          document.dispatchEvent(new CustomEvent('site-ready'));
+        };
+
+        if (heroPosterSrc.length > 0) {
+          const preloadImage = new Image();
+          preloadImage.src = heroPosterSrc;
+          preloadImage.onload = markPageReady;
+        }
+
+        window.setTimeout(markPageReady, 3000);
+
+        const header = document.querySelector('[data-site-header]');
+        const menu = document.querySelector('[data-fullscreen-menu]');
+        const toggle = document.querySelector('[data-menu-toggle]');
+        const closeButton = document.querySelector('[data-menu-close]');
+        const main = document.querySelector('main');
+        const footer = document.querySelector('footer');
+        const contactSection = document.querySelector('#contact');
+        const mobileCta = document.querySelector('[data-mobile-cta]');
+        const customCursor = document.querySelector('[data-custom-cursor]');
+        const cursorLabel = document.querySelector('[data-cursor-label]');
+        const menuLinks = Array.from(document.querySelectorAll('[data-menu-link]')).filter(
+          (node) => node instanceof HTMLAnchorElement,
+        );
+        const previewImage = document.querySelector('[data-menu-preview-image]');
+        const previewTitle = document.querySelector('[data-menu-preview-title]');
+
+        if (!(header instanceof HTMLElement)) return;
+
+        const syncHeader = () => {
+          header.classList.toggle('is-scrolled', window.scrollY > 10);
+        };
+
+        syncHeader();
+        window.addEventListener('scroll', syncHeader, { passive: true });
+
+        if (!(menu instanceof HTMLElement) || !(toggle instanceof HTMLButtonElement)) return;
+
+        const focusableSelector =
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+        let lastFocusedElement = null;
+
+        const getFocusable = () =>
+          Array.from(menu.querySelectorAll(focusableSelector)).filter((node) => node instanceof HTMLElement);
+
+        const setMenuState = (open) => {
+          menu.classList.toggle('open', open);
+          menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          toggle.classList.toggle('is-open', open);
+          header.classList.toggle('is-menu-open', open);
+          document.body.style.overflow = open ? 'hidden' : '';
+          if (open) {
+            smoothScroll.stop();
+          } else {
+            smoothScroll.start();
+          }
+
+          [main, footer].forEach((node) => {
+            if (!(node instanceof HTMLElement)) return;
+            if (open) {
+              node.setAttribute('aria-hidden', 'true');
+              node.setAttribute('inert', '');
+            } else {
+              node.removeAttribute('aria-hidden');
+              node.removeAttribute('inert');
+            }
+          });
+
+          if (open) {
+            lastFocusedElement = document.activeElement;
+            const first = getFocusable()[0];
+            if (first instanceof HTMLElement) {
+              first.focus();
+            }
+          } else if (lastFocusedElement instanceof HTMLElement) {
+            lastFocusedElement.focus();
+          }
+        };
+
+        const closeMenu = () => setMenuState(false);
+        const openMenu = () => setMenuState(true);
+
+        toggle.addEventListener('click', () => {
+          const isOpen = menu.classList.contains('open');
+          if (isOpen) {
+            closeMenu();
+          } else {
+            openMenu();
+          }
+        });
+
+        if (closeButton instanceof HTMLButtonElement) {
+          closeButton.addEventListener('click', closeMenu);
+        }
+
+        menu.addEventListener('pointerdown', (event) => {
+          if (event.target === menu) {
+            closeMenu();
+          }
+        });
+
+        menu.querySelectorAll('a[href^="#"]').forEach((link) => {
+          if (!(link instanceof HTMLAnchorElement)) return;
+          link.addEventListener('click', (event) => {
+            event.preventDefault();
+            const targetId = link.getAttribute('href') || '';
+            const target = targetId ? document.querySelector(targetId) : null;
+            closeMenu();
+            if (target instanceof HTMLElement) {
+              smoothScroll.scrollTo(target, -72);
+            }
+          });
+        });
+
+        const setPreview = (link) => {
+          if (!(link instanceof HTMLAnchorElement)) return;
+          const src = link.dataset.menuPreviewSrc;
+          const title = link.dataset.menuPreviewTitle || '';
+
+          if (previewImage instanceof HTMLImageElement && src) {
+            previewImage.src = src;
+            previewImage.alt = `${title} preview`;
+          }
+
+          if (previewTitle instanceof HTMLElement) {
+            previewTitle.textContent = title;
+          }
+        };
+
+        menuLinks.forEach((link) => {
+          link.addEventListener('mouseenter', () => setPreview(link));
+          link.addEventListener('focus', () => setPreview(link));
+        });
+
+        if (mobileCta instanceof HTMLButtonElement) {
+          const updateMobileCta = () => {
+            const isMobile = window.matchMedia('(max-width: 1024px)').matches;
+            if (!isMobile) {
+              mobileCta.hidden = true;
+              return;
+            }
+
+            const scrollDepth = window.scrollY / Math.max(document.body.scrollHeight - window.innerHeight, 1);
+            const contactVisible =
+              contactSection instanceof HTMLElement
+                ? contactSection.getBoundingClientRect().top < window.innerHeight &&
+                  contactSection.getBoundingClientRect().bottom > 0
+                : false;
+
+            mobileCta.hidden = !(scrollDepth > 0.5 && !contactVisible);
+          };
+
+          updateMobileCta();
+          window.addEventListener('scroll', updateMobileCta, { passive: true });
+          window.addEventListener('resize', updateMobileCta, { passive: true });
+
+          mobileCta.addEventListener('click', () => {
+            if (contactSection instanceof HTMLElement) {
+              smoothScroll.scrollTo(contactSection, -72);
+            }
+          });
+        }
+
+        if (
+          customCursor instanceof HTMLElement &&
+          cursorLabel instanceof HTMLElement &&
+          window.matchMedia('(pointer: fine)').matches &&
+          window.matchMedia('(min-width: 1025px)').matches
+        ) {
+          customCursor.hidden = false;
+          let cursorX = window.innerWidth / 2;
+          let cursorY = window.innerHeight / 2;
+          let idleTimer = 0;
+
+          const clearCursorState = () => {
+            customCursor.classList.remove('is-link', 'is-view');
+            cursorLabel.textContent = '';
+          };
+
+          const scheduleIdle = () => {
+            window.clearTimeout(idleTimer);
+            customCursor.classList.remove('is-idle');
+            idleTimer = window.setTimeout(() => {
+              customCursor.classList.add('is-idle');
+            }, 5000);
+          };
+
+          const renderCursor = () => {
+            customCursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
+            requestAnimationFrame(renderCursor);
+          };
+          requestAnimationFrame(renderCursor);
+
+          document.addEventListener(
+            'pointermove',
+            (event) => {
+              scheduleIdle();
+              customCursor.classList.remove('is-idle');
+              cursorX = event.clientX;
+              cursorY = event.clientY;
+            },
+            { passive: true },
+          );
+
+          scheduleIdle();
+
+          const linkTargets = Array.from(document.querySelectorAll('a, button')).filter(
+            (node) => node instanceof HTMLElement,
+          );
+          linkTargets.forEach((target) => {
+            target.addEventListener('mouseenter', () => {
+              customCursor.classList.add('is-active', 'is-link');
+            });
+            target.addEventListener('mouseleave', () => {
+              customCursor.classList.remove('is-active');
+              clearCursorState();
+            });
+          });
+
+          const workCards = Array.from(document.querySelectorAll('.work-card')).filter(
+            (node) => node instanceof HTMLElement,
+          );
+          workCards.forEach((target) => {
+            target.addEventListener('mouseenter', () => {
+              customCursor.classList.add('is-active', 'is-view');
+              cursorLabel.textContent = 'View';
+            });
+            target.addEventListener('mouseleave', () => {
+              customCursor.classList.remove('is-active', 'is-view');
+              cursorLabel.textContent = '';
+            });
+          });
+
+          document.querySelectorAll('input, textarea').forEach((field) => {
+            if (!(field instanceof HTMLElement)) return;
+            field.addEventListener('mouseenter', () => customCursor.classList.add('is-hidden'));
+            field.addEventListener('mouseleave', () => customCursor.classList.remove('is-hidden'));
+          });
+
+          const heroCanvasArea = document.querySelector('.hero-canvas-slot');
+          if (heroCanvasArea instanceof HTMLElement) {
+            heroCanvasArea.addEventListener('mouseenter', () => {
+              customCursor.classList.remove('is-active');
+              clearCursorState();
+            });
+          }
+
+          document.addEventListener('pointerdown', () => {
+            scheduleIdle();
+          });
+
+          document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+              customCursor.classList.add('is-idle');
+            } else {
+              scheduleIdle();
+            }
+          });
+        }
+
+        document.addEventListener('keydown', (event) => {
+          if (!menu.classList.contains('open')) return;
+
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            closeMenu();
+            return;
+          }
+
+          if (event.key !== 'Tab') return;
+
+          const focusable = getFocusable();
+          if (focusable.length === 0) return;
+
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          const active = document.activeElement;
+
+          if (event.shiftKey && active === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && active === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        });
+
+        window.addEventListener('pagehide', () => {
+          smoothScroll.destroy();
+        });
+      })();
+    </script>
+  </body>
+</html>

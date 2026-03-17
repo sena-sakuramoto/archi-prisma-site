@@ -1,0 +1,57 @@
+---
+interface MethodBadge {
+  label: string;
+  state?: 'live' | 'community' | 'developing' | 'partner';
+}
+
+interface MethodStep {
+  id: string;
+  number: string;
+  focus: string;
+  title: string;
+  summary: string;
+  deliverables: string[];
+  badges: MethodBadge[];
+}
+
+interface Props {
+  steps: MethodStep[];
+}
+
+const { steps } = Astro.props as Props;
+---
+
+<section id="method" class="method-scroll-section section-space-lg">
+  <div class="site-container">
+    <div class="method-heading">
+      <h2 data-reveal>
+        <span class="en">HOW WE WORK.</span>
+        <span class="ja">私たちの方法論。</span>
+      </h2>
+    </div>
+
+    <div class="method-vertical-track">
+      {steps.map((step, index) => (
+        <article class="method-step-card" data-reveal data-reveal-stagger style={`--index: ${index}`}>
+          <div class="method-step-header">
+            <p class="method-card-index">{step.number}</p>
+            <p class="method-card-focus">{step.focus}</p>
+          </div>
+          <div class="method-step-body">
+            <h3>{step.title}</h3>
+            <p class="method-card-summary">{step.summary}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="method-bridge">
+      <p data-bridge>このプロセスを加速させる、<br />自社開発のAI。</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initScrollReveal } from '../lib/scrollReveal';
+  initScrollReveal();
+</script>

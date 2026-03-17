@@ -1,0 +1,174 @@
+---
+import Layout from '../layouts/main.astro';
+import Hero from '../components/Hero.astro';
+import SignatureExperience from '../components/SignatureExperience.astro';
+import Works from '../components/Works.astro';
+import Method from '../components/Method.astro';
+import Products from '../components/Products.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+import { loadWorks, loadTeam, loadPartners, loadContact } from '../lib/content';
+import { signatureTracks } from '../lib/signatureTracks.mjs';
+
+const [works, team, partners, contact] = await Promise.all([
+  loadWorks(),
+  loadTeam(),
+  loadPartners(),
+  loadContact(),
+]);
+
+const pageTitle = 'Archi-Prisma Design works | AI × 建築で心を動かす設計事務所';
+const pageDescription =
+  'Archi-Prisma Design works は、企画から運用までを一貫して設計するAI建築事務所です。';
+
+const companyName = 'Archi-Prisma Design works株式会社';
+const canonicalUrl = 'https://archi-prisma.co.jp/';
+const address = {
+  '@type': 'PostalAddress',
+  streetAddress: '東京都品川区上大崎2-6-7 SMA白金長者丸301',
+  postalCode: '141-0021',
+  addressLocality: '品川区',
+  addressRegion: '東京都',
+  addressCountry: 'JP',
+};
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: companyName,
+    description: pageDescription,
+    url: canonicalUrl,
+    logo: 'https://archi-prisma.co.jp/og-image.png',
+    address,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ArchitectureFirm',
+    name: companyName,
+    description: pageDescription,
+    url: canonicalUrl,
+    logo: 'https://archi-prisma.co.jp/og-image.png',
+    address,
+  },
+];
+
+const products = [
+  {
+    name: 'AICommander',
+    subtitle: 'Featured Product',
+    description: '建築設計AIアシスタント。設計から申請書類まで、AIが加速する。',
+    href: 'https://archi-prisma.co.jp/#contact',
+    linkLabel: '詳しく見る →',
+    logo: '/assets/products/aicommander-icon.png',
+    visual: '/assets/products/aicommander-screen.png',
+    status: '運用中',
+    featured: true,
+  },
+  {
+    name: 'KOZO',
+    subtitle: 'Structural Intelligence',
+    description: '構造計算を、AIで。',
+    href: 'https://archi-prisma.co.jp/#contact',
+    linkLabel: '導入相談',
+    logo: '/assets/products/kozo-logo.png',
+    status: '開発中',
+  },
+  {
+    name: '楽々省エネ計算',
+    subtitle: 'Sustainability Workflow',
+    description: '省エネ計算を自動化。',
+    href: 'https://archi-prisma.co.jp/#contact',
+    linkLabel: '導入相談',
+    logo: '/assets/products/rakuraku-logo.png',
+    status: '開発中',
+  },
+];
+
+const methodSteps = [
+  {
+    id: 'hearing',
+    number: '01',
+    focus: 'Hearing',
+    title: 'ヒアリング',
+    summary: '課題と理想を言語化する。',
+    deliverables: ['目的と制約条件の言語化'],
+    badges: [{ label: 'Discovery', state: 'live' }],
+  },
+  {
+    id: 'analysis',
+    number: '02',
+    focus: 'Analysis',
+    title: '分析',
+    summary: 'データとコンテキストを読み解く。',
+    deliverables: ['課題構造の整理と優先順位付け'],
+    badges: [{ label: 'Insight', state: 'live' }],
+  },
+  {
+    id: 'design',
+    number: '03',
+    focus: 'Design',
+    title: '設計',
+    summary: '空間に思想を落とし込む。',
+    deliverables: ['空間・体験・技術の統合設計'],
+    badges: [{ label: 'Architecture', state: 'live' }],
+  },
+  {
+    id: 'build',
+    number: '04',
+    focus: 'Build',
+    title: '実施',
+    summary: '図面を現実にする。',
+    deliverables: ['実装・監理・品質統制'],
+    badges: [{ label: 'Execution', state: 'live' }],
+  },
+  {
+    id: 'operate',
+    number: '05',
+    focus: 'Operate',
+    title: '運用',
+    summary: 'つくった後も、伴走する。',
+    deliverables: ['公開後の運用改善と継続支援'],
+    badges: [{ label: 'Operation', state: 'community' }],
+  },
+];
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonical={canonicalUrl}
+  structuredData={structuredData}
+  partnerLogos={partners.companies}
+>
+  <!-- Scene 1: Opening (Hero only) -->
+  <div data-scene="opening" class="scene-opening">
+    <Hero registration="一級建築士事務所 東京都知事登録 第6108号" />
+  </div>
+
+  <!-- Scene 2: Signature -->
+  <div data-scene="journey" class="scene-journey">
+    <SignatureExperience tracks={signatureTracks} />
+  </div>
+
+  <!-- Scene 3: Works -->
+  <div data-scene="gallery" class="scene-gallery">
+    <Works works={works} />
+  </div>
+
+  <!-- Scene 4: Method -->
+  <div data-scene="chapters" class="scene-chapters">
+    <Method steps={methodSteps} />
+  </div>
+
+  <!-- Scene 5: Products -->
+  <Products products={products} />
+
+  <!-- Scene 6: About -->
+  <div data-scene="portraits" class="scene-portraits">
+    <About team={team} partners={partners.companies} />
+  </div>
+
+  <!-- Scene 7: Contact -->
+  <Contact address={contact.address} />
+</Layout>

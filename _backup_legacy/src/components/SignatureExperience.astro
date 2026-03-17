@@ -1,0 +1,144 @@
+---
+import { signatureTracks } from '../lib/signatureTracks.mjs';
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path: string) => `${basePath}${path}`;
+---
+
+<section id="signature" class="signature-section" data-signature-section>
+  <!-- Intro -->
+  <div class="sig-intro">
+    <p class="sig-eyebrow" data-reveal>OUR PROCESS</p>
+    <h2>
+      <span class="en" data-reveal>FROM STRATEGY TO OPERATION.</span>
+      <span class="ja" data-reveal>企画から、運用まで。</span>
+    </h2>
+    <p data-reveal>
+      ひとつの会社が、6つの専門領域を横断する。<br />
+      だから、一貫した体験が生まれる。
+    </p>
+  </div>
+
+  <!-- Phases -->
+  <div class="sig-phases">
+    {
+      signatureTracks.map((track, i) => (
+        <div class="sig-phase" id={`phase-${track.id}`} data-phase-index={i}>
+          <div class="sig-phase-inner">
+            <div class="sig-phase-image" data-reveal>
+              <img
+                src={toPublicPath(track.image)}
+                alt={`${track.phaseJa}のイメージ`}
+                loading="lazy"
+                width="800"
+                height="600"
+              />
+            </div>
+            <div class="sig-phase-content">
+              <span class="sig-phase-num" data-reveal>
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="sig-phase-title" data-reveal>
+                <span class="ja">{track.phaseJa}</span>
+                <span class="en">/ {track.phaseEn}</span>
+              </h3>
+              <p class="sig-phase-summary" data-reveal>
+                {track.summary}
+              </p>
+              <ul class="sig-phase-caps" data-reveal>
+                {track.capabilities.map((cap) => (
+                  <li>{cap}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Progress Indicators -->
+  <nav class="sig-progress" aria-label="Process navigation">
+    {
+      signatureTracks.map((_, i) => (
+        <button
+          type="button"
+          class="sig-dot"
+          aria-label={`Go to phase ${i + 1}`}
+          aria-current={i === 0 ? 'step' : 'false'}
+          data-target-index={i}
+        />
+      ))
+    }
+  </nav>
+</section>
+
+<script>
+  import { initScrollReveal } from '../lib/scrollReveal';
+
+  // Initialize scroll reveal for this section
+  initScrollReveal();
+
+  const section = document.querySelector('[data-signature-section]');
+  const phases = document.querySelectorAll('.sig-phase');
+  const dots = document.querySelectorAll('.sig-dot');
+  const progressNav = document.querySelector('.sig-progress');
+
+  if (section && phases.length > 0 && dots.length > 0 && progressNav instanceof HTMLElement) {
+    // Scroll to phase on dot click
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        phases[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+
+    // Intersection Observer to update active dot and show/hide nav
+    const observerCallback: IntersectionObserverCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = Number(entry.target.getAttribute('data-phase-index'));
+          
+          // Update dots
+          dots.forEach((d, i) => {
+            if (i === index) {
+              d.classList.add('is-active');
+              d.setAttribute('aria-current', 'step');
+            } else {
+              d.classList.remove('is-active');
+              d.setAttribute('aria-current', 'false');
+            }
+          });
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, {
+      root: null,
+      rootMargin: '-40% 0px -40% 0px', // Activate when element is in middle 20% of screen
+      threshold: 0,
+    });
+
+    phases.forEach((phase) => observer.observe(phase));
+
+    // Show progress nav only when inside the phases area
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            progressNav.style.opacity = '1';
+            progressNav.style.pointerEvents = 'auto';
+          } else {
+            progressNav.style.opacity = '0';
+            progressNav.style.pointerEvents = 'none';
+          }
+        });
+      },
+      { rootMargin: '-10% 0px -10% 0px' }
+    );
+
+    const phasesContainer = document.querySelector('.sig-phases');
+    if (phasesContainer) {
+      sectionObserver.observe(phasesContainer);
+    }
+  }
+</script>

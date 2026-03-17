@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash \"C:/Users/senaa/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.2/skills/brainstorming/scripts/start-server.sh\" --project-dir \"D:/senaa_dev/archi-prisma-site\")",
+      "Bash(gh api:*)",
+      "Bash(mkdir:*)",
+      "Bash(cd:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm build:*)",
+      "Bash(git add:*)",
+      "Bash(git restore:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

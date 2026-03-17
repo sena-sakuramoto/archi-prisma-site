@@ -1,0 +1,83 @@
+---
+import type { TeamData, PartnerCompany } from '../lib/content';
+
+interface Props {
+  team: TeamData;
+  partners: PartnerCompany[];
+}
+
+const { team, partners } = Astro.props as Props;
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path: string) => `${basePath}${path}`;
+
+// Use the first 3-5 core members
+const coreMembers = team.core.slice(0, 5);
+---
+
+<section id="about" class="about-team-section section-space">
+  <div class="site-container">
+    <div class="about-heading">
+      <h2 data-reveal>
+        <span class="en">WHO WE ARE.</span>
+        <span class="ja">私たちについて。</span>
+      </h2>
+    </div>
+
+    <p class="about-mission" data-reveal>
+      Archi-Prisma Design works は、<br />
+      ロンドンで2001年に始まり、<br />
+      2024年、東京に拠点を構えた。<br />
+      企画から運用まで、一貫して設計する。
+    </p>
+
+    <div class="about-core-members">
+      {coreMembers.map((member) => (
+        <article class="about-member-card" data-reveal>
+          {member.image && (
+            <img
+              src={toPublicPath(member.image)}
+              alt={`${member.name}の写真`}
+              loading="lazy"
+              width="720"
+              height="900"
+            />
+          )}
+          <div class="about-member-meta">
+            <h3>{member.name}</h3>
+            <p>{member.role}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    {partners.length > 0 && (
+      <div class="about-partners-block" data-reveal>
+        <p class="section-eyebrow" style="color: var(--color-text-tertiary); margin-bottom: 24px;">PARTNERS</p>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; opacity: 0.7;">
+          {partners.map((partner) => (
+             partner.logo ? (
+              <img 
+                src={toPublicPath(partner.logo)} 
+                alt={partner.name} 
+                style="height: 32px; width: auto; filter: grayscale(1);" 
+                loading="lazy"
+              />
+             ) : (
+               <span style="font-size: 14px; color: var(--color-text-secondary);">{partner.name}</span>
+             )
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="about-bridge">
+      <p data-bridge>あなたのプロジェクトを、始めよう。</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initScrollReveal } from '../lib/scrollReveal';
+  initScrollReveal();
+</script>

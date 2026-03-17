@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { ViewTransitions } from 'astro:transitions';
 
 interface Props {
   title?: string;
@@ -79,6 +80,9 @@ const jsonLd = {
 
     <!-- JSON-LD Organization schema -->
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- View Transitions for seamless page navigation -->
+    <ViewTransitions />
   </head>
   <body>
     <slot />

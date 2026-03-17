@@ -1,0 +1,65 @@
+---
+interface Props {
+  registration: string;
+}
+
+const { registration } = Astro.props as Props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const toPublicPath = (path: string) => `${basePath}${path}`;
+---
+
+<div id="hero" class="hero hero-panel" data-hero>
+  <img
+    src={toPublicPath('/assets/hero-poster.webp')}
+    alt="Archi-Prisma 代表プロジェクト"
+    class="hero-poster"
+    fetchpriority="high"
+    width="1920"
+    height="1080"
+    data-hero-poster
+  />
+
+  <div class="hero-canvas-slot" aria-hidden="true">
+    <canvas class="hero-canvas" data-hero-canvas></canvas>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-text">
+      <h1 class="hero-title" aria-label="MOVE HEARTS. 心を、動かせ。">
+        <span class="hero-title-en">MOVE HEARTS.</span>
+        <span class="hero-title-ja">心を、動かせ。</span>
+      </h1>
+      <p class="hero-sub">
+        AI × 建築 × デザインで、<br />
+        未来の街と暮らしをつくる。
+      </p>
+      <a href="#works" class="hero-cta">実績を見る →</a>
+    </div>
+    <p class="hero-reg">{registration}</p>
+  </div>
+
+  <div class="hero-scroll" aria-hidden="true">↓ scroll</div>
+
+  <script>
+    const hero = document.querySelector('[data-hero]');
+
+    if (hero instanceof HTMLElement) {
+      const boot = () => {
+        window.setTimeout(async () => {
+          try {
+            const { initHeroScene } = await import('../lib/heroScene');
+            initHeroScene(hero);
+          } catch (error) {
+            console.error('[hero] failed to initialize scene', error);
+          }
+        }, 1800);
+      };
+
+      if (document.body.classList.contains('site-ready')) {
+        boot();
+      } else {
+        document.addEventListener('site-ready', boot, { once: true });
+      }
+    }
+  </script>
+</div>
