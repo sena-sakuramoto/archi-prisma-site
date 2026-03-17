@@ -24,19 +24,34 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
   { id: 'contact',    linePos: '50%', lineOpacity: 0 },
 ];
 
+/**
+ * Calculate the pixel position of the line, aligned to the container grid.
+ * The grid lives inside a container with max-width and padding.
+ * The fixed overlay line must match the grid column boundary exactly.
+ */
+function calcLinePixelPos(linePos: string): number {
+  // Find any .line-section to measure the container
+  const ref = document.querySelector('.line-section');
+  if (!ref) return parseFloat(linePos) / 100 * window.innerWidth;
+
+  const rect = ref.getBoundingClientRect();
+  const pct = parseFloat(linePos) / 100;
+  // The grid-template-columns is: linePos 1px 1fr
+  // So the line sits at containerLeft + containerWidth * pct
+  return rect.left + rect.width * pct;
+}
+
 export function initLineSystem(sections: SectionConfig[] = DEFAULT_SECTIONS) {
   if (!window.matchMedia('(min-width: 768px)').matches) return;
 
   const line = document.getElementById('dividing-line');
   if (!line) return;
 
-  // Ensure each section's .line-section has its OWN --line-pos locked in.
-  // The grid columns never change — only the fixed overlay line animates.
+  // Lock each section's grid to its own line position
   sections.forEach((section) => {
     const el = document.getElementById(section.id);
     if (!el) return;
 
-    // Lock this section's grid to its own line position
     const lineSection = el.querySelector('.line-section') ?? el.closest('.line-section');
     if (lineSection instanceof HTMLElement) {
       lineSection.style.setProperty('--line-pos', section.linePos);
@@ -51,17 +66,33 @@ export function initLineSystem(sections: SectionConfig[] = DEFAULT_SECTIONS) {
     });
   });
 
+  // Recalculate line position on resize (container offset changes)
+  let currentSection = sections[0];
+  window.addEventListener('resize', () => {
+    const px = calcLinePixelPos(currentSection.linePos);
+    gsap.set(line, { left: px });
+  });
+
+  // Store current section reference for resize handler
+  const origAnimateLine = animateLine;
+  animateLine = (l, s) => {
+    currentSection = s;
+    origAnimateLine(l, s);
+  };
+
   // Initial state
   animateLine(line, sections[0]);
 }
 
 /**
- * Only animates the fixed overlay line.
- * Does NOT touch any section's grid columns — those are locked per-section.
+ * Animates the fixed overlay line to match the grid column boundary.
+ * Uses pixel position calculated from the container, not viewport %.
  */
-function animateLine(line: HTMLElement, section: SectionConfig) {
+let animateLine = function(line: HTMLElement, section: SectionConfig) {
+  const px = calcLinePixelPos(section.linePos);
+
   gsap.to(line, {
-    left: section.linePos,
+    left: px,
     opacity: section.lineOpacity ?? 1,
     duration: 0.8,
     ease: 'power3.out',
@@ -73,7 +104,7 @@ function animateLine(line: HTMLElement, section: SectionConfig) {
       duration: 0.4,
     });
   }
-}
+};
 
 export function destroyLineSystem() {
   ScrollTrigger.getAll().forEach(t => t.kill());
