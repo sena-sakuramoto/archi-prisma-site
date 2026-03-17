@@ -3,7 +3,7 @@ const navItems = [
   { label: 'Works',    href: '/works/' },
   { label: 'Products', href: '/products/' },
   { label: 'About',    href: '/about/' },
-  { label: 'Contact',  href: '#contact' },
+  { label: 'Contact',  href: '/contact/' },
 ];
 ---
 
@@ -65,55 +65,3 @@ const navItems = [
     ))}
   </ul>
 </nav>
-
-<script>
-  // Space-aware header: switch to dark variant when scrolling over .dark-space sections
-  const header = document.getElementById('site-header');
-  const mobileNav = document.getElementById('mobile-tab-bar');
-
-  function updateSpaceMode(isDark: boolean) {
-    const targets = [header, mobileNav];
-    targets.forEach((el) => {
-      if (!el) return;
-      el.dataset.space = isDark ? 'dark' : 'light';
-      if (isDark) {
-        el.style.backgroundColor = 'rgba(12, 12, 12, 0.85)';
-        el.style.borderColor = 'rgba(196, 168, 130, 0.2)';
-        // Update nav link colours
-        el.querySelectorAll('a').forEach((a) => {
-          (a as HTMLElement).style.color = 'var(--color-ink-dark)';
-        });
-      } else {
-        el.style.backgroundColor =
-          el === header
-            ? 'rgba(248, 246, 243, 0.85)'
-            : 'rgba(248, 246, 243, 0.92)';
-        el.style.borderColor = 'var(--color-rule)';
-        el.querySelectorAll('a').forEach((a) => {
-          (a as HTMLElement).style.color = 'var(--color-ink)';
-        });
-      }
-    });
-  }
-
-  const darkSections = Array.from(
-    document.querySelectorAll<HTMLElement>('.dark-space')
-  );
-
-  if (darkSections.length > 0) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const anyDark = entries.some((e) => e.isIntersecting);
-        // Re-check all sections on every tick for accuracy
-        const currentlyDark = darkSections.some((section) => {
-          const rect = section.getBoundingClientRect();
-          return rect.top <= 0 && rect.bottom >= 0;
-        });
-        updateSpaceMode(currentlyDark);
-      },
-      { threshold: [0, 0.01], rootMargin: '0px 0px 0px 0px' }
-    );
-
-    darkSections.forEach((section) => observer.observe(section));
-  }
-</script>

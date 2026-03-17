@@ -43,10 +43,12 @@ export function initLineSystem(sections: SectionConfig[] = DEFAULT_SECTIONS) {
     });
   });
 
+  // Initial state
   applyLineState(line, sections[0]);
 }
 
 function applyLineState(line: HTMLElement, section: SectionConfig) {
+  // Animate the fixed overlay line position
   gsap.to(line, {
     left: section.linePos,
     opacity: section.lineOpacity ?? 1,
@@ -61,7 +63,13 @@ function applyLineState(line: HTMLElement, section: SectionConfig) {
     });
   }
 
-  document.documentElement.style.setProperty('--line-pos', section.linePos);
+  // Update ALL visible .line-section elements to match.
+  // This keeps the CSS Grid columns in sync with the animated fixed line.
+  document.querySelectorAll('.line-section').forEach((el) => {
+    if (el instanceof HTMLElement) {
+      el.style.setProperty('--line-pos', section.linePos);
+    }
+  });
 }
 
 export function destroyLineSystem() {

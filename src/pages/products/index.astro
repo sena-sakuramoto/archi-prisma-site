@@ -3,6 +3,8 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 
+const currentYear = new Date().getFullYear();
+
 const products = [
   {
     id: 'compass',
@@ -205,12 +207,12 @@ const products = [
       class="products-footer-inner"
     >
       <div
-        style="display: flex; flex-col md:flex-row justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;"
+        style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;"
       >
         <span
           style="font-family: var(--font-display); font-size: var(--text-caption); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-ink-muted-dark);"
         >
-          &copy; 2024&ndash;2026 Archi-Prisma Design Works
+          &copy; 2024&ndash;{currentYear} Archi-Prisma Design Works
         </span>
         <a
           href="/"
