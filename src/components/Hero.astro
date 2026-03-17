@@ -1,9 +1,8 @@
 ---
 /**
- * Hero — Task 9
- * Line position: 30|70
+ * Hero — Line position: 30|70
  * Left: ARCHI-PRISMA logotype, Est. 2024, Tokyo / London, tagline
- * Right: hero-poster.webp bleeding right
+ * Right: hero-bg.jpg (Japanese architecture with ocean view)
  * Staggered reveal on load; image via clip-path
  */
 ---
@@ -17,96 +16,63 @@
     class="line-section"
     style="--line-pos: 30%; min-height: calc(100svh - 64px); align-items: stretch;"
   >
-    <!-- Left zone -->
+    <!-- Left zone: Identity statement -->
     <div
       style="display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(40px, 6vw, 80px) 40px clamp(48px, 6vw, 80px) 0;"
     >
-      <!-- Logotype -->
       <div data-hero-item style="opacity: 0; transform: translateY(24px);">
         <img
           src="/assets/branding/apdw-logotype.png"
           alt="Archi-Prisma Design Works"
-          style="height: 36px; width: auto; display: block;"
+          style="height: 28px; width: auto; display: block;"
         />
       </div>
 
-      <!-- Meta stack -->
       <div
         data-hero-item
-        style="opacity: 0; transform: translateY(24px); margin-top: 40px;"
+        style="opacity: 0; transform: translateY(24px); margin-top: 48px;"
       >
-        <p
-          style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-muted); margin: 0 0 8px;"
-        >
+        <p style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ink-muted); margin: 0 0 6px;">
           Est. 2024
         </p>
-        <p
-          style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted); margin: 0;"
-        >
+        <p style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted); margin: 0;">
           Tokyo / London
         </p>
       </div>
 
-      <!-- Tagline -->
       <div
         data-hero-item
-        style="opacity: 0; transform: translateY(24px); margin-top: 32px;"
+        style="opacity: 0; transform: translateY(24px); margin-top: 40px;"
       >
-        <p
-          style="font-family: var(--font-display); font-size: var(--text-section); font-weight: 600; color: var(--color-ink); line-height: 1.2; margin: 0; letter-spacing: -0.02em;"
-        >
-          Architecture × Software
-        </p>
+        <h1 style="font-family: var(--font-display); font-size: var(--text-section); font-weight: 700; color: var(--color-ink); line-height: 1.15; margin: 0; letter-spacing: -0.02em;">
+          Architecture<br />× Software
+        </h1>
       </div>
 
-      <!-- Bottom rule -->
       <div
         data-hero-item
         style="opacity: 0; margin-top: 48px; height: 1px; background-color: var(--color-rule);"
       ></div>
     </div>
 
-    <!-- Dividing line -->
+    <!-- Dividing line (structural spacer) -->
     <div class="dividing-line" aria-hidden="true"></div>
 
-    <!-- Right zone — hero image bleeds right -->
-    <div
-      style="position: relative; overflow: hidden; min-height: 320px;"
-    >
+    <!-- Right zone: Hero image -->
+    <div style="position: relative; overflow: hidden; min-height: 320px;">
       <div
         data-hero-image
         style="clip-path: inset(0 100% 0 0); height: 100%; width: 100%;"
       >
         <img
-          src="/assets/hero-poster.webp"
-          alt="Archi-Prisma Design Works — architectural photography"
+          src="/assets/hero-bg.jpg"
+          alt="日本建築 — Archi-Prisma Design Works"
           style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;"
           loading="eager"
           fetchpriority="high"
         />
       </div>
     </div>
-  </div>
-
-  <!-- Large display heading — overlaid bottom-left of right zone on desktop -->
-  <div
-    style="position: absolute; bottom: clamp(32px, 5vw, 72px); left: 0; width: 100%; pointer-events: none; padding: 0 var(--content-padding-x); max-width: var(--max-width); margin: 0 auto;"
-  >
-    <h1
-      data-hero-heading
-      style="
-        opacity: 0;
-        font-family: var(--font-display);
-        font-size: var(--text-hero);
-        font-weight: 700;
-        letter-spacing: -0.03em;
-        line-height: 1;
-        color: var(--color-ink);
-        margin: 0;
-      "
-    >
-      ARCHI-PRISMA
-    </h1>
   </div>
 </section>
 
@@ -116,7 +82,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-    // Stagger meta items
     tl.to('[data-hero-item]', {
       opacity: 1,
       y: 0,
@@ -125,14 +90,6 @@
       delay: 0.2,
     });
 
-    // Heading fades in
-    tl.to(
-      '[data-hero-heading]',
-      { opacity: 1, duration: 1.2, ease: 'power2.out' },
-      '-=0.5'
-    );
-
-    // Image clip-path reveal
     tl.to(
       '[data-hero-image]',
       {
@@ -140,7 +97,7 @@
         duration: 1.4,
         ease: 'power4.inOut',
       },
-      '-=1.0'
+      '-=0.6'
     );
   });
 </script>
