@@ -8,45 +8,49 @@ import { loadFeaturedWorks } from '../lib/content';
 
 const works = loadFeaturedWorks();
 
+const yachtClub = works.find((w) => w.title === 'The Super Yacht Club');
+const kotsubo = works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place');
+const shimouma = works.find((w) => w.title === '下馬賃貸マンション');
+
 const projects = [
   {
     id: 'works-01',
     linePos: '40%',
     num: '01',
-    layout: 'text-left',
+    layout: 'text-left' as const,
     image: '/assets/work-yacht-club.jpg',
-    title: works.find((w) => w.title === 'The Super Yacht Club')?.title ?? 'The Super Yacht Club',
-    type: works.find((w) => w.title === 'The Super Yacht Club')?.type ?? 'Hospitality/Club',
-    region: works.find((w) => w.title === 'The Super Yacht Club')?.region ?? 'Japan',
-    year: works.find((w) => w.title === 'The Super Yacht Club')?.year ?? 2024,
-    phase: works.find((w) => w.title === 'The Super Yacht Club')?.phase ?? 'Planning/Design',
-    storyline: works.find((w) => w.title === 'The Super Yacht Club')?.storyline ?? '',
+    title: yachtClub?.title ?? 'The Super Yacht Club',
+    type: yachtClub?.type ?? 'Hospitality/Club',
+    region: yachtClub?.region ?? 'Japan',
+    year: yachtClub?.year ?? 2024,
+    phase: yachtClub?.phase ?? 'Planning/Design',
+    storyline: yachtClub?.storyline ?? '',
   },
   {
     id: 'works-02',
     linePos: '65%',
     num: '02',
-    layout: 'image-left',
+    layout: 'image-left' as const,
     image: '/assets/work-kotsubo-market.jpg',
-    title: works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place')?.title ?? 'KOTSUBO Jacaranda Market Place',
-    type: works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place')?.type ?? 'Urban/Commercial',
-    region: works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place')?.region ?? 'Japan',
-    year: works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place')?.year ?? 2024,
-    phase: works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place')?.phase ?? 'Planning/Design',
-    storyline: works.find((w) => w.title === 'KOTSUBO Jacaranda Market Place')?.storyline ?? '',
+    title: kotsubo?.title ?? 'KOTSUBO Jacaranda Market Place',
+    type: kotsubo?.type ?? 'Urban/Commercial',
+    region: kotsubo?.region ?? 'Japan',
+    year: kotsubo?.year ?? 2024,
+    phase: kotsubo?.phase ?? 'Planning/Design',
+    storyline: kotsubo?.storyline ?? '',
   },
   {
     id: 'works-03',
     linePos: '20%',
     num: '03',
-    layout: 'image-dominant',
+    layout: 'image-dominant' as const,
     image: '/assets/work-shimouma-residence.jpg',
-    title: works.find((w) => w.title === '下馬賃貸マンション')?.title ?? '下馬賃貸マンション',
-    type: works.find((w) => w.title === '下馬賃貸マンション')?.type ?? 'Residential',
-    region: works.find((w) => w.title === '下馬賃貸マンション')?.region ?? 'Japan',
-    year: works.find((w) => w.title === '下馬賃貸マンション')?.year ?? 2024,
-    phase: works.find((w) => w.title === '下馬賃貸マンション')?.phase ?? 'Design',
-    storyline: works.find((w) => w.title === '下馬賃貸マンション')?.storyline ?? '',
+    title: shimouma?.title ?? '下馬賃貸マンション',
+    type: shimouma?.type ?? 'Residential',
+    region: shimouma?.region ?? 'Japan',
+    year: shimouma?.year ?? 2024,
+    phase: shimouma?.phase ?? 'Design',
+    storyline: shimouma?.storyline ?? '',
   },
 ];
 ---
@@ -67,56 +71,25 @@ const projects = [
               style="padding: clamp(48px, 7vw, 96px) 40px clamp(48px, 7vw, 96px) 0; display: flex; flex-direction: column; justify-content: space-between;"
             >
               <div>
-                <p
-                  style="font-family: var(--font-display); font-size: 5rem; font-weight: 700; line-height: 1; color: var(--color-rule); margin: 0 0 32px; letter-spacing: -0.04em;"
-                  aria-hidden="true"
-                >
+                <p class="project-num" aria-hidden="true">
                   {p.num}
                 </p>
-                <h2
-                  style="font-family: var(--font-display); font-size: var(--text-project); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: var(--color-ink); margin: 0 0 24px;"
-                >
+                <h2 class="project-title">
                   {p.title}
                 </h2>
                 <ul
                   style="list-style: none; padding: 0; margin: 0 0 32px; display: flex; flex-wrap: wrap; gap: 8px 16px;"
                 >
-                  <li
-                    style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted);"
-                  >
-                    {p.type}
-                  </li>
-                  <li style="color: var(--color-rule);" aria-hidden="true">
-                    /
-                  </li>
-                  <li
-                    style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted);"
-                  >
-                    {p.region}
-                  </li>
-                  <li style="color: var(--color-rule);" aria-hidden="true">
-                    /
-                  </li>
-                  <li
-                    style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted);"
-                  >
-                    {p.year}
-                  </li>
-                  <li style="color: var(--color-rule);" aria-hidden="true">
-                    /
-                  </li>
-                  <li
-                    style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted);"
-                  >
-                    {p.phase}
-                  </li>
+                  <li class="project-meta">{p.type}</li>
+                  <li style="color: var(--color-rule);" aria-hidden="true">/</li>
+                  <li class="project-meta">{p.region}</li>
+                  <li style="color: var(--color-rule);" aria-hidden="true">/</li>
+                  <li class="project-meta">{p.year}</li>
+                  <li style="color: var(--color-rule);" aria-hidden="true">/</li>
+                  <li class="project-meta">{p.phase}</li>
                 </ul>
                 {p.storyline && (
-                  <p
-                    style="font-family: var(--font-jp); font-size: var(--text-body); line-height: 1.9; color: var(--color-ink-muted);"
-                  >
-                    {p.storyline}
-                  </p>
+                  <p class="project-storyline">{p.storyline}</p>
                 )}
               </div>
             </div>
@@ -124,7 +97,7 @@ const projects = [
             <div class="dividing-line" aria-hidden="true" />
 
             {/* Right: image */}
-            <div style="overflow: hidden; min-height: 320px;" data-works-image>
+            <div class="project-image" data-works-image>
               <img
                 src={p.image}
                 alt={p.title}
@@ -139,7 +112,7 @@ const projects = [
         {p.layout === 'image-left' && (
           <div class="line-section reveal" style="align-items: stretch;">
             {/* Left: image dominates (65%) */}
-            <div style="overflow: hidden; min-height: 360px;" data-works-image>
+            <div class="project-image" style="min-height: 360px;" data-works-image>
               <img
                 src={p.image}
                 alt={p.title}
@@ -154,34 +127,21 @@ const projects = [
             <div
               style="padding: clamp(48px, 7vw, 96px) 0 clamp(48px, 7vw, 96px) 40px; display: flex; flex-direction: column; justify-content: flex-end;"
             >
-              <p
-                style="font-family: var(--font-display); font-size: 5rem; font-weight: 700; line-height: 1; color: var(--color-rule); margin: 0 0 32px; letter-spacing: -0.04em;"
-                aria-hidden="true"
-              >
+              <p class="project-num" aria-hidden="true">
                 {p.num}
               </p>
-              <h2
-                style="font-family: var(--font-display); font-size: var(--text-project); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: var(--color-ink); margin: 0 0 24px;"
-              >
+              <h2 class="project-title">
                 {p.title}
               </h2>
               <ul
                 style="list-style: none; padding: 0; margin: 0 0 32px; display: flex; flex-direction: column; gap: 6px;"
               >
                 {[p.type, p.region, String(p.year), p.phase].map((meta) => (
-                  <li
-                    style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted);"
-                  >
-                    {meta}
-                  </li>
+                  <li class="project-meta">{meta}</li>
                 ))}
               </ul>
               {p.storyline && (
-                <p
-                  style="font-family: var(--font-jp); font-size: var(--text-body); line-height: 1.9; color: var(--color-ink-muted);"
-                >
-                  {p.storyline}
-                </p>
+                <p class="project-storyline">{p.storyline}</p>
               )}
             </div>
           </div>
@@ -194,10 +154,7 @@ const projects = [
             <div
               style="padding: clamp(48px, 7vw, 96px) 40px clamp(48px, 7vw, 96px) 0; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start;"
             >
-              <p
-                style="font-family: var(--font-display); font-size: 5rem; font-weight: 700; line-height: 1; color: var(--color-rule); margin: 0; letter-spacing: -0.04em;"
-                aria-hidden="true"
-              >
+              <p class="project-num" style="margin: 0;" aria-hidden="true">
                 {p.num}
               </p>
               <div>
@@ -212,7 +169,7 @@ const projects = [
             <div class="dividing-line" aria-hidden="true" />
 
             {/* Right: image (80%) with text overlay */}
-            <div style="position: relative; overflow: hidden; min-height: 480px;" data-works-image>
+            <div class="project-image" style="min-height: 480px;" data-works-image>
               <img
                 src={p.image}
                 alt={p.title}
@@ -223,17 +180,11 @@ const projects = [
               <div
                 style="position: absolute; bottom: 0; left: 0; right: 0; padding: 40px; background: linear-gradient(to top, rgba(10,10,10,0.75) 0%, transparent 100%);"
               >
-                <h2
-                  style="font-family: var(--font-display); font-size: var(--text-project); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; color: #F0EEEB; margin: 0 0 12px;"
-                >
+                <h2 class="project-title project-title--overlay">
                   {p.title}
                 </h2>
                 {p.storyline && (
-                  <p
-                    style="font-family: var(--font-jp); font-size: var(--text-body); line-height: 1.7; color: rgba(240,238,235,0.75); margin: 0;"
-                  >
-                    {p.storyline}
-                  </p>
+                  <p class="project-storyline project-storyline--overlay">{p.storyline}</p>
                 )}
               </div>
             </div>
@@ -270,3 +221,58 @@ const projects = [
     });
   });
 </script>
+
+<style>
+  .project-num {
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-rule);
+    margin: 0 0 32px;
+    letter-spacing: -0.04em;
+  }
+
+  .project-title {
+    font-family: var(--font-display);
+    font-size: var(--text-project);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    margin: 0 0 24px;
+  }
+
+  .project-title--overlay {
+    color: #F0EEEB;
+    margin: 0 0 12px;
+  }
+
+  .project-meta {
+    font-family: var(--font-display);
+    font-size: var(--text-caption);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .project-storyline {
+    font-family: var(--font-jp);
+    font-size: var(--text-body);
+    line-height: 1.9;
+    color: var(--color-ink-muted);
+  }
+
+  .project-storyline--overlay {
+    line-height: 1.7;
+    color: rgba(240, 238, 235, 0.75);
+    margin: 0;
+  }
+
+  .project-image {
+    overflow: hidden;
+    min-height: 320px;
+    position: relative;
+  }
+</style>

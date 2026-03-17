@@ -1,9 +1,25 @@
 ---
 const navItems = [
-  { label: 'Works',    href: '/works/' },
-  { label: 'Products', href: '/products/' },
-  { label: 'About',    href: '/about/' },
-  { label: 'Contact',  href: '/contact/' },
+  {
+    label: 'Works',
+    href: '/works/',
+    icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="1"/><rect x="11" y="2" width="7" height="7" rx="1"/><rect x="2" y="11" width="7" height="7" rx="1"/><rect x="11" y="11" width="7" height="7" rx="1"/></svg>`,
+  },
+  {
+    label: 'Products',
+    href: '/products/',
+    icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2L18 6.5V13.5L10 18L2 13.5V6.5L10 2Z"/><path d="M10 2V18"/><path d="M2 6.5L10 11L18 6.5"/></svg>`,
+  },
+  {
+    label: 'About',
+    href: '/about/',
+    icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="8"/><line x1="10" y1="9" x2="10" y2="14"/><circle cx="10" cy="6.5" r="0.5" fill="currentColor"/></svg>`,
+  },
+  {
+    label: 'Contact',
+    href: '/contact/',
+    icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="16" height="12" rx="2"/><path d="M2 7l8 5 8-5"/></svg>`,
+  },
 ];
 ---
 
@@ -59,6 +75,7 @@ const navItems = [
           href={item.href}
           style={`display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; font-family: var(--font-display); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ink); text-decoration: none; gap: 2px; padding: 6px 4px;`}
         >
+          <Fragment set:html={item.icon} />
           {item.label}
         </a>
       </li>

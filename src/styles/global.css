@@ -128,3 +128,14 @@ h1, h2, h3, h4 {
     transition: none;
   }
 }
+
+/* Focus indicators */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.dark-space :focus-visible {
+  outline-color: var(--color-accent-dark);
+}
