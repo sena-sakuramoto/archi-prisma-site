@@ -1,97 +1,27 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import PageLoader from '../components/PageLoader.astro';
-import Header from '../components/Header.astro';
-import DividingLine from '../components/DividingLine.astro';
-import Hero from '../components/Hero.astro';
-import WorksHighlight from '../components/WorksHighlight.astro';
-import BrandBridge from '../components/BrandBridge.astro';
-import Products from '../components/Products.astro';
-import Team from '../components/Team.astro';
-import CompanyInfo from '../components/CompanyInfo.astro';
-import Footer from '../components/Footer.astro';
 ---
-
-<Layout>
-  <PageLoader />
-  <Header />
-  <DividingLine />
-  <main>
-    <Hero />
-    <WorksHighlight />
-    <BrandBridge />
-    <Products />
-    <Team />
-    <CompanyInfo />
-  </main>
-  <Footer />
-
-  <script>
-    import { initLineSystem, destroyLineSystem } from '../lib/line-system';
-    import { gsap } from 'gsap';
-    import { ScrollTrigger } from 'gsap/ScrollTrigger';
-    import Lenis from 'lenis';
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    let lenis: Lenis | null = null;
-
-    function init() {
-      // Clean up previous instances (View Transitions re-entry)
-      if (lenis) { lenis.destroy(); lenis = null; }
-      destroyLineSystem();
-
-      // Smooth scroll
-      lenis = new Lenis({
-        duration: 1.2,
-        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      });
-
-      // Connect Lenis ↔ GSAP ScrollTrigger
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add((time) => {
-        lenis!.raf(time * 1000);
-      });
-      gsap.ticker.lagSmoothing(0);
-
-      // Line system (desktop only)
-      if (window.matchMedia('(min-width: 768px)').matches) {
-        initLineSystem();
-      }
-
-      // Header space awareness
-      const header = document.getElementById('site-header');
-      const darkSections = document.querySelectorAll('.dark-space');
-      if (header && darkSections.length > 0) {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            const isInDark = entries.some(e => e.isIntersecting);
-            header.setAttribute('data-space', isInDark ? 'dark' : 'light');
-          },
-          { rootMargin: '-64px 0px -90% 0px' }
-        );
-        darkSections.forEach(el => observer.observe(el));
-      }
-
-      // Scroll reveals
-      document.querySelectorAll('.reveal').forEach(el => {
-        const observer = new IntersectionObserver(
-          ([entry]) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              observer.disconnect();
-            }
-          },
-          { threshold: 0.1 }
-        );
-        observer.observe(el);
-      });
-    }
-
-    // Initial load
-    init();
-
-    // Re-init after View Transitions page swap
-    document.addEventListener('astro:after-swap', init);
-  </script>
-</Layout>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ARCHI PRISMA | Coming Soon</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #0a0a0a; color: #fff; font-family: 'Syne', 'Noto Sans JP', sans-serif; }
+    .container { text-align: center; padding: 2rem; }
+    h1 { font-size: clamp(2rem, 5vw, 4rem); letter-spacing: 0.3em; margin-bottom: 1rem; font-weight: 300; }
+    .line { width: 60px; height: 1px; background: #fff; margin: 2rem auto; opacity: 0.4; }
+    p { font-size: 1rem; letter-spacing: 0.15em; opacity: 0.6; }
+    .sub { font-size: 0.85rem; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ARCHI PRISMA</h1>
+    <div class="line"></div>
+    <p>Coming Soon</p>
+    <p class="sub">準備中</p>
+  </div>
+</body>
+</html>
