@@ -1,0 +1,66 @@
+---
+// AboutHero.astro — Cinematic hero section
+---
+
+<section class="about-hero">
+  <img
+    src="/assets/curated/yacht-club-aerial-day.jpg"
+    alt="Aerial view of yacht club project"
+    class="about-hero__img"
+  />
+  <div class="about-hero__scrim"></div>
+  <div class="about-hero__content">
+    <h1 class="about-hero__title reveal">
+      MOVE<br />HEARTS.
+    </h1>
+    <p class="about-hero__sub reveal" style="--delay: 0.15s">
+      心を動かせ
+    </p>
+  </div>
+</section>
+
+<style>
+  .about-hero {
+    position: relative;
+    min-height: 75vh;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+  }
+  .about-hero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 120%;
+    object-fit: cover;
+  }
+  .about-hero__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.05) 100%);
+  }
+  .about-hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--content-padding-x);
+    width: 100%;
+    padding-bottom: clamp(3rem, 6vw, 6rem);
+  }
+  .about-hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.92;
+    color: var(--color-ink-dark);
+    margin-bottom: 1rem;
+  }
+  .about-hero__sub {
+    font-family: var(--font-jp);
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    color: rgba(240,238,235,0.65);
+    letter-spacing: 0.1em;
+  }
+</style>

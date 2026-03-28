@@ -1,0 +1,94 @@
+---
+// AboutServices.astro — Services grid
+interface Props {
+  services: { num: string; title: string; en: string }[];
+}
+
+const { services } = Astro.props;
+---
+
+<section class="about-services">
+  <div class="about-services__inner">
+    <h2 class="about-services__heading reveal">Services</h2>
+    <ul class="about-services__grid">
+      {services.map((svc, i) => (
+        <li class="about-services__item reveal" style={`--delay: ${i * 0.04}s`}>
+          <a href="/works/" class="about-services__link">
+            <span class="about-services__num">{svc.num}</span>
+            <div>
+              <span class="about-services__title">{svc.title}</span>
+              <span class="about-services__en">{svc.en}</span>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .about-services {
+    padding: 0 0 8rem;
+  }
+  .about-services__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--content-padding-x);
+  }
+  .about-services__heading {
+    font-family: var(--font-display);
+    font-size: var(--text-section);
+    font-weight: 700;
+    margin-bottom: 3rem;
+  }
+  .about-services__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  @media (min-width: 768px) {
+    .about-services__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .about-services__item {
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .about-services__link {
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+    padding: 1.25rem 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.25s var(--ease);
+  }
+  .about-services__link:hover,
+  .about-services__link:focus-visible {
+    background-color: rgba(92, 67, 64, 0.04);
+  }
+  .about-services__num {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    width: 2rem;
+  }
+  .about-services__title {
+    font-family: var(--font-jp);
+    font-size: var(--text-body);
+    color: var(--color-ink);
+    display: block;
+  }
+  .about-services__en {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--color-ink-muted);
+    letter-spacing: 0.05em;
+  }
+</style>

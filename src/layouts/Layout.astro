@@ -6,12 +6,16 @@ interface Props {
   title?: string;
   description?: string;
   darkSpace?: boolean;
+  ogImage?: string;
+  preloadImages?: string[];
 }
 
 const {
   title = 'Archi-Prisma Design Works | Architecture × Software — Tokyo / London',
   description = 'Archi-Prisma Design Works は建築設計とソフトウェア開発の二軸で、AI × 建築の未来を切り拓く設計事務所です。Tokyo / London.',
   darkSpace = false,
+  ogImage = 'https://archi-prisma.co.jp/assets/og-image.png',
+  preloadImages = [],
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://archi-prisma.co.jp');
@@ -36,7 +40,7 @@ const jsonLd = {
       addressCountry: 'GB',
     },
   ],
-  sameAs: [],
+  sameAs: ['https://ai-archi-circle.jp'],
 };
 ---
 
@@ -57,15 +61,17 @@ const jsonLd = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL.href} />
-    <meta property="og:image" content="/assets/og-image.png" />
+    <meta property="og:image" content={ogImage} />
     <meta property="og:locale" content="ja_JP" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content="/assets/og-image.png" />
+    <meta name="twitter:image" content={ogImage} />
 
-    <!-- Preload critical assets -->
-    <link rel="preload" href="/assets/curated/masterplan-aerial.jpg" as="image" type="image/jpeg" />
+    <!-- Preload critical assets (per-page) -->
+    {preloadImages.map((src) => (
+      <link rel="preload" href={src} as="image" type="image/jpeg" />
+    ))}
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

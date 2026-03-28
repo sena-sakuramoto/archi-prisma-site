@@ -1,0 +1,56 @@
+---
+interface Props {
+  count: number;
+}
+
+const { count } = Astro.props;
+---
+
+<section class="works-hero">
+  <div class="works-hero__inner">
+    <h1 class="works-hero__title reveal">Works</h1>
+    <p class="works-hero__sub reveal">
+      1986年の初期プロジェクトから現在の都市開発まで —<br />
+      建築と社会の接点を、設計を通して探り続けてきた全記録。
+    </p>
+    <span class="works-hero__count reveal">{count} Projects · 4 Countries · Since 1986</span>
+  </div>
+</section>
+
+<style>
+  .works-hero {
+    padding: 8rem 0 4rem;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .works-hero__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--content-padding-x);
+  }
+  .works-hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 10vw, 9rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+    margin-bottom: 1.5rem;
+  }
+  .works-hero__sub {
+    font-family: var(--font-jp);
+    font-size: var(--text-body);
+    color: var(--color-ink-muted);
+    line-height: 2;
+    max-width: 560px;
+    margin-bottom: 2rem;
+  }
+  .works-hero__count {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .reveal { transition-delay: var(--delay, 0s); }
+</style>

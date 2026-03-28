@@ -1,0 +1,131 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { loadTeam, loadPartners, loadCompany } from '../../lib/content';
+
+import AboutHero from '../../components/about/AboutHero.astro';
+import AboutStory from '../../components/about/AboutStory.astro';
+import AboutNumbers from '../../components/about/AboutNumbers.astro';
+import AboutQuote from '../../components/about/AboutQuote.astro';
+import AboutServices from '../../components/about/AboutServices.astro';
+import AboutTeam from '../../components/about/AboutTeam.astro';
+import AboutNetwork from '../../components/about/AboutNetwork.astro';
+import AboutPartners from '../../components/about/AboutPartners.astro';
+import AboutCta from '../../components/about/AboutCta.astro';
+
+const team = loadTeam();
+const partners = loadPartners();
+const company = loadCompany();
+
+const services = [
+  { num: '01', title: '建築・土木設計監理', en: 'Architecture & Civil Engineering' },
+  { num: '02', title: '事業計画・コンサルティング', en: 'Business Planning' },
+  { num: '03', title: '都市開発・飲食プロデュース', en: 'Urban Development' },
+  { num: '04', title: '建築パース・CG制作', en: 'Visualization & CG' },
+  { num: '05', title: 'インテリアデザイン', en: 'Interior Design' },
+  { num: '06', title: 'ソフトウェア企画・開発', en: 'Software Development' },
+  { num: '07', title: 'コンピューター操作指導', en: 'Digital Training' },
+  { num: '08', title: 'プロダクトデザイン', en: 'Product Design' },
+  { num: '09', title: 'グラフィックデザイン', en: 'Graphic Design' },
+  { num: '10', title: 'ホテル経営・管理', en: 'Hotel Management' },
+];
+
+const offices = [
+  {
+    city: 'Tokyo',
+    label: '本社',
+    address: `${company.address} ${company.building}`,
+    details: company.license,
+  },
+  {
+    city: 'London',
+    label: 'Associate',
+    address: 'Archi-Prisma Ltd. London (est. 2001)',
+    details: '国際案件の拠点として20年以上の実績',
+  },
+];
+---
+
+<Layout
+  title="About | Archi-Prisma Design Works"
+  description="心を動かせ — AI × 建築で、人生と街にわくわくの火を灯す設計事務所。"
+  ogImage="https://archi-prisma.co.jp/assets/curated/yacht-club-aerial-day.jpg"
+  preloadImages={['/assets/curated/yacht-club-aerial-day.jpg']}
+>
+  <Header />
+
+  <main class="page-main">
+    <AboutHero />
+    <AboutStory />
+    <AboutNumbers />
+    <AboutQuote />
+    <AboutServices services={services} />
+    <AboutTeam team={team} />
+    <AboutNetwork offices={offices} />
+    <AboutPartners partners={partners} />
+    <AboutCta />
+  </main>
+
+  <Footer />
+
+  <script>
+    import { createScrollEngine, initReveals } from '../../lib/scroll-engine';
+    import { gsap } from 'gsap';
+
+    function init() {
+      const engine = createScrollEngine();
+      initReveals(engine.prefersReduced);
+
+      // Hero parallax
+      const heroImg = document.querySelector('.about-hero__img') as HTMLElement;
+      if (!engine.prefersReduced && heroImg && window.matchMedia('(min-width: 768px)').matches) {
+        gsap.to(heroImg, {
+          y: 100,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.about-hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.5,
+          },
+        });
+      }
+
+      // Number counter animation (data-target/data-suffix safe)
+      document.querySelectorAll<HTMLElement>('.about-numbers__value[data-target]').forEach((el) => {
+        const target = parseInt(el.dataset.target || '0', 10);
+        const suffix = el.dataset.suffix || '';
+
+        if (engine.prefersReduced) {
+          el.textContent = target + suffix;
+          return;
+        }
+
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: target,
+          duration: 2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            once: true,
+          },
+          onUpdate: () => {
+            el.textContent = Math.round(obj.val) + suffix;
+          },
+        });
+      });
+    }
+
+    import { registerPageInit } from '../../lib/scroll-engine';
+    registerPageInit(init);
+  </script>
+
+  <style>
+    .reveal {
+      transition-delay: var(--delay, 0s);
+    }
+  </style>
+</Layout>

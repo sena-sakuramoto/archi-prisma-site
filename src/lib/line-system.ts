@@ -19,6 +19,7 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
   { id: 'products-compass',  linePos: '45%', lineColor: '#C4A882' },
   { id: 'products-kakome',   linePos: '60%', lineColor: '#C4A882' },
   { id: 'products-kozo',     linePos: '40%', lineColor: '#C4A882' },
+  { id: 'hook-manifesto',    linePos: '95%', lineColor: '#C4A882' },
   { id: 'team',              linePos: '35%', lineColor: '#7A5C5A' },
   { id: 'company',           linePos: '50%' },
   { id: 'contact',           linePos: '50%', lineOpacity: 0 },

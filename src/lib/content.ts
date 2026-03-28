@@ -1,15 +1,20 @@
 import worksData from '../content/works.json';
 import teamData from '../content/team.json';
 import partnersData from '../content/partners.json';
+import companyData from '../content/company.json';
 
 export interface Work {
   year: number;
   title: string;
   type: string;
+  category?: string;
   region: string;
   phase: string;
   image?: string;
   storyline?: string;
+  scope?: string;
+  description?: string;
+  featured?: boolean;
 }
 
 export interface TeamMember {
@@ -33,8 +38,30 @@ export function loadWorks(): Work[] {
 }
 
 export function loadFeaturedWorks(): Work[] {
-  const featured = ['The Super Yacht Club', 'KOTSUBO Jacaranda Market Place', '下馬賃貸マンション'];
-  return loadWorks().filter(w => featured.includes(w.title));
+  return loadWorks().filter(w => w.featured);
+}
+
+export function slugify(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[（）()／/]/g, '')
+    .replace(/[\s　·・—–]+/g, '-')
+    .replace(/[^a-z0-9\u3000-\u9fff\u30a0-\u30ff\u3040-\u309f-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+export function getWorkBySlug(slug: string): Work | undefined {
+  return loadWorks().find(w => slugify(w.title) === slug);
+}
+
+export function getAdjacentWorks(slug: string): { prev?: Work; next?: Work } {
+  const works = loadWorks();
+  const idx = works.findIndex(w => slugify(w.title) === slug);
+  return {
+    prev: idx > 0 ? works[idx - 1] : undefined,
+    next: idx < works.length - 1 ? works[idx + 1] : undefined,
+  };
 }
 
 export function loadTeam() {
@@ -47,4 +74,26 @@ export function loadTeam() {
 
 export function loadPartners() {
   return (partnersData as { companies: Partner[] }).companies;
+}
+
+export interface Company {
+  name: string;
+  nameEn: string;
+  postalCode: string;
+  address: string;
+  building: string;
+  tel: string;
+  email: string;
+  license: string;
+  established: string;
+  ceo: string;
+  hours: string;
+  social: {
+    note: string;
+    x: string;
+  };
+}
+
+export function loadCompany(): Company {
+  return companyData as Company;
 }

@@ -1,0 +1,42 @@
+---
+// WorksCta — Call-to-action section for Works page
+---
+
+<section class="works-cta">
+  <div class="works-cta__inner">
+    <p class="works-cta__lead reveal">プロジェクトのご相談はお気軽に。</p>
+    <div class="works-cta__links reveal" style="--delay: 0.1s">
+      <a href="/contact/" class="works-cta__btn works-cta__btn--primary">この実績について相談する →</a>
+      <a href="/ai/" class="works-cta__btn works-cta__btn--secondary">AI × 建築事業を見る →</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .works-cta {
+    padding: 6rem 0 8rem; text-align: center;
+    border-top: 1px solid var(--color-rule);
+  }
+  .works-cta__inner {
+    max-width: var(--max-width); margin: 0 auto;
+    padding: 0 var(--content-padding-x);
+  }
+  .works-cta__lead {
+    font-family: var(--font-jp); font-size: clamp(1.2rem, 2vw, 1.6rem);
+    font-weight: 400; color: var(--color-ink); margin-bottom: 2.5rem; line-height: 1.8;
+  }
+  .works-cta__links { display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap; }
+  .works-cta__btn {
+    font-family: var(--font-display); font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.08em; padding: 0.85rem 2rem; border-radius: 3px;
+    text-decoration: none; transition: all 0.25s var(--ease);
+  }
+  .works-cta__btn--primary { background: var(--color-ink); color: var(--color-surface); }
+  .works-cta__btn--primary:hover { background: var(--color-accent); }
+  .works-cta__btn--secondary {
+    border: 1px solid var(--color-rule); color: var(--color-ink); background: transparent;
+  }
+  .works-cta__btn--secondary:hover { border-color: var(--color-ink); }
+
+  .reveal { transition-delay: var(--delay, 0s); }
+</style>

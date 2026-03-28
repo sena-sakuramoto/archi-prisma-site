@@ -1,0 +1,68 @@
+---
+// AboutStory.astro — Philosophy + company story paragraphs
+---
+
+<section class="about-story">
+  <div class="about-story__inner">
+    <div class="about-story__content">
+      <p class="about-story__philosophy reveal">"設計とは、空間を通じて人の心を動かす行為である。"</p>
+      <p class="about-story__lead reveal">
+        AI × 建築で、人生と街に<br class="about-story__br-mobile" /> "わくわく" の火を灯す。
+      </p>
+      <p class="about-story__body reveal" style="--delay: 0.08s">
+        Archi-Prisma Design Works株式会社は、2001年に英国で設立された Archi-Prisma Ltd. London、
+        および日本法人として設立されたアーキプリズマインターナショナル株式会社の実績と経験を継承し、
+        2024年に東京・品川で誕生しました。
+      </p>
+      <p class="about-story__body reveal" style="--delay: 0.16s">
+        AIとArchicadの統合、国際的デザイナーとの強固なパートナー体制を軸に、
+        都市開発・商業施設・ホテル・住宅までを幅広く手掛けます。
+        代表・櫻本聖成は、最年少でArchicadの代理店契約を締結。
+        AI連動のアドオン開発や高精度のビジュアライゼーションで、設計から意思決定までの体験を刷新します。
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-story {
+    padding: 8rem 0 6rem;
+  }
+  .about-story__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--content-padding-x);
+  }
+  .about-story__content {
+    max-width: 720px;
+  }
+  .about-story__philosophy {
+    font-family: var(--font-jp);
+    font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.08em;
+    line-height: 2;
+    color: var(--color-ink);
+    margin-bottom: 3rem;
+  }
+  .about-story__lead {
+    font-family: var(--font-jp);
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    font-weight: 400;
+    line-height: 2;
+    color: var(--color-ink);
+    margin-bottom: 2.5rem;
+  }
+  .about-story__body {
+    font-family: var(--font-jp);
+    font-size: var(--text-body);
+    color: var(--color-ink-muted);
+    line-height: 2.1;
+    margin-bottom: 1.5rem;
+  }
+  .about-story__br-mobile { display: none; }
+  @media (max-width: 639px) {
+    .about-story__br-mobile { display: inline; }
+  }
+</style>

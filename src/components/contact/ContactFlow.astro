@@ -1,0 +1,72 @@
+---
+/**
+ * ContactFlow — 3-step consultation flow section.
+ * Props: { steps: { num: number; title: string; desc: string }[] }
+ */
+interface Props {
+  steps: { num: number; title: string; desc: string }[];
+}
+
+const { steps } = Astro.props;
+---
+
+<div class="contact-flow reveal" style="--delay: 0.25s">
+  <h2 class="contact-flow__heading">初回相談の流れ</h2>
+  <ol class="contact-flow__steps" aria-label="初回相談の流れ">
+    {steps.map((step) => (
+      <li class="contact-flow__step">
+        <span class="contact-flow__num">{step.num}</span>
+        <div class="contact-flow__body">
+          <span class="contact-flow__step-title">{step.title}</span>
+          <span class="contact-flow__step-desc">{step.desc}</span>
+        </div>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .contact-flow {
+    padding: clamp(2rem, 4vw, 3rem);
+    background: var(--color-bg, #fff);
+    border-top: 1px solid var(--color-rule);
+  }
+  .contact-flow__heading {
+    font-family: var(--font-display); font-size: 1.1rem;
+    font-weight: 700; margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+  .contact-flow__steps {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .contact-flow__steps {
+      flex-direction: row; gap: 1.5rem;
+    }
+  }
+  .contact-flow__step {
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    flex: 1;
+  }
+  .contact-flow__num {
+    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; min-width: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-ink);
+    font-family: var(--font-display); font-size: 0.85rem;
+    font-weight: 700; color: var(--color-ink);
+    line-height: 1;
+  }
+  .contact-flow__body {
+    display: flex; flex-direction: column; gap: 0.15rem;
+  }
+  .contact-flow__step-title {
+    font-family: var(--font-jp); font-size: 0.9rem;
+    font-weight: 600; color: var(--color-ink);
+  }
+  .contact-flow__step-desc {
+    font-family: var(--font-jp); font-size: 0.78rem;
+    color: var(--color-ink-muted); line-height: 1.5;
+  }
+</style>

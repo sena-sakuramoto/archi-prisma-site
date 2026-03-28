@@ -1,0 +1,73 @@
+---
+// AboutNumbers.astro — The 4 number stats with data-target/data-suffix
+---
+
+<section class="about-numbers">
+  <div class="about-numbers__inner">
+    <div class="about-numbers__item reveal">
+      <span class="about-numbers__value" data-target="40">0</span>
+      <span class="about-numbers__unit">Years</span>
+      <span class="about-numbers__label">設計実績</span>
+    </div>
+    <div class="about-numbers__item reveal" style="--delay: 0.08s">
+      <span class="about-numbers__value" data-target="200" data-suffix="+">0+</span>
+      <span class="about-numbers__unit">Projects</span>
+      <span class="about-numbers__label">累計プロジェクト</span>
+    </div>
+    <div class="about-numbers__item reveal" style="--delay: 0.16s">
+      <span class="about-numbers__value" data-target="4">0</span>
+      <span class="about-numbers__unit">Countries</span>
+      <span class="about-numbers__label">日本・英国・中国・台湾</span>
+    </div>
+    <div class="about-numbers__item reveal" style="--delay: 0.24s">
+      <span class="about-numbers__value" data-target="10">0</span>
+      <span class="about-numbers__unit">Services</span>
+      <span class="about-numbers__label">設計から経営まで</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-numbers {
+    padding: 4rem 0 6rem;
+    border-top: 1px solid var(--color-rule);
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .about-numbers__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--content-padding-x);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 2rem;
+  }
+  @media (min-width: 768px) {
+    .about-numbers__inner { grid-template-columns: repeat(4, 1fr); }
+  }
+  .about-numbers__item { text-align: center; }
+  .about-numbers__value {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .about-numbers__unit {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .about-numbers__label {
+    font-family: var(--font-jp);
+    font-size: var(--text-caption);
+    color: var(--color-ink-muted);
+    display: block;
+  }
+</style>

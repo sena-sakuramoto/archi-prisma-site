@@ -1,0 +1,139 @@
+---
+/**
+ * ContactInfo — Left panel with all contact details.
+ * Email, Tel, Address, Hours, Area, License, Links.
+ */
+import { loadCompany } from '../../lib/content';
+
+const company = loadCompany();
+---
+
+<div class="contact-info">
+  <h1 class="contact-title reveal">Contact</h1>
+
+  <div class="contact-block reveal" style="--delay: 0.06s">
+    <span class="contact-label">Email</span>
+    <a href={`mailto:${company.email}`} class="contact-email link-animated">
+      {company.email}
+    </a>
+  </div>
+
+  <div class="contact-block reveal" style="--delay: 0.12s">
+    <span class="contact-label">Tel</span>
+    <a href={`tel:+81${company.tel.replace(/-/g, '').replace(/^0/, '')}`} class="contact-tel link-animated">{company.tel}</a>
+  </div>
+
+  <div class="contact-block reveal" style="--delay: 0.18s">
+    <span class="contact-label">Address</span>
+    <address class="contact-address">
+      {company.postalCode}<br />
+      {company.address}<br />
+      {company.building}
+    </address>
+    <a
+      href={`https://maps.google.com/?q=${company.address}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="contact-map-link link-animated"
+      aria-label="Google Mapsで所在地を確認（新しいタブ）"
+    >Google Maps →</a>
+  </div>
+
+  <div class="contact-block reveal" style="--delay: 0.24s">
+    <span class="contact-label">Hours</span>
+    <p class="contact-hours">{company.hours}</p>
+    <p class="contact-response">通常2営業日以内にご返信いたします</p>
+  </div>
+
+  <div class="contact-block reveal" style="--delay: 0.28s">
+    <span class="contact-label">Area</span>
+    <p class="contact-area">対応エリア: 関東全域 / 全国出張対応 / 海外案件実績あり</p>
+  </div>
+
+  <div class="contact-block reveal" style="--delay: 0.32s">
+    <span class="contact-label">License</span>
+    <p class="contact-license" set:html={company.license.replace(' ', '<br />')} />
+  </div>
+
+  <div class="contact-block reveal" style="--delay: 0.38s">
+    <span class="contact-label">Links</span>
+    <div class="contact-links">
+      <a href={company.social.note} target="_blank" rel="noopener noreferrer" class="contact-social link-animated" aria-label="note（新しいタブ）">note</a>
+      <a href={company.social.x} target="_blank" rel="noopener noreferrer" class="contact-social link-animated" aria-label="X（新しいタブ）">X</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .contact-info {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: clamp(3rem, 6vw, 6rem) var(--content-padding-x);
+    order: 2;
+  }
+  @media (min-width: 768px) {
+    .contact-info {
+      order: 1; padding: clamp(3rem, 4vw, 5rem) clamp(2rem, 4vw, 4rem);
+    }
+  }
+  .contact-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 7vw, 5rem);
+    font-weight: 800; letter-spacing: -0.04em;
+    line-height: 0.95; margin-bottom: 2.5rem;
+  }
+  .contact-block { margin-bottom: 2rem; }
+  .contact-label {
+    font-family: var(--font-body); font-size: var(--text-caption);
+    color: var(--color-ink-muted); letter-spacing: 0.2em;
+    text-transform: uppercase; display: block; margin-bottom: 0.5rem;
+  }
+  .contact-email {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-weight: 700; color: var(--color-ink);
+    text-decoration: none; letter-spacing: -0.01em;
+  }
+  .contact-tel {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 1.8vw, 1.3rem);
+    font-weight: 600; color: var(--color-ink); text-decoration: none;
+  }
+  .contact-address {
+    font-style: normal; font-family: var(--font-jp);
+    font-size: var(--text-body); color: var(--color-ink); line-height: 1.9;
+  }
+  .contact-map-link {
+    font-family: var(--font-display); font-size: 0.8rem;
+    font-weight: 600; color: var(--color-accent);
+    text-decoration: none; letter-spacing: 0.05em;
+    display: inline-block; margin-top: 0.5rem;
+  }
+  .contact-map-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .contact-hours {
+    font-family: var(--font-jp); font-size: var(--text-body); color: var(--color-ink);
+  }
+  .contact-response {
+    font-family: var(--font-jp); font-size: var(--text-caption);
+    color: var(--color-accent); margin-top: 0.25rem;
+  }
+  .contact-area {
+    font-family: var(--font-jp); font-size: var(--text-body);
+    color: var(--color-ink); line-height: 1.7;
+  }
+  .contact-license {
+    font-family: var(--font-jp); font-size: var(--text-caption);
+    color: var(--color-ink-muted); line-height: 1.7;
+  }
+  .contact-links { display: flex; gap: 1.5rem; }
+  .contact-social {
+    font-family: var(--font-display); font-size: var(--text-body);
+    font-weight: 600; color: var(--color-ink); text-decoration: none;
+  }
+  .contact-social:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+</style>

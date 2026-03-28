@@ -3,7 +3,7 @@
 @theme {
   --color-surface: #F8F6F3;
   --color-ink: #1A1A1A;
-  --color-ink-muted: #6B6560;
+  --color-ink-muted: #5A5550;
   --color-accent: #5C4340;
   --color-accent-decorative: #7A5C5A;
   --color-rule: #E2DDD7;
@@ -32,7 +32,7 @@
 html {
   background-color: var(--color-surface);
   color: var(--color-ink);
-  font-family: var(--font-body);
+  font-family: var(--font-jp), var(--font-body), sans-serif;
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -40,8 +40,14 @@ html {
 
 body { min-height: 100vh; overflow-x: hidden; }
 
+/* Desktop header offset — mobile uses bottom tab bar, no top padding needed */
+.page-main { padding-top: 0; }
+@media (min-width: 768px) {
+  .page-main { padding-top: 64px; }
+}
+
 h1, h2, h3, h4 {
-  font-family: var(--font-display);
+  font-family: var(--font-jp), var(--font-display), sans-serif;
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.02em;
@@ -107,7 +113,8 @@ h1, h2, h3, h4 {
   transition: width var(--duration-fast) var(--ease);
 }
 
-.link-animated:hover::after { width: 100%; }
+.link-animated:hover::after,
+.link-animated:focus-visible::after { width: 100%; }
 
 /* Scroll reveal */
 .reveal {
@@ -130,6 +137,102 @@ h1, h2, h3, h4 {
   }
 }
 
+/* ─── Image Authenticity Layer ─── */
+
+/* Kill the AI sheen: subtle desaturation + contrast */
+.img-graded {
+  filter: saturate(0.88) contrast(1.08) brightness(0.96);
+}
+
+/* Film grain overlay via pseudo-element */
+.img-grain {
+  position: relative;
+}
+
+.img-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' seed='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Vignette for hero-scale images */
+.img-vignette {
+  position: relative;
+}
+
+.img-vignette::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.45) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Ken Burns slow ambient zoom */
+@keyframes kenBurns {
+  0%   { transform: scale(1.0) translate(0, 0); }
+  100% { transform: scale(1.08) translate(-1%, -1%); }
+}
+
+.img-ken-burns {
+  animation: kenBurns 25s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img-ken-burns { animation: none; }
+}
+
+/* Slit reveal container */
+.slit-reveal {
+  clip-path: inset(0 50% 0 50%);
+}
+
+/* Circle mask for サークル */
+.img-circle-mask {
+  border-radius: 50%;
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+
+/* Vertical strip (section cut) */
+.img-strip {
+  width: 120px;
+  height: 100%;
+  min-height: 300px;
+  overflow: hidden;
+}
+
+/* Gradient edge fade (dark space emergence) */
+.img-dark-emerge {
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+}
+
+/* Diagonal clip */
+.img-diagonal {
+  clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+/* Float animation */
+@keyframes subtleFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+.img-float {
+  animation: subtleFloat 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img-float { animation: none; }
+}
+
 /* Focus indicators */
 :focus-visible {
   outline: 2px solid var(--color-accent);
@@ -139,4 +242,17 @@ h1, h2, h3, h4 {
 
 .dark-space :focus-visible {
   outline-color: var(--color-accent-dark);
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }

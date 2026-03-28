@@ -1,0 +1,236 @@
+---
+import type { Work } from '../../lib/content';
+
+interface Props {
+  works: Work[];
+  allDisplayed: Work[];
+  eras: { label: string; filter: string }[];
+  categories: { label: string; filter: string }[];
+}
+
+const { works, allDisplayed, eras, categories } = Astro.props;
+
+function getEra(year: number): string {
+  if (year >= 2024) return '2024';
+  if (year >= 2000) return '2000s';
+  return '1990s';
+}
+
+/* Pre-compute category counts */
+const categoryCounts: Record<string, number> = { all: works.length };
+works.forEach((w) => {
+  const cat = w.category || '';
+  if (cat) categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+});
+
+/* Pre-compute era counts */
+const eraCounts: Record<string, number> = { all: works.length };
+works.forEach((w) => {
+  const era = getEra(w.year);
+  eraCounts[era] = (eraCounts[era] || 0) + 1;
+});
+---
+
+<section class="works-archive">
+  <div class="works-archive__inner">
+    <div class="works-archive__header">
+      <h2 class="works-archive__title reveal">Archive</h2>
+      <div class="works-archive__filters reveal">
+        <div id="era-filter" class="works-filter" role="group" aria-label="年代フィルタ">
+          <span class="works-filter__label">Era</span>
+          {eras.map((era) => (
+            <button
+              data-filter={era.filter}
+              data-axis="era"
+              aria-pressed={era.filter === 'all' ? 'true' : 'false'}
+              class="works-filter__btn"
+              type="button"
+            >
+              {era.label}
+              <span class="works-filter__count">{eraCounts[era.filter] ?? 0}</span>
+            </button>
+          ))}
+        </div>
+        <div id="category-filter" class="works-filter" role="group" aria-label="カテゴリフィルタ">
+          <span class="works-filter__label">Category</span>
+          {categories.map((cat) => (
+            <button
+              data-filter={cat.filter}
+              data-axis="category"
+              aria-pressed={cat.filter === 'all' ? 'true' : 'false'}
+              class="works-filter__btn"
+              type="button"
+            >
+              {cat.label}
+              <span class="works-filter__count">{categoryCounts[cat.filter] ?? 0}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div id="filter-status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+    <div id="works-grid" class="works-grid" role="list">
+      {works.map((work, i) => {
+        const era = getEra(work.year);
+        const globalIdx = allDisplayed.indexOf(work);
+        return (
+          <article
+            role="listitem"
+            class={`reveal work-card ${work.image ? 'work-card--has-image' : 'work-card--text-only'}`}
+            data-era={era}
+            data-category={work.category || ''}
+            style={`--delay: ${(i % 6) * 0.06}s`}
+          >
+            {work.image ? (
+              <button class="work-card__btn" type="button" data-project-idx={globalIdx} aria-label={`${work.title}の詳細を見る`}>
+                <div class="work-card__img-wrap">
+                  <img
+                    src={work.image}
+                    alt={`${work.title} — ${work.year} ${work.type}, ${work.region}`}
+                    loading="lazy"
+                    class={`work-card__img ${work.image.includes('/generated/') ? 'img-graded' : ''}`}
+                  />
+                </div>
+                <div class="work-card__body">
+                  <span class="work-card__meta">{work.year} · {work.region}</span>
+                  <h3 class="work-card__title">{work.title}</h3>
+                  <span class="work-card__type">{work.type} — {work.phase}</span>
+                  {work.storyline && <p class="work-card__story">{work.storyline}</p>}
+                </div>
+              </button>
+            ) : (
+              <div class="work-card__text-body">
+                <span class="work-card__year">{work.year}</span>
+                <div>
+                  <h3 class="work-card__title work-card__title--compact">{work.title}</h3>
+                  <span class="work-card__meta">{work.type} · {work.region} — {work.phase}</span>
+                </div>
+              </div>
+            )}
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .works-archive { padding: 6rem 0 4rem; }
+  .works-archive__inner {
+    max-width: var(--max-width); margin: 0 auto;
+    padding: 0 var(--content-padding-x);
+  }
+  .works-archive__header {
+    display: flex; flex-wrap: wrap; align-items: baseline;
+    justify-content: space-between; gap: 1.5rem; margin-bottom: 3rem;
+  }
+  .works-archive__title {
+    font-family: var(--font-display); font-size: var(--text-section); font-weight: 700;
+  }
+  .works-archive__filters {
+    display: flex; flex-direction: column; gap: 0.75rem;
+  }
+  .works-filter {
+    display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
+  }
+  .works-filter__label {
+    font-family: var(--font-display); font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--color-ink-muted); min-width: 5rem;
+  }
+  .works-filter__btn {
+    font-family: var(--font-display); font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.5rem 1.25rem; border-radius: 100px;
+    border: 1px solid var(--color-rule); background: transparent;
+    color: var(--color-ink); cursor: pointer;
+    transition: all 0.25s var(--ease);
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .works-filter__btn[aria-pressed="true"] {
+    background: var(--color-ink); color: var(--color-surface);
+    border-color: var(--color-ink);
+  }
+  .works-filter__btn[aria-pressed="true"] .works-filter__count {
+    background: rgba(255,255,255,0.2); color: var(--color-surface);
+  }
+  .works-filter__btn:hover:not([aria-pressed="true"]) { border-color: var(--color-ink-muted); }
+  .works-filter__count {
+    font-size: 0.65rem; font-weight: 500;
+    background: var(--color-rule); color: var(--color-ink-muted);
+    border-radius: 100px; padding: 0.1rem 0.45rem;
+    line-height: 1.4; transition: all 0.25s var(--ease);
+  }
+
+  /* Grid */
+  .works-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+  @media (min-width: 640px) { .works-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .works-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .work-card {
+    transition: opacity 0.3s var(--ease), max-height 0.3s var(--ease);
+    overflow: hidden;
+  }
+  .work-card.is-hidden {
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    pointer-events: none;
+  }
+  .work-card--has-image { display: flex; flex-direction: column; }
+  .work-card.is-hidden.work-card--has-image { display: flex; }
+
+  .work-card__btn {
+    display: flex; flex-direction: column;
+    background: none; border: none; padding: 0; cursor: pointer;
+    color: inherit; text-align: left; width: 100%;
+  }
+  .work-card__img-wrap {
+    overflow: hidden; border-radius: 3px;
+    aspect-ratio: 16/10; background: #eee;
+  }
+  .work-card__img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 0.6s var(--ease);
+  }
+  .work-card__btn:hover .work-card__img,
+  .work-card__btn:focus-visible .work-card__img { transform: scale(1.04); }
+  .work-card__body {
+    padding: 1rem 0 1.5rem; border-bottom: 1px solid var(--color-rule);
+  }
+  .work-card__meta {
+    font-family: var(--font-body); font-size: var(--text-caption);
+    color: var(--color-ink-muted); letter-spacing: 0.12em;
+    display: block; margin-bottom: 0.35rem;
+  }
+  .work-card__title {
+    font-family: var(--font-display); font-size: clamp(1rem, 1.6vw, 1.3rem);
+    font-weight: 700; margin-bottom: 0.3rem; line-height: 1.3;
+  }
+  .work-card__title--compact { font-size: clamp(0.95rem, 1.4vw, 1.15rem); }
+  .work-card__type {
+    font-family: var(--font-body); font-size: var(--text-caption);
+    color: var(--color-ink-muted);
+  }
+  .work-card__story {
+    font-family: var(--font-jp); font-size: var(--text-body);
+    color: var(--color-ink-muted); margin-top: 0.5rem; line-height: 1.7;
+  }
+  .work-card--text-only {
+    border-bottom: 1px solid var(--color-rule); padding-bottom: 1.25rem;
+  }
+  .work-card__text-body {
+    display: flex; align-items: baseline; gap: 1.5rem;
+    flex-wrap: wrap; padding: 0.75rem 0;
+  }
+  .work-card__year {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    font-weight: 800; color: var(--color-rule); line-height: 1; flex-shrink: 0;
+  }
+
+  .reveal { transition-delay: var(--delay, 0s); }
+</style>

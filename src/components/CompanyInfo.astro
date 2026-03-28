@@ -6,11 +6,12 @@
  * Right: definition list (company details)
  * Partners section with logos (grayscale → hover full color)
  */
-import { loadPartners, loadTeam } from '../lib/content';
+import { loadPartners, loadTeam, loadCompany } from '../lib/content';
 
 const partners = loadPartners();
 const { core } = loadTeam();
 const architect = core.find((m) => m.role === '管理建築士');
+const company = loadCompany();
 ---
 
 <section
@@ -37,11 +38,11 @@ const architect = core.find((m) => m.role === '管理建築士');
       >
         {
           [
-            { term: '社名', detail: 'Archi-Prisma Design Works 株式会社' },
-            { term: '英名', detail: 'Archi-Prisma Design Works K.K.' },
-            { term: '所在地', detail: '〒141-0021 東京都品川区上大崎2-6-7 SMA白金長者丸301' },
-            { term: '設立', detail: '2024年' },
-            { term: '免許', detail: '一級建築士事務所（東京都知事登録）' },
+            { term: '社名', detail: company.name },
+            { term: '英名', detail: `${company.nameEn} K.K.` },
+            { term: '所在地', detail: `${company.postalCode} ${company.address} ${company.building}` },
+            { term: '設立', detail: company.established },
+            { term: '免許', detail: company.license },
             {
               term: '管理建築士',
               detail: architect

@@ -1,108 +1,168 @@
 ---
-// Coming Soon — ARCHI PRISMA
+import Layout from '../layouts/Layout.astro';
+import PageLoader from '../components/PageLoader.astro';
+import Header from '../components/Header.astro';
+import DividingLine from '../components/DividingLine.astro';
+import Hero from '../components/Hero.astro';
+import WorksHighlight from '../components/WorksHighlight.astro';
+import BrandBridge from '../components/BrandBridge.astro';
+import Products from '../components/Products.astro';
+import Team from '../components/Team.astro';
+import CompanyInfo from '../components/CompanyInfo.astro';
+import Footer from '../components/Footer.astro';
 ---
 
-<!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ARCHI PRISMA | Coming Soon</title>
-    <meta name="description" content="Archi-Prisma Design Works — Architecture × Software. Tokyo / London." />
-    <meta name="robots" content="noindex, nofollow" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Outfit:wght@200;300&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<Layout
+  preloadImages={['/assets/curated/masterplan-aerial.jpg']}
+>
+  <PageLoader />
+  <Header />
+  <DividingLine />
+  <main>
+    <Hero />
+    <WorksHighlight />
+    <BrandBridge />
+    <Products />
 
-      html, body {
-        height: 100%;
-        background: #0A0A0A;
-        color: #F0EEEB;
-        font-family: 'Syne', sans-serif;
-        -webkit-font-smoothing: antialiased;
+    <!-- Hook: AI事業への導線 — "The Slit Opens" -->
+    <section id="hook-manifesto" class="dark-space" style="position: relative; min-height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+      <!-- Image revealed through expanding slit -->
+      <div class="hook-img-wrap img-vignette img-grain" style="position: absolute; inset: 0;">
+        <img
+          src="/assets/generated/hook-manifesto.jpg"
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          class="hook-slit-img img-graded"
+          style="width: 100%; height: 100%; object-fit: cover; display: block; clip-path: inset(0 49% 0 49%);"
+        />
+      </div>
+      <!-- Golden center line (visible before slit opens) -->
+      <div class="hook-center-line" style="position: absolute; left: 50%; top: 10%; bottom: 10%; width: 1px; transform: translateX(-50%); background: linear-gradient(to bottom, transparent, var(--color-accent-dark), transparent); z-index: 2; opacity: 1;"></div>
+      <!-- Text content -->
+      <div style="position: relative; z-index: 3; max-width: 800px; padding: 0 var(--content-padding-x); text-align: center;">
+        <p
+          class="reveal hook-line-1"
+          style="font-family: var(--font-jp); font-size: clamp(1rem, 2.2vw, 1.4rem); font-weight: 400; color: rgba(240,238,235,0.75); line-height: 2.2; margin-bottom: 3rem; letter-spacing: 0.05em;"
+        >
+          建築を知らない人間が AI を持っても、<br />現場では何も変えられない。
+        </p>
+        <p
+          class="reveal hook-line-2"
+          style="font-family: var(--font-jp); font-size: clamp(1.4rem, 3.5vw, 2.5rem); font-weight: 700; color: var(--color-ink-dark); line-height: 1.6; margin-bottom: 4rem; letter-spacing: -0.01em;"
+        >
+          経験を持つ人間が<br />AI を手にしたとき、<br />革命が起きる。
+        </p>
+        <a
+          href="/ai/"
+          class="link-animated"
+          style="font-family: var(--font-display); font-size: 0.9rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-accent-dark); text-decoration: none;"
+        >
+          AI × 建築事業 →
+        </a>
+      </div>
+    </section>
+
+    <Team />
+    <CompanyInfo />
+  </main>
+  <Footer />
+
+  <script>
+    import { initLineSystem, destroyLineSystem } from '../lib/line-system';
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    import Lenis from 'lenis';
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    let lenis: Lenis | null = null;
+
+    function init() {
+      // Clean up previous instances (View Transitions re-entry)
+      if (lenis) { lenis.destroy(); lenis = null; }
+      destroyLineSystem();
+
+      // Smooth scroll
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      });
+
+      // Connect Lenis ↔ GSAP ScrollTrigger
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => {
+        lenis!.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
+
+      // Line system (desktop only)
+      if (window.matchMedia('(min-width: 768px)').matches) {
+        initLineSystem();
       }
 
-      body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        padding: 2rem;
-        text-align: center;
+      // Header space awareness
+      const header = document.getElementById('site-header');
+      const darkSections = document.querySelectorAll('.dark-space');
+      if (header && darkSections.length > 0) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const isInDark = entries.some(e => e.isIntersecting);
+            header.setAttribute('data-space', isInDark ? 'dark' : 'light');
+          },
+          { rootMargin: '-64px 0px -90% 0px' }
+        );
+        darkSections.forEach(el => observer.observe(el));
       }
 
-      .wordmark {
-        font-family: 'Syne', sans-serif;
-        font-weight: 800;
-        font-size: clamp(2.2rem, 9vw, 5.5rem);
-        letter-spacing: 0.14em;
-        color: #F0EEEB;
-        line-height: 1;
-        margin-bottom: 0.5em;
+      // Hook slit reveal (desktop)
+      if (window.matchMedia('(min-width: 768px)').matches) {
+        const hookImg = document.querySelector('.hook-slit-img') as HTMLElement;
+        const hookLine = document.querySelector('.hook-center-line') as HTMLElement;
+        if (hookImg && hookLine) {
+          gsap.to(hookImg, {
+            clipPath: 'inset(0 0% 0 0%)',
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '#hook-manifesto',
+              start: 'top 70%',
+              end: 'center center',
+              scrub: 0.8,
+            },
+          });
+          gsap.to(hookLine, {
+            opacity: 0,
+            scrollTrigger: {
+              trigger: '#hook-manifesto',
+              start: 'top 50%',
+              end: 'center center',
+              scrub: 0.5,
+            },
+          });
+        }
+      } else {
+        // Mobile: show image immediately
+        const hookImg = document.querySelector('.hook-slit-img') as HTMLElement;
+        if (hookImg) hookImg.style.clipPath = 'inset(0 15% 0 15%)';
       }
 
-      .tagline {
-        font-family: 'Outfit', sans-serif;
-        font-weight: 200;
-        font-size: clamp(0.65rem, 1.8vw, 0.875rem);
-        letter-spacing: 0.35em;
-        text-transform: uppercase;
-        color: #555;
-        margin-bottom: 4.5rem;
-      }
+      // Scroll reveals
+      document.querySelectorAll('.reveal').forEach(el => {
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.disconnect();
+            }
+          },
+          { threshold: 0.1 }
+        );
+        observer.observe(el);
+      });
+    }
 
-      .rule {
-        width: 1px;
-        height: 56px;
-        background: linear-gradient(to bottom, transparent, #3A3A3A, transparent);
-        margin: 0 auto 3.5rem;
-      }
-
-      .status-en {
-        font-family: 'Outfit', sans-serif;
-        font-weight: 300;
-        font-size: clamp(0.8rem, 2.5vw, 1.05rem);
-        letter-spacing: 0.3em;
-        text-transform: uppercase;
-        color: #C8C4C0;
-        margin-bottom: 0.6rem;
-      }
-
-      .status-ja {
-        font-family: 'Outfit', sans-serif;
-        font-weight: 200;
-        font-size: clamp(0.7rem, 2vw, 0.85rem);
-        letter-spacing: 0.2em;
-        color: #555;
-      }
-
-      footer {
-        position: fixed;
-        bottom: 2rem;
-        left: 50%;
-        transform: translateX(-50%);
-        font-family: 'Outfit', sans-serif;
-        font-weight: 200;
-        font-size: 0.65rem;
-        letter-spacing: 0.22em;
-        color: #333;
-        white-space: nowrap;
-      }
-    </style>
-  </head>
-  <body>
-    <p class="wordmark">ARCHI PRISMA</p>
-    <p class="tagline">Architecture &times; Software &mdash; Tokyo / London</p>
-    <div class="rule"></div>
-    <p class="status-en">Coming Soon</p>
-    <p class="status-ja">準備中</p>
-    <footer>&copy; 2026 Archi-Prisma Design Works</footer>
-  </body>
-</html>
+    // Initial load + re-init on View Transition swap (previous listener auto-aborted)
+    import { registerPageInit } from '../lib/scroll-engine';
+    registerPageInit(init);
+  </script>
+</Layout>

@@ -1,0 +1,71 @@
+---
+// AboutCta.astro — CTA section
+---
+
+<section class="about-cta">
+  <div class="about-cta__inner">
+    <p class="about-cta__lead reveal">
+      実績をご覧いただくか、お気軽にご相談ください。
+    </p>
+    <div class="about-cta__links reveal" style="--delay: 0.1s">
+      <a href="/works/" class="about-cta__btn about-cta__btn--secondary">
+        Works を見る →
+      </a>
+      <a href="/contact/" class="about-cta__btn about-cta__btn--primary">
+        お問い合わせ →
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-cta {
+    padding: 6rem 0 8rem;
+    text-align: center;
+    border-top: 1px solid var(--color-rule);
+  }
+  .about-cta__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--content-padding-x);
+  }
+  .about-cta__lead {
+    font-family: var(--font-jp);
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    font-weight: 400;
+    color: var(--color-ink);
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+  }
+  .about-cta__links {
+    display: flex;
+    gap: 1.25rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .about-cta__btn {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 0.85rem 2rem;
+    border-radius: 3px;
+    text-decoration: none;
+    transition: all 0.25s var(--ease);
+  }
+  .about-cta__btn--primary {
+    background: var(--color-ink);
+    color: var(--color-surface);
+  }
+  .about-cta__btn--primary:hover {
+    background: var(--color-accent);
+  }
+  .about-cta__btn--secondary {
+    border: 1px solid var(--color-rule);
+    color: var(--color-ink);
+    background: transparent;
+  }
+  .about-cta__btn--secondary:hover {
+    border-color: var(--color-ink);
+  }
+</style>

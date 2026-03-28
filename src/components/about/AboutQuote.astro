@@ -1,0 +1,62 @@
+---
+// AboutQuote.astro — CEO blockquote section
+---
+
+<section class="about-quote">
+  <div class="about-quote__inner">
+    <blockquote class="about-quote__block reveal">
+      <p class="about-quote__text">
+        建築を知らない人間が AI を持っても、現場では何も変えられない。<br />
+        経験を持つ人間が AI を手にしたとき、革命が起きる。
+      </p>
+      <footer class="about-quote__cite">
+        <span class="about-quote__name">櫻本 聖成</span>
+        <span class="about-quote__role">代表取締役社長 / CEO</span>
+      </footer>
+    </blockquote>
+  </div>
+</section>
+
+<style>
+  .about-quote {
+    padding: 6rem 0;
+  }
+  .about-quote__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--content-padding-x);
+  }
+  .about-quote__block {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    border: none;
+    padding: 0;
+  }
+  .about-quote__text {
+    font-family: var(--font-jp);
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-weight: 400;
+    line-height: 2.2;
+    color: var(--color-ink);
+    margin-bottom: 2rem;
+    letter-spacing: 0.02em;
+  }
+  .about-quote__cite {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .about-quote__name {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+  .about-quote__role {
+    font-family: var(--font-body);
+    font-size: var(--text-caption);
+    color: var(--color-ink-muted);
+    letter-spacing: 0.08em;
+  }
+</style>

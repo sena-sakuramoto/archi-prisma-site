@@ -1,0 +1,251 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { loadWorks, slugify, getAdjacentWorks, type Work } from '../../lib/content';
+
+export function getStaticPaths() {
+  const works = loadWorks();
+  return works.map((work) => ({
+    params: { slug: slugify(work.title) },
+    props: { work },
+  }));
+}
+
+const { work } = Astro.props as { work: Work };
+const { prev, next } = getAdjacentWorks(slugify(work.title));
+
+function getCategoryLabel(cat?: string): string {
+  const map: Record<string, string> = {
+    urban: '都市開発', hospitality: 'ホスピタリティ',
+    commercial: '商業', cultural: '文化',
+  };
+  return cat ? map[cat] || cat : '';
+}
+---
+
+<Layout
+  title={`${work.title} | Works | Archi-Prisma Design Works`}
+  description={work.description || work.storyline || `${work.title} — ${work.year} ${work.type}`}
+  ogImage={work.image ? `https://archi-prisma.co.jp${work.image}` : undefined}
+  preloadImages={work.image ? [work.image] : []}
+>
+  <Header />
+
+  <main class="page-main">
+    <!-- Back link -->
+    <div class="work-detail__nav-top">
+      <a href="/works/" class="work-detail__back link-animated">← Works 一覧に戻る</a>
+    </div>
+
+    <!-- Hero image -->
+    {work.image && (
+      <section class="work-detail__hero img-grain img-vignette">
+        <img
+          src={work.image}
+          alt={`${work.title} — ${work.year} ${work.type}, ${work.region}`}
+          class={`work-detail__hero-img ${work.image.includes('/generated/') ? 'img-graded' : ''}`}
+        />
+      </section>
+    )}
+
+    <!-- Info -->
+    <section class="work-detail__info">
+      <div class="work-detail__info-inner">
+        <span class="work-detail__meta reveal">
+          {work.year} — {work.type} · {work.region}
+        </span>
+        <h1 class="work-detail__title reveal">{work.title}</h1>
+
+        {work.storyline && (
+          <p class="work-detail__storyline reveal">{work.storyline}</p>
+        )}
+
+        {work.description && (
+          <p class="work-detail__description reveal" style="--delay: 0.08s">
+            {work.description}
+          </p>
+        )}
+
+        <dl class="work-detail__dl reveal" style="--delay: 0.16s">
+          {work.scope && (
+            <>
+              <dt class="work-detail__dt">Scope</dt>
+              <dd class="work-detail__dd">{work.scope}</dd>
+            </>
+          )}
+          <dt class="work-detail__dt">Phase</dt>
+          <dd class="work-detail__dd">{work.phase}</dd>
+          {work.category && (
+            <>
+              <dt class="work-detail__dt">Category</dt>
+              <dd class="work-detail__dd">{getCategoryLabel(work.category)}</dd>
+            </>
+          )}
+          <dt class="work-detail__dt">Region</dt>
+          <dd class="work-detail__dd">{work.region}</dd>
+        </dl>
+
+        <div class="work-detail__actions reveal" style="--delay: 0.24s">
+          <a href="/contact/" class="work-detail__cta-primary">
+            この実績について相談する →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prev / Next -->
+    <nav class="work-detail__pager" aria-label="前後のプロジェクト">
+      <div class="work-detail__pager-inner">
+        {prev ? (
+          <a href={`/works/${slugify(prev.title)}/`} class="work-detail__pager-link work-detail__pager-link--prev">
+            <span class="work-detail__pager-label">← Previous</span>
+            <span class="work-detail__pager-title">{prev.title}</span>
+          </a>
+        ) : <div />}
+        {next ? (
+          <a href={`/works/${slugify(next.title)}/`} class="work-detail__pager-link work-detail__pager-link--next">
+            <span class="work-detail__pager-label">Next →</span>
+            <span class="work-detail__pager-title">{next.title}</span>
+          </a>
+        ) : <div />}
+      </div>
+    </nav>
+  </main>
+
+  <Footer />
+
+  <script>
+    import { createScrollEngine, initReveals } from '../../lib/scroll-engine';
+
+    function init() {
+      const engine = createScrollEngine();
+      initReveals(engine.prefersReduced);
+    }
+    import { registerPageInit } from '../../lib/scroll-engine';
+    registerPageInit(init);
+  </script>
+
+  <style>
+    .reveal { transition-delay: var(--delay, 0s); }
+
+    .work-detail__nav-top {
+      max-width: var(--max-width); margin: 0 auto;
+      padding: 2rem var(--content-padding-x) 0;
+    }
+    .work-detail__back {
+      font-family: var(--font-display); font-size: 0.8rem;
+      font-weight: 600; color: var(--color-ink-muted);
+      text-decoration: none; letter-spacing: 0.05em;
+    }
+
+    /* Hero */
+    .work-detail__hero {
+      max-width: var(--max-width); margin: 2rem auto 0;
+      padding: 0 var(--content-padding-x);
+      position: relative; overflow: hidden; border-radius: 4px;
+    }
+    .work-detail__hero-img {
+      width: 100%; aspect-ratio: 21/9; object-fit: cover;
+      display: block; border-radius: 4px;
+    }
+    @media (max-width: 767px) {
+      .work-detail__hero-img { aspect-ratio: 16/10; }
+    }
+
+    /* Info */
+    .work-detail__info {
+      padding: 4rem 0 3rem;
+    }
+    .work-detail__info-inner {
+      max-width: 720px; margin: 0 auto;
+      padding: 0 var(--content-padding-x);
+    }
+    .work-detail__meta {
+      font-family: var(--font-body); font-size: var(--text-caption);
+      color: var(--color-ink-muted); letter-spacing: 0.15em;
+      text-transform: uppercase; display: block; margin-bottom: 0.75rem;
+    }
+    .work-detail__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 800; letter-spacing: -0.02em;
+      line-height: 1.15; margin-bottom: 1.5rem;
+    }
+    .work-detail__storyline {
+      font-family: var(--font-jp);
+      font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+      font-weight: 400; line-height: 2;
+      color: var(--color-ink); margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+    .work-detail__description {
+      font-family: var(--font-jp);
+      font-size: var(--text-body); color: var(--color-ink-muted);
+      line-height: 2.1; margin-bottom: 2rem;
+    }
+
+    /* Definition list */
+    .work-detail__dl {
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 0.5rem 1.5rem; margin-bottom: 2.5rem;
+      padding-top: 1.5rem; border-top: 1px solid var(--color-rule);
+    }
+    .work-detail__dt {
+      font-family: var(--font-display); font-size: 0.8rem;
+      font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--color-ink-muted);
+    }
+    .work-detail__dd {
+      font-family: var(--font-jp); font-size: var(--text-body);
+      color: var(--color-ink); margin: 0;
+    }
+
+    /* CTA */
+    .work-detail__actions { margin-top: 0.5rem; }
+    .work-detail__cta-primary {
+      font-family: var(--font-display); font-size: 0.85rem;
+      font-weight: 600; letter-spacing: 0.08em;
+      padding: 0.85rem 2.5rem; border-radius: 3px;
+      background: var(--color-ink); color: var(--color-surface);
+      text-decoration: none; display: inline-block;
+      transition: background 0.25s var(--ease);
+    }
+    .work-detail__cta-primary:hover,
+    .work-detail__cta-primary:focus-visible {
+      background: var(--color-accent);
+    }
+
+    /* Pager */
+    .work-detail__pager {
+      border-top: 1px solid var(--color-rule);
+      padding: 3rem 0 6rem;
+    }
+    .work-detail__pager-inner {
+      max-width: var(--max-width); margin: 0 auto;
+      padding: 0 var(--content-padding-x);
+      display: flex; justify-content: space-between;
+      gap: 2rem; flex-wrap: wrap;
+    }
+    .work-detail__pager-link {
+      text-decoration: none; color: var(--color-ink);
+      max-width: 45%;
+    }
+    .work-detail__pager-link--next { text-align: right; margin-left: auto; }
+    .work-detail__pager-label {
+      font-family: var(--font-display); font-size: 0.78rem;
+      font-weight: 600; letter-spacing: 0.1em;
+      color: var(--color-accent); display: block; margin-bottom: 0.35rem;
+    }
+    .work-detail__pager-title {
+      font-family: var(--font-display);
+      font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+      font-weight: 700; line-height: 1.3;
+      transition: color 0.2s var(--ease);
+    }
+    .work-detail__pager-link:hover .work-detail__pager-title,
+    .work-detail__pager-link:focus-visible .work-detail__pager-title {
+      color: var(--color-accent);
+    }
+  </style>
+</Layout>

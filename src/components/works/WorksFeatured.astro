@@ -1,0 +1,108 @@
+---
+import type { Work } from '../../lib/content';
+
+interface Props {
+  featured: Work[];
+  allDisplayed: Work[];
+}
+
+const { featured, allDisplayed } = Astro.props;
+---
+
+<section class="works-featured">
+  {featured.map((work, i) => (
+    <button
+      class="works-featured__card reveal"
+      style={`--delay: ${i * 0.12}s`}
+      data-project-idx={allDisplayed.indexOf(work)}
+      aria-label={`${work.title}の詳細を見る`}
+      type="button"
+    >
+      <div class="works-featured__img-wrap img-grain">
+        {work.image && (
+          <img
+            src={work.image}
+            alt={`${work.title} — ${work.year} ${work.type}, ${work.region}`}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            class={`works-featured__img ${work.image.includes('/generated/') ? 'img-graded' : ''}`}
+          />
+        )}
+      </div>
+      <div class="works-featured__overlay">
+        <span class="works-featured__meta">{work.year} — {work.type}</span>
+        <h2 class="works-featured__name">{work.title}</h2>
+        {work.storyline && <p class="works-featured__story">{work.storyline}</p>}
+        <span class="works-featured__view">View Project →</span>
+      </div>
+    </button>
+  ))}
+</section>
+
+<style>
+  .works-featured {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 4rem var(--content-padding-x);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .works-featured__card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    aspect-ratio: 21/9;
+    background: var(--color-surface-dark);
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+    color: inherit;
+  }
+  .works-featured__img-wrap { position: absolute; inset: 0; }
+  .works-featured__img {
+    width: 100%; height: 120%; object-fit: cover; display: block;
+    transform: translateY(-10%);
+    transition: transform 0.8s var(--ease);
+  }
+  .works-featured__card:hover .works-featured__img,
+  .works-featured__card:focus-visible .works-featured__img {
+    transform: translateY(-10%) scale(1.03);
+  }
+  .works-featured__overlay {
+    position: absolute; inset: 0; z-index: 2;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 45%, transparent 100%);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: clamp(1.5rem, 4vw, 3rem);
+  }
+  .works-featured__meta {
+    font-family: var(--font-body); font-size: var(--text-caption);
+    color: rgba(240,238,235,0.55); letter-spacing: 0.2em;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .works-featured__name {
+    font-family: var(--font-display); font-size: var(--text-project);
+    font-weight: 700; color: var(--color-ink-dark); margin-bottom: 0.5rem;
+  }
+  .works-featured__story {
+    font-family: var(--font-jp); font-size: var(--text-body);
+    color: rgba(240,238,235,0.7); max-width: 480px; line-height: 1.8;
+  }
+  .works-featured__view {
+    font-family: var(--font-display); font-size: 0.8rem; font-weight: 600;
+    color: var(--color-accent-dark); letter-spacing: 0.1em;
+    margin-top: 1rem; opacity: 0; transform: translateY(8px);
+    transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+  }
+  .works-featured__card:hover .works-featured__view,
+  .works-featured__card:focus-visible .works-featured__view {
+    opacity: 1; transform: translateY(0);
+  }
+  @media (max-width: 767px) {
+    .works-featured__card { aspect-ratio: 4/3; }
+    .works-featured__view { opacity: 1; transform: none; }
+  }
+
+  .reveal { transition-delay: var(--delay, 0s); }
+</style>

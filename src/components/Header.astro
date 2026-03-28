@@ -1,4 +1,5 @@
 ---
+const currentPath = Astro.url.pathname;
 const navItems = [
   {
     label: 'Works',
@@ -6,8 +7,8 @@ const navItems = [
     icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="1"/><rect x="11" y="2" width="7" height="7" rx="1"/><rect x="2" y="11" width="7" height="7" rx="1"/><rect x="11" y="11" width="7" height="7" rx="1"/></svg>`,
   },
   {
-    label: 'Products',
-    href: '/products/',
+    label: 'AI',
+    href: '/ai/',
     icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2L18 6.5V13.5L10 18L2 13.5V6.5L10 2Z"/><path d="M10 2V18"/><path d="M2 6.5L10 11L18 6.5"/></svg>`,
   },
   {
@@ -49,7 +50,8 @@ const navItems = [
             <a
               href={item.href}
               class="link-animated"
-              style={`font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-ink); text-decoration: none;`}
+              aria-current={currentPath.startsWith(item.href) ? 'page' : undefined}
+              style={`font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-ink); text-decoration: none; ${currentPath.startsWith(item.href) ? 'opacity: 1;' : 'opacity: 0.7;'}`}
             >
               {item.label}
             </a>
@@ -60,12 +62,33 @@ const navItems = [
   </div>
 </header>
 
+<style>
+  /* Dark space header adaptation */
+  :global(.dark-space) #site-header {
+    background-color: rgba(12, 12, 12, 0.85) !important;
+    border-bottom-color: rgba(255,255,255,0.06) !important;
+  }
+  :global(.dark-space) #site-header a {
+    color: var(--color-ink-dark) !important;
+  }
+  :global(.dark-space) #site-header img {
+    filter: brightness(0) invert(1);
+  }
+  :global(.dark-space) #mobile-tab-bar {
+    background-color: rgba(12, 12, 12, 0.92) !important;
+    border-top-color: rgba(255,255,255,0.06) !important;
+  }
+  :global(.dark-space) #mobile-tab-bar a {
+    color: var(--color-ink-dark) !important;
+  }
+</style>
+
 <!-- Mobile: fixed bottom tab bar -->
 <nav
   id="mobile-tab-bar"
   aria-label="Mobile navigation"
   data-space="light"
-  style="position: fixed; bottom: 0; left: 0; width: 100%; z-index: 100; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background-color: rgba(248, 246, 243, 0.92); border-top: 1px solid var(--color-rule);"
+  style="position: fixed; bottom: 0; left: 0; width: 100%; z-index: 100; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background-color: rgba(248, 246, 243, 0.92); border-top: 1px solid var(--color-rule); padding-bottom: env(safe-area-inset-bottom, 0);"
   class="md:hidden"
 >
   <ul style="display: flex; justify-content: space-around; align-items: stretch; list-style: none; margin: 0; padding: 0; height: 56px;">
@@ -73,7 +96,8 @@ const navItems = [
       <li style="flex: 1; display: flex;">
         <a
           href={item.href}
-          style={`display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; font-family: var(--font-display); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ink); text-decoration: none; gap: 2px; padding: 6px 4px;`}
+          aria-current={currentPath.startsWith(item.href) ? 'page' : undefined}
+          style={`display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; font-family: var(--font-display); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ink); text-decoration: none; gap: 2px; padding: 6px 4px; ${currentPath.startsWith(item.href) ? 'opacity: 1;' : 'opacity: 0.6;'}`}
         >
           <Fragment set:html={item.icon} />
           {item.label}
