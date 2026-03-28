@@ -2,23 +2,66 @@
 const currentYear = new Date().getFullYear();
 ---
 
-<footer id="contact" class="py-24 md:py-32">
-  <div class="max-w-[var(--max-width)] mx-auto px-[var(--content-padding-x)]">
-    <h2 class="font-[family-name:var(--font-display)] text-[length:var(--text-section)] font-bold mb-4">
+<footer id="contact" class="footer">
+  <div class="footer__inner">
+    <h2 class="footer__heading">
       お問い合わせ
     </h2>
     <a
       href="mailto:info@archi-prisma.co.jp"
-      class="text-[length:var(--text-body)] link-animated inline-block mb-16"
+      class="footer__email link-animated"
     >
       info@archi-prisma.co.jp
     </a>
 
-    <div class="w-full h-px bg-[var(--color-rule)] mb-8"></div>
+    <div class="footer__rule"></div>
 
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-[length:var(--text-caption)] text-[var(--color-ink-muted)]">
+    <div class="footer__meta">
       <span>&copy; 2024&ndash;{currentYear} Archi-Prisma Design Works</span>
       <span>Tokyo / London</span>
     </div>
   </div>
 </footer>
+
+<style>
+  .footer {
+    padding: clamp(6rem, 8vw, 8rem) 0;
+  }
+  .footer__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--content-padding-x);
+  }
+  .footer__heading {
+    font-family: var(--font-display), sans-serif;
+    font-size: var(--text-section);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .footer__email {
+    font-size: var(--text-body);
+    display: inline-block;
+    margin-bottom: 4rem;
+  }
+  .footer__rule {
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-rule);
+    margin-bottom: 2rem;
+  }
+  .footer__meta {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    font-size: var(--text-caption);
+    color: var(--color-ink-muted);
+  }
+  @media (min-width: 768px) {
+    .footer__meta {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+</style>

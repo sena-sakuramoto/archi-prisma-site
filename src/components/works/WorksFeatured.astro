@@ -25,13 +25,15 @@ const { featured, allDisplayed } = Astro.props;
             alt={`${work.title} — ${work.year} ${work.type}, ${work.region}`}
             loading={i === 0 ? 'eager' : 'lazy'}
             class={`works-featured__img ${work.image.includes('/generated/') ? 'img-graded' : ''}`}
+            width="1920"
+            height="823"
           />
         )}
       </div>
       <div class="works-featured__overlay">
         <span class="works-featured__meta">{work.year} — {work.type}</span>
         <h2 class="works-featured__name">{work.title}</h2>
-        {work.storyline && <p class="works-featured__story">{work.storyline}</p>}
+        {work.storyline && <p class="works-featured__story text-measure">{work.storyline}</p>}
         <span class="works-featured__view">View Project →</span>
       </div>
     </button>

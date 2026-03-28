@@ -91,13 +91,15 @@ works.forEach((w) => {
                     alt={`${work.title} — ${work.year} ${work.type}, ${work.region}`}
                     loading="lazy"
                     class={`work-card__img ${work.image.includes('/generated/') ? 'img-graded' : ''}`}
+                    width="800"
+                    height="500"
                   />
                 </div>
                 <div class="work-card__body">
                   <span class="work-card__meta">{work.year} · {work.region}</span>
                   <h3 class="work-card__title">{work.title}</h3>
                   <span class="work-card__type">{work.type} — {work.phase}</span>
-                  {work.storyline && <p class="work-card__story">{work.storyline}</p>}
+                  {work.storyline && <p class="work-card__story text-measure">{work.storyline}</p>}
                 </div>
               </button>
             ) : (
@@ -136,12 +138,12 @@ works.forEach((w) => {
     display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
   }
   .works-filter__label {
-    font-family: var(--font-display); font-size: 0.7rem; font-weight: 600;
+    font-family: var(--font-display); font-size: 0.8rem; font-weight: 600;
     letter-spacing: 0.15em; text-transform: uppercase;
     color: var(--color-ink-muted); min-width: 5rem;
   }
   .works-filter__btn {
-    font-family: var(--font-display); font-size: 0.78rem; font-weight: 600;
+    font-family: var(--font-display); font-size: 0.8rem; font-weight: 600;
     letter-spacing: 0.08em; text-transform: uppercase;
     padding: 0.5rem 1.25rem; border-radius: 100px;
     border: 1px solid var(--color-rule); background: transparent;
@@ -158,7 +160,7 @@ works.forEach((w) => {
   }
   .works-filter__btn:hover:not([aria-pressed="true"]) { border-color: var(--color-ink-muted); }
   .works-filter__count {
-    font-size: 0.65rem; font-weight: 500;
+    font-size: 0.8rem; font-weight: 500;
     background: var(--color-rule); color: var(--color-ink-muted);
     border-radius: 100px; padding: 0.1rem 0.45rem;
     line-height: 1.4; transition: all 0.25s var(--ease);

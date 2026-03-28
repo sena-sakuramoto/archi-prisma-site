@@ -26,12 +26,14 @@ const { team } = Astro.props;
             alt={team.core[0].name}
             loading="lazy"
             class="about-team__ceo-img"
+            width="400"
+            height="533"
           />
         </div>
         <div class="about-team__ceo-info">
           <span class="about-team__role">{team.core[0].role}</span>
           <h3 class="about-team__name">{team.core[0].name}</h3>
-          <p class="about-team__notes">{team.core[0].notes}</p>
+          <p class="about-team__notes text-measure">{team.core[0].notes}</p>
         </div>
       </div>
     )}
@@ -47,6 +49,8 @@ const { team } = Astro.props;
                 alt={member.name}
                 loading="lazy"
                 class="about-team__member-img"
+                width="400"
+                height="533"
               />
             </div>
             <h4 class="about-team__member-name">{member.name}</h4>

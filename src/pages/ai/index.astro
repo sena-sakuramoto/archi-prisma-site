@@ -3,14 +3,31 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 
-const services = [
-  { name: 'AI×建築セミナー', tagline: '入口', step: 'AIで何が変わるかを知る', desc: '単発参加OK。サークル会員は月額内で受講可能。', image: '/assets/generated/ai-service-training.jpg', price: '' },
-  { name: 'AI × 建築サークル', tagline: '入口', step: 'まず、自分が触る', desc: '全ツール使い放題。Discord + 月1イベント + セミナー受講。', image: '/assets/generated/ai-service-circle.jpg', price: '月額5,000円' },
-  { name: '法人研修', tagline: '組織展開', step: '全員が触れる状態をつくる', desc: '部署別カスタマイズ。ハンズオン70%。共通言語をつくる。', image: '/assets/generated/ai-service-training.jpg', price: '' },
-  { name: 'AI導入プログラム', tagline: '本格導入', step: '業務ごと変える', desc: '3〜6ヶ月。業務分析→構築→定着。研修の先へ進む会社のために。', image: '/assets/generated/ai-service-program.jpg', price: '' },
-  { name: 'AI保守顧問', tagline: '定着', step: '導入後、止まらないようにする', desc: '月1面談 + チャットサポート。研修後でも導入後でも、推進役の伴走。', image: '/assets/generated/ai-service-consulting.jpg', price: '' },
-  { name: '受託開発', tagline: '必要時', step: '自社専用のツールを作る', desc: '既存ツールの限界が見えたとき。建築実務を知る開発チームが構築。', image: '/assets/generated/ai-service-development.jpg', price: '' },
-];
+/* Images kept for potential future use:
+ * /assets/generated/ai-service-seminar.jpg
+ * /assets/generated/ai-service-circle.jpg
+ * /assets/generated/ai-service-training.jpg
+ * /assets/generated/ai-service-program.jpg
+ * /assets/generated/ai-service-consulting.jpg
+ * /assets/generated/ai-service-development.jpg
+ */
+const services = {
+  entry: [
+    { name: 'AI×建築セミナー', step: 'AIで何が変わるかを知る', desc: '単発参加OK。サークル会員は月額内で受講可能。' },
+    { name: 'AI × 建築サークル', step: 'まず、自分が触る', desc: '全ツール使い放題。Discord + 月1イベント + セミナー受講。', price: '月額 5,000円' },
+  ],
+  org: [
+    { name: '法人研修', step: '全員が触れる状態をつくる', desc: '部署別カスタマイズ。ハンズオン70%。共通言語をつくる。' },
+    { name: 'AI導入プログラム', step: '業務ごと変える', desc: '3〜6ヶ月。業務分析→構築→定着。研修の先へ進む会社のために。' },
+  ],
+  retain: [
+    { name: 'AI保守顧問', step: '導入後、止まらないようにする', desc: '月1面談 + チャットサポート。研修後でも導入後でも、推進役の伴走。' },
+  ],
+  demand: [
+    { name: '受託開発', step: '自社専用のツールを作る', desc: '既存ツールの限界が見えたとき。建築実務を知る開発チームが構築。' },
+  ],
+};
+const servicesFlat = [...services.entry, ...services.org, ...services.retain, ...services.demand];
 
 const values = [
   { num: '01', title: '実務で証明する', criterion: '使ってないなら語るな。' },
@@ -53,18 +70,33 @@ const audiences = [
     provider: {
       '@type': 'Organization',
       name: 'Archi-Prisma Design Works',
+      alternateName: 'APDW',
       url: 'https://archi-prisma.co.jp',
+      logo: 'https://archi-prisma.co.jp/assets/branding/apdw-logo.png',
     },
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: 'AI × 建築 商品ライン',
-      itemListElement: services.map((s, i) => ({
-        '@type': 'Offer',
-        position: i + 1,
-        name: s.name,
-        description: s.desc,
-        priceCurrency: 'JPY',
-      })),
+      itemListElement: servicesFlat.map((s, i) => {
+        const offer: Record<string, unknown> = {
+          '@type': 'Offer',
+          position: i + 1,
+          name: s.name,
+          description: s.desc,
+          priceCurrency: 'JPY',
+        };
+        // サークル: public monthly price
+        if (s.name === 'AI × 建築サークル') {
+          offer.price = '5000';
+          offer.priceSpecification = {
+            '@type': 'UnitPriceSpecification',
+            price: '5000',
+            priceCurrency: 'JPY',
+            billingDuration: 'P1M',
+          };
+        }
+        return offer;
+      }),
     },
   })} />
 
@@ -74,13 +106,13 @@ const audiences = [
     <section class="hero-wrap" data-section="hero">
       <div class="hero-sticky">
         <div class="hero-bg img-vignette">
-          <img src="/assets/generated/ai-hero.jpg" alt="" aria-hidden="true" class="img-graded hero-img" />
+          <img src="/assets/generated/ai-hero.jpg" alt="" aria-hidden="true" class="img-graded hero-img" width="1920" height="823" />
         </div>
         <div class="hero-overlay"></div>
         <div class="hero-grid-lines" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
         <div class="hero-content">
           <div class="hero-inner">
-            <img src="/assets/branding/apdw-dev-logo.png" alt="ARCHI-PRISMA" class="hero-logo" />
+            <img src="/assets/branding/apdw-dev-logo.png" alt="ARCHI-PRISMA" class="hero-logo" width="400" height="80" />
             <h1 class="hero-title">
               <span class="hero-word">建築のプロを、</span>
               <span class="hero-word">AIで最強にする。</span>
@@ -130,11 +162,11 @@ const audiences = [
         <!-- Real UI evidence — two products side by side -->
         <div class="proof-ui-grid reveal">
           <div class="proof-ui">
-            <img src="/assets/curated/compass-gantt-ui.png" alt="COMPASS ガントチャートUI" class="proof-ui-img" loading="lazy" />
+            <img src="/assets/curated/compass-gantt-ui.png" alt="COMPASS ガントチャートUI" class="proof-ui-img" loading="lazy" width="800" height="500" />
             <p class="proof-ui-caption">COMPASS — 工程管理ガントチャート</p>
           </div>
           <div class="proof-ui">
-            <img src="/assets/curated/kakome-report-ui.jpg" alt="KAKOME 写真指示書UI" class="proof-ui-img" loading="lazy" />
+            <img src="/assets/curated/kakome-report-ui.jpg" alt="KAKOME 写真指示書UI" class="proof-ui-img" loading="lazy" width="800" height="500" />
             <p class="proof-ui-caption">KAKOME — 写真指示書レポート</p>
           </div>
         </div>
@@ -157,7 +189,7 @@ const audiences = [
     <!-- ━━━ 4. VISION 2031 — evidentiary, not emotional ━━━ -->
     <section class="vision" data-section="vision">
       <div class="vision-bg">
-        <img src="/assets/generated/ai-vision.jpg" alt="" aria-hidden="true" class="img-graded vision-img" loading="lazy" />
+        <img src="/assets/generated/ai-vision.jpg" alt="" aria-hidden="true" class="img-graded vision-img" loading="lazy" width="1920" height="823" />
       </div>
       <div class="vision-overlay"></div>
       <div class="vision-content">
@@ -181,50 +213,113 @@ const audiences = [
       </div>
     </section>
 
-    <!-- ━━━ 5. SERVICE — scroll-pinned carousel ━━━ -->
-    <section class="svc-section" data-section="service" role="region" aria-label="サービス詳細">
-      <div class="svc-pin-wrap">
-        <div class="svc-pinned">
-          <div class="svc-layout">
-            <div class="svc-left">
-              <span class="section-label" style="margin-bottom: 0.75rem;">SERVICE</span>
-              <h2 style="font-family: var(--font-jp); font-size: clamp(1.2rem, 2vw, 1.5rem); font-weight: 700; color: var(--color-ink-dark); margin-bottom: 0.5rem;">関わり方を、選べる。</h2>
-              <p class="svc-subtitle" id="svc-step-label">まず、自分が触る</p>
-              <div class="svc-counter">
-                <span class="svc-counter-current" id="svc-counter-num">01</span>
-                <span class="svc-counter-sep">/</span>
-                <span class="svc-counter-total">06</span>
+    <!-- ━━━ 5. SERVICE — architectural section drawing ━━━ -->
+    <section class="svc-arch" data-section="service" role="region" aria-label="サービス詳細">
+      <div class="svc-arch__scroll-height"></div>
+      <div class="svc-arch__sticky">
+        <div class="svc-arch__frame">
+          <!-- Section heading -->
+          <div class="svc-arch__header">
+            <span class="section-label">SERVICE</span>
+            <h2 class="svc-arch__title">関わり方を、選べる。</h2>
+          </div>
+
+          <!-- Luminous scan line -->
+          <div class="svc-arch__scanline" aria-hidden="true"></div>
+
+          <!-- Service levels -->
+          <div class="svc-arch__levels">
+
+            <!-- Level: Entry -->
+            <div class="svc-arch__level" data-level="entry">
+              <div class="svc-arch__level-meta">
+                <span class="svc-arch__level-label">ENTRY</span>
               </div>
-              <div class="svc-text-area" id="svc-text-area">
-                {services.map((svc, i) => (
-                  <div class="svc-slide-text" data-index={i} data-step={svc.step}>
-                    <p class="svc-state">{svc.step}</p>
-                    <span class="svc-tagline">{svc.tagline}</span>
-                    <h3 class="svc-name">{svc.name}</h3>
-                    <p class="svc-desc">{svc.desc}</p>
-                    {svc.price && <span class="svc-price">{svc.price}</span>}
+              <div class="svc-arch__level-body svc-arch__level-body--dual">
+                <div class="svc-arch__item" data-svc="seminar" tabindex="0">
+                  <h3 class="svc-arch__item-name">{services.entry[0].name}</h3>
+                  <div class="svc-arch__item-detail">
+                    <p class="svc-arch__item-step">{services.entry[0].step}</p>
+                    <p class="svc-arch__item-desc">{services.entry[0].desc}</p>
                   </div>
-                ))}
-              </div>
-              <!-- Journey indicator -->
-              <div class="svc-journey" id="svc-journey">
-                <div class="svc-journey__track"><div class="svc-journey__fill" id="svc-journey-fill"></div></div>
-                {services.map((svc, i) => (
-                  <button class="svc-journey__dot" data-svc-idx={i} type="button" aria-label={svc.name}>
-                    <span class="svc-journey__dot-label">{svc.name.replace('AI × 建築', '').replace('AI', '').trim()}</span>
-                  </button>
-                ))}
+                </div>
+                <div class="svc-arch__level-split" aria-hidden="true"></div>
+                <div class="svc-arch__item" data-svc="circle" tabindex="0">
+                  <h3 class="svc-arch__item-name">{services.entry[1].name}</h3>
+                  <div class="svc-arch__item-detail">
+                    <p class="svc-arch__item-step">{services.entry[1].step}</p>
+                    <p class="svc-arch__item-desc">{services.entry[1].desc}</p>
+                    <span class="svc-arch__item-price">{services.entry[1].price}</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="svc-right">
-              <div class="svc-image-area" id="svc-image-area">
-                {services.map((svc, i) => (
-                  <div class="svc-slide-img img-grain" data-index={i}>
-                    <img src={svc.image} alt={svc.name} loading="lazy" class="img-graded" />
+
+            <!-- Level: Organization -->
+            <div class="svc-arch__level" data-level="org">
+              <div class="svc-arch__level-meta">
+                <span class="svc-arch__level-label">ORGANIZATION</span>
+              </div>
+              <div class="svc-arch__level-body">
+                <div class="svc-arch__item" data-svc="training" tabindex="0">
+                  <h3 class="svc-arch__item-name">{services.org[0].name}</h3>
+                  <div class="svc-arch__item-detail">
+                    <p class="svc-arch__item-step">{services.org[0].step}</p>
+                    <p class="svc-arch__item-desc">{services.org[0].desc}</p>
                   </div>
-                ))}
+                </div>
+                <div class="svc-arch__level-connector" aria-hidden="true">
+                  <span class="svc-arch__connector-line"></span>
+                  <span class="svc-arch__connector-note">さらに深く</span>
+                </div>
+                <div class="svc-arch__item svc-arch__item--sub" data-svc="program" tabindex="0">
+                  <h3 class="svc-arch__item-name">{services.org[1].name}</h3>
+                  <div class="svc-arch__item-detail">
+                    <p class="svc-arch__item-step">{services.org[1].step}</p>
+                    <p class="svc-arch__item-desc">{services.org[1].desc}</p>
+                  </div>
+                </div>
               </div>
             </div>
+
+            <!-- Level: Retention -->
+            <div class="svc-arch__level" data-level="retain">
+              <div class="svc-arch__level-meta">
+                <span class="svc-arch__level-label">RETENTION</span>
+              </div>
+              <!-- Convergence SVG -->
+              <svg class="svc-arch__converge-svg" aria-hidden="true" viewBox="0 0 60 40" width="60" height="40">
+                <path d="M15 0 L30 38" fill="none" stroke="rgba(196,168,130,0.1)" stroke-width="1" />
+                <path d="M45 0 L30 38" fill="none" stroke="rgba(196,168,130,0.1)" stroke-width="1" />
+              </svg>
+              <div class="svc-arch__level-body">
+                <div class="svc-arch__item" data-svc="advisory" tabindex="0">
+                  <p class="svc-arch__item-convergence">研修後でも、導入後でも。</p>
+                  <h3 class="svc-arch__item-name">{services.retain[0].name}</h3>
+                  <div class="svc-arch__item-detail">
+                    <p class="svc-arch__item-step">{services.retain[0].step}</p>
+                    <p class="svc-arch__item-desc">{services.retain[0].desc}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Level: On Demand -->
+            <div class="svc-arch__level svc-arch__level--demand" data-level="demand">
+              <div class="svc-arch__level-meta">
+                <span class="svc-arch__level-label">ON DEMAND</span>
+              </div>
+              <div class="svc-arch__level-body">
+                <div class="svc-arch__item" data-svc="bespoke" tabindex="0">
+                  <h3 class="svc-arch__item-name">{services.demand[0].name}</h3>
+                  <div class="svc-arch__item-detail">
+                    <p class="svc-arch__item-step">{services.demand[0].step}</p>
+                    <p class="svc-arch__item-desc">{services.demand[0].desc}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -260,11 +355,11 @@ const audiences = [
         <div class="tools-track" id="tools-track">
           {tools.map((tool) => (
             <div class="tool-card">
-              <img src={tool.logo} alt={tool.name} loading="lazy" class="tool-logo" />
+              <img src={tool.logo} alt={tool.name} loading="lazy" class="tool-logo" width="120" height="40" />
               <span class="tool-tagline">{tool.tagline}</span>
               <h3 class="tool-name">{tool.name}</h3>
               {tool.image && (
-                <div class="tool-screenshot"><img src={tool.image} alt="" loading="lazy" /></div>
+                <div class="tool-screenshot"><img src={tool.image} alt="" loading="lazy" width="800" height="500" /></div>
               )}
             </div>
           ))}
@@ -312,11 +407,12 @@ const audiences = [
   <!-- No-JS fallback: make all services visible -->
   <noscript>
     <style>
-      .svc-slide-text { position: relative !important; opacity: 1 !important; pointer-events: auto !important; margin-bottom: 2rem !important; }
-      .svc-slide-img { position: relative !important; opacity: 1 !important; clip-path: none !important; margin-bottom: 2rem !important; }
-      .svc-section { height: auto !important; }
-      .svc-pinned { height: auto !important; display: block !important; }
-      .svc-counter, .svc-progress { display: none !important; }
+      .svc-arch__scroll-height { display: none !important; }
+      .svc-arch__sticky { position: relative !important; height: auto !important; }
+      .svc-arch__scanline { display: none !important; }
+      .svc-arch__level { opacity: 1 !important; }
+      .svc-arch__item-detail { max-height: 200px !important; opacity: 1 !important; }
+      .svc-arch__item { border-left: 2px solid var(--color-accent-dark) !important; padding-left: 1.5rem !important; }
       .m-line { opacity: 1 !important; }
       .hero-logo, .hero-sub, .hero-proof { opacity: 1 !important; }
       .hero-img { transform: none !important; }
@@ -379,7 +475,7 @@ const audiences = [
     /* ── MANIFESTO ── */
     .manifesto { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 8rem var(--pad); }
     .manifesto-inner { max-width: 720px; }
-    .m-line { font-family: var(--font-jp); margin: 0; opacity: 0.08; }
+    .m-line { font-family: var(--font-jp); margin: 0; opacity: 0; transition: opacity 0.6s ease; }
     .m-line--muted { font-size: clamp(0.9rem, 1.5vw, 1.1rem); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 2.6; }
     .m-line--bold { font-size: clamp(1.2rem, 2.5vw, 1.8rem); font-weight: 700; color: var(--color-ink-dark); line-height: 2; }
     .m-line--accent { font-size: clamp(1.3rem, 2.8vw, 2.2rem); font-weight: 800; color: var(--color-accent-dark); line-height: 2; }
@@ -398,75 +494,141 @@ const audiences = [
     .vision-ev-item { display: flex; align-items: flex-start; gap: 0.75rem; font-family: var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 1.8; }
     .vision-ev-icon { color: var(--color-accent-dark); flex-shrink: 0; margin-top: 0.15rem; }
 
-    /* ── SERVICE CAROUSEL ── */
-    .svc-section { position: relative; }
-    .svc-pinned { height: 100vh; display: flex; align-items: center; overflow: hidden; }
-    .svc-layout { max-width: var(--mw); margin: 0 auto; padding: 0 var(--pad); width: 100%; display: grid; grid-template-columns: 1fr; gap: 3rem; align-items: center; }
-    .svc-left { position: relative; }
-    .svc-subtitle { font-family: var(--font-jp); font-size: clamp(0.8rem, 1.2vw, 0.95rem); font-weight: 400; color: var(--color-accent-dark); letter-spacing: 0.08em; margin-bottom: 1.5rem; opacity: 0.8; }
-    .svc-counter { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; color: rgba(196,168,130,0.12); line-height: 1; margin-bottom: 1.5rem; display: flex; align-items: baseline; gap: 0.25rem; }
-    .svc-counter-current { color: var(--color-accent-dark); opacity: 0.4; }
-    .svc-counter-sep, .svc-counter-total { font-size: 0.3em; color: rgba(196,168,130,0.2); }
-    .svc-text-area { position: relative; min-height: 150px; }
-    .svc-slide-text { position: absolute; top: 0; left: 0; width: 100%; opacity: 0; pointer-events: none; }
-    .svc-slide-text[data-index="0"] { position: relative; opacity: 1; pointer-events: auto; }
-    .svc-state { font-family: var(--font-jp); font-size: clamp(1rem, 1.8vw, 1.3rem); font-weight: 400; color: var(--color-ink-dark); margin-bottom: 1.5rem; line-height: 1.6; opacity: 0.7; }
-    .svc-tagline { font-family: var(--font-display); font-size: 0.55rem; font-weight: 600; letter-spacing: 0.3em; color: var(--color-accent-dark); text-transform: uppercase; display: block; margin-bottom: 0.5rem; }
-    .svc-name { font-family: var(--font-jp); font-size: clamp(1.2rem, 2vw, 1.5rem); font-weight: 700; color: var(--color-ink-dark); margin-bottom: 0.6rem; }
-    .svc-desc { font-family: var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 2; margin-bottom: 0.75rem; }
-    .svc-price { font-family: var(--font-body); font-size: 0.8rem; font-weight: 400; color: var(--color-accent-dark); }
+    /* ── SERVICE — architectural section drawing ── */
+    .svc-arch { position: relative; }
+    .svc-arch__scroll-height { height: 400vh; }
+    .svc-arch__sticky {
+      position: sticky; top: 0; height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .svc-arch__frame {
+      max-width: 900px; width: 100%;
+      padding: clamp(2rem, 4vw, 4rem) clamp(1.5rem, 3vw, 3rem);
+      border: 1px solid rgba(196,168,130,0.04);
+      position: relative;
+    }
+    .svc-arch__header { margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+    .svc-arch__title {
+      font-family: var(--font-jp); font-size: clamp(1.2rem, 2vw, 1.5rem);
+      font-weight: 700; color: var(--color-ink-dark); margin: 0;
+    }
 
-    /* Journey indicator */
-    .svc-journey {
-      margin-top: 2.5rem; position: relative;
-      display: flex; align-items: flex-start; justify-content: space-between;
-      max-width: 100%; gap: 0;
+    /* Scan line */
+    .svc-arch__scanline {
+      position: absolute; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--color-accent-dark) 20%, var(--color-accent-dark) 80%, transparent 100%);
+      box-shadow: 0 0 20px rgba(196,168,130,0.15), 0 0 60px rgba(196,168,130,0.05);
+      top: 0; pointer-events: none; z-index: 2;
+      opacity: 0;
     }
-    .svc-journey__track {
-      position: absolute; top: 5px; left: 0; right: 0;
-      height: 1px; background: rgba(255,255,255,0.08);
+
+    /* Levels container */
+    .svc-arch__levels {
+      display: flex; flex-direction: column;
     }
-    .svc-journey__fill {
-      height: 100%; width: 0%; background: var(--color-accent-dark);
-      transition: width 0.5s var(--ease);
+
+    /* Individual level */
+    .svc-arch__level {
+      padding: clamp(1.25rem, 2vw, 2rem) 0;
+      border-bottom: 1px solid rgba(196,168,130,0.06);
+      opacity: 0.12;
+      transition: opacity 0.4s var(--ease);
+      display: grid; grid-template-columns: 90px 1fr; gap: clamp(0.75rem, 1.5vw, 1.5rem);
+      align-items: start;
     }
-    .svc-journey__dot {
-      position: relative; z-index: 1;
-      background: none; border: none; padding: 0; cursor: pointer;
-      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-      flex: 1;
+    .svc-arch__level:first-child { border-top: 1px solid rgba(196,168,130,0.06); }
+    .svc-arch__level--demand { padding-top: clamp(2rem, 4vw, 3.5rem); }
+
+    /* Level states */
+    .svc-arch__level--active { opacity: 1; }
+    .svc-arch__level--passed { opacity: 0.55; }
+    .svc-arch__level--active .svc-arch__item {
+      border-left: 2px solid var(--color-accent-dark);
+      padding-left: 1.5rem;
     }
-    .svc-journey__dot::before {
-      content: ''; display: block;
-      width: 11px; height: 11px; border-radius: 50%;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.15);
-      transition: all 0.3s var(--ease); flex-shrink: 0;
+
+    /* Level label */
+    .svc-arch__level-meta { padding-top: 0.3rem; }
+    .svc-arch__level-label {
+      font-family: var(--font-display); font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--color-accent-dark); opacity: 0.3;
     }
-    .svc-journey__dot--active::before {
-      background: var(--color-accent-dark); border-color: var(--color-accent-dark);
-      box-shadow: 0 0 8px rgba(196,168,130,0.3);
+
+    /* Level body */
+    .svc-arch__level-body { min-width: 0; }
+    .svc-arch__level-body--dual {
+      display: grid; grid-template-columns: 1fr 1px 1fr; gap: clamp(1rem, 2vw, 2rem);
     }
-    .svc-journey__dot-label {
-      font-family: var(--font-jp); font-size: 0.65rem;
-      color: rgba(255,255,255,0.25); white-space: nowrap;
-      transition: color 0.3s var(--ease);
+
+    /* Vertical split between dual items */
+    .svc-arch__level-split {
+      background: rgba(255,255,255,0.04); width: 1px; align-self: stretch;
     }
-    .svc-journey__dot--active .svc-journey__dot-label {
-      color: var(--color-accent-dark);
+
+    /* Service item */
+    .svc-arch__item {
+      transition: border-left 0.3s var(--ease), padding-left 0.3s var(--ease);
+      border-left: 2px solid transparent; padding-left: 0;
     }
-    .svc-journey__dot:focus-visible {
+    .svc-arch__item:focus-visible {
       outline: 2px solid var(--color-accent-dark); outline-offset: 4px; border-radius: 2px;
     }
-    .svc-journey__dot[data-svc-idx="0"]::before {
-      background: var(--color-accent-dark); border-color: var(--color-accent-dark);
-      box-shadow: 0 0 8px rgba(196,168,130,0.3);
+    .svc-arch__item--sub { padding-left: 1rem; }
+    .svc-arch__item-name {
+      font-family: var(--font-jp); font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+      font-weight: 700; color: var(--color-ink-dark); margin: 0 0 0.25rem;
     }
-    .svc-journey__dot[data-svc-idx="0"] .svc-journey__dot-label { color: var(--color-accent-dark); }
-    .svc-right { position: relative; }
-    .svc-image-area { position: relative; aspect-ratio: 4/3; overflow: hidden; border-radius: 3px; }
-    .svc-slide-img { position: absolute; inset: 0; opacity: 0; clip-path: inset(0 100% 0 0); }
-    .svc-slide-img[data-index="0"] { opacity: 1; clip-path: inset(0 0% 0 0); }
-    .svc-slide-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* Detail (expandable) */
+    .svc-arch__item-detail {
+      max-height: 0; opacity: 0; overflow: hidden;
+      transition: max-height 0.5s var(--ease), opacity 0.3s var(--ease);
+    }
+    .svc-arch__level--active .svc-arch__item-detail {
+      max-height: 200px; opacity: 1;
+    }
+    .svc-arch__item-step {
+      font-family: var(--font-jp); font-size: 0.85rem; font-weight: 400;
+      color: var(--color-accent-dark); opacity: 0.8; margin: 0.4rem 0 0.3rem;
+    }
+    .svc-arch__item-desc {
+      font-family: var(--font-jp); font-size: var(--text-body); font-weight: 300;
+      color: var(--color-ink-muted-dark); line-height: 2; margin: 0;
+    }
+    .svc-arch__item-price {
+      font-family: var(--font-body); font-size: 0.8rem; font-weight: 400;
+      color: var(--color-accent-dark); display: block; margin-top: 0.4rem;
+    }
+
+    /* Convergence text */
+    .svc-arch__item-convergence {
+      font-family: var(--font-jp); font-size: 0.8rem; font-weight: 300;
+      color: var(--color-ink-muted-dark); margin: 0 0 0.4rem; opacity: 0.7;
+    }
+
+    /* Convergence SVG */
+    .svc-arch__converge-svg {
+      display: block; margin: 0 auto -0.5rem; grid-column: 2;
+    }
+    .svc-arch__level[data-level="retain"] {
+      grid-template-rows: auto auto;
+    }
+
+    /* Connector between 研修 and 導入PG */
+    .svc-arch__level-connector {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.25rem; margin: 1rem 0;
+    }
+    .svc-arch__connector-line {
+      display: block; width: 1px; height: 32px;
+      background: linear-gradient(to bottom, rgba(196,168,130,0.2), transparent);
+    }
+    .svc-arch__connector-note {
+      font-family: var(--font-jp); font-size: 0.6rem; font-weight: 300;
+      letter-spacing: 0.2em; color: var(--color-ink-muted-dark); opacity: 0.5;
+    }
 
     /* ── VALUES ── */
     .values-section { padding: 8rem 0; }
@@ -518,20 +680,34 @@ const audiences = [
 
     /* ── Responsive ── */
     @media (min-width: 768px) {
-      .svc-layout { grid-template-columns: 42% 1fr; gap: 4rem; }
       .value-item { grid-template-columns: 90px 1fr; }
     }
     @media (max-width: 767px) {
       .hero-grid-lines, .hero-scroll-hint { display: none; }
-      .svc-image-area { aspect-ratio: 16/10; margin-bottom: 2rem; }
       .hero-proof { gap: 1.25rem; }
       .hero-proof-divider { display: none; }
       .cta-section { padding-bottom: calc(10rem + 56px + env(safe-area-inset-bottom, 0px)); }
+      /* Service section: mobile stacked layout */
+      .svc-arch__scroll-height { display: none; }
+      .svc-arch__sticky { position: relative; height: auto; }
+      .svc-arch__frame { border: none; padding: clamp(2rem, 4vw, 3rem) var(--pad); }
+      .svc-arch__scanline { display: none; }
+      .svc-arch__level {
+        grid-template-columns: 1fr; gap: 0.5rem;
+        opacity: 1; /* all visible on mobile */
+      }
+      .svc-arch__level-body--dual { grid-template-columns: 1fr; gap: 1.5rem; }
+      .svc-arch__level-split {
+        width: 100%; height: 1px; background: rgba(255,255,255,0.04);
+      }
+      .svc-arch__item-detail { max-height: 200px; opacity: 1; }
+      .svc-arch__converge-svg { display: none; }
     }
 
-    /* ── No-JS fallback: show all service slides ── */
-    @supports not (animation-timeline: scroll()) {
-      /* noscript handled by <noscript> tag below */
+    /* ── Short viewport: disable sticky ── */
+    @media (max-height: 699px) {
+      .svc-arch__scroll-height { display: none; }
+      .svc-arch__sticky { position: relative; height: auto; }
     }
 
     /* ── Reduced motion ── */
@@ -540,6 +716,12 @@ const audiences = [
       .vision-bg img { transform: none !important; }
       .m-line { opacity: 1 !important; }
       .value-item { opacity: 1 !important; transform: none !important; }
+      .svc-arch__scroll-height { display: none !important; }
+      .svc-arch__sticky { position: relative !important; height: auto !important; }
+      .svc-arch__scanline { display: none !important; }
+      .svc-arch__level { opacity: 1 !important; }
+      .svc-arch__item-detail { max-height: 200px !important; opacity: 1 !important; }
+      .svc-arch__item { border-left: 2px solid var(--color-accent-dark) !important; padding-left: 1.5rem !important; }
     }
   </style>
 
@@ -563,14 +745,11 @@ const audiences = [
       if (lenisInstance) { lenisInstance.destroy(); lenisInstance = null; }
     }
 
-    function showAllServices() {
-      document.querySelectorAll<HTMLElement>('.svc-slide-text').forEach(el => {
-        el.style.position = 'relative'; el.style.opacity = '1'; el.style.pointerEvents = 'auto';
-        el.style.marginBottom = '2.5rem'; el.removeAttribute('aria-hidden');
-      });
-      document.querySelectorAll<HTMLElement>('.svc-slide-img').forEach(el => {
-        el.style.position = 'relative'; el.style.opacity = '1'; el.style.clipPath = 'none';
-        el.removeAttribute('aria-hidden');
+    /** Show all service levels at full opacity (reduced-motion / no-JS fallback) */
+    function showAllLevels() {
+      document.querySelectorAll<HTMLElement>('.svc-arch__level').forEach(el => {
+        el.classList.add('svc-arch__level--active');
+        el.classList.remove('svc-arch__level--passed');
       });
     }
 
@@ -594,17 +773,7 @@ const audiences = [
         document.querySelectorAll('.value-item').forEach(el => { (el as HTMLElement).style.opacity = '1'; (el as HTMLElement).style.transform = 'none'; });
         gsap.set(['.hero-logo', '.hero-sub', '.hero-proof'], { opacity: 1 });
         gsap.set('.hero-img', { scale: 1 });
-        showAllServices();
-        // Also apply mobile service reset (for small-screen + reduced-motion)
-        const svc = document.querySelector('.svc-section') as HTMLElement;
-        if (svc) {
-          svc.style.height = 'auto';
-          document.querySelector('.svc-counter')?.setAttribute('style', 'display:none');
-          document.querySelector('.svc-progress')?.setAttribute('style', 'display:none');
-          document.querySelector('.svc-pinned')?.setAttribute('style', 'height:auto; display:block;');
-          const imgArea = document.querySelector('.svc-image-area') as HTMLElement;
-          if (imgArea) { imgArea.style.position = 'relative'; imgArea.style.aspectRatio = 'auto'; imgArea.style.display = 'flex'; imgArea.style.flexDirection = 'column'; }
-        }
+        showAllLevels();
         return;
       }
 
@@ -641,64 +810,63 @@ const audiences = [
         // VISION PARALLAX
         gsap.to('.vision-img', { y: '-10%', scrollTrigger: { trigger: '.vision', start: 'top bottom', end: 'bottom top', scrub: 0.5 } });
 
-        // SERVICE CAROUSEL
-        const svcSection = document.querySelector('.svc-section') as HTMLElement;
-        const svcPinWrap = document.querySelector('.svc-pin-wrap') as HTMLElement;
-        const textSlides = document.querySelectorAll<HTMLElement>('.svc-slide-text');
-        const imgSlides = document.querySelectorAll<HTMLElement>('.svc-slide-img');
-        const journeyFill = document.getElementById('svc-journey-fill');
-        const journeyDots = document.querySelectorAll<HTMLElement>('.svc-journey__dot');
-        const counterNum = document.getElementById('svc-counter-num');
-        const total = textSlides.length;
+        // ── SERVICE — architectural section drawing ──
+        const svcArch = document.querySelector('.svc-arch') as HTMLElement;
+        const scanline = document.querySelector('.svc-arch__scanline') as HTMLElement;
+        const levels = document.querySelectorAll<HTMLElement>('.svc-arch__level');
+        const levelKeys = ['entry', 'org', 'retain', 'demand'];
+        const thresholds = [0, 0.25, 0.5, 0.75]; // progress at which each level activates
 
-        if (svcSection && svcPinWrap && total > 0) {
-          const grid = document.querySelector('.svc-layout') as HTMLElement;
-          if (grid) grid.style.gridTemplateColumns = '42% 1fr';
+        if (svcArch && scanline && levels.length > 0) {
+          // Show scanline
+          gsap.set(scanline, { opacity: 1 });
 
-          // Set aria-hidden on non-active slides (JS-only, not in markup)
-          textSlides.forEach((el, i) => { if (i > 0) el.setAttribute('aria-hidden', 'true'); });
-          imgSlides.forEach((el, i) => { if (i > 0) el.setAttribute('aria-hidden', 'true'); });
+          // Get the frame element to measure positions
+          const frame = document.querySelector('.svc-arch__frame') as HTMLElement;
 
-          let current = 0;
-          function goTo(idx: number) {
-            if (idx === current || idx < 0 || idx >= total) return;
-            const dir = idx > current ? 1 : -1;
-            const prev = current;
-            current = idx; // Update synchronously to prevent race conditions
+          ScrollTrigger.create({
+            trigger: svcArch,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: true,
+            onUpdate(self) {
+              const progress = self.progress;
 
-            // Outgoing: text + image + aria
-            const outText = textSlides[prev]!;
-            outText.setAttribute('aria-hidden', 'true');
-            gsap.to(outText, { opacity: 0, y: -15 * dir, duration: 0.3, ease: 'power2.in', onComplete() { outText.style.pointerEvents = 'none'; } });
-            imgSlides[prev]!.setAttribute('aria-hidden', 'true');
-            gsap.to(imgSlides[prev], { opacity: 0, duration: 0.35, ease: 'power2.in' });
+              // Position the scan line within the frame
+              if (frame) {
+                const frameRect = frame.getBoundingClientRect();
+                // Map progress to scan line position within the levels area
+                // Offset from top of frame (account for header)
+                const levelsEl = frame.querySelector('.svc-arch__levels') as HTMLElement;
+                if (levelsEl) {
+                  const levelsTop = levelsEl.offsetTop;
+                  const levelsHeight = levelsEl.offsetHeight;
+                  const scanY = levelsTop + (progress * levelsHeight);
+                  scanline.style.top = `${scanY}px`;
+                }
+              }
 
-            // Incoming: text + image + aria
-            const inText = textSlides[idx]!;
-            inText.removeAttribute('aria-hidden');
-            inText.style.pointerEvents = 'auto';
-            gsap.set(inText, { opacity: 1 });
-            gsap.fromTo(inText.querySelectorAll('.svc-tagline,.svc-name,.svc-desc,.svc-price'), { opacity: 0, y: 20 * dir }, { opacity: 1, y: 0, stagger: 0.06, duration: 0.45, ease, delay: 0.12 });
-            imgSlides[idx]!.removeAttribute('aria-hidden');
-            gsap.fromTo(imgSlides[idx], { opacity: 1, clipPath: dir > 0 ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)' }, { clipPath: 'inset(0 0% 0 0%)', duration: 0.6, ease: 'power3.out', delay: 0.06 });
+              // Determine active level based on progress
+              let activeIdx = 0;
+              for (let i = thresholds.length - 1; i >= 0; i--) {
+                if (progress >= thresholds[i]) {
+                  activeIdx = i;
+                  break;
+                }
+              }
 
-            // Update journey indicator
-            if (journeyFill) journeyFill.style.width = `${((idx + 0.5) / total) * 100}%`;
-            journeyDots.forEach((dot, j) => {
-              dot.classList.toggle('svc-journey__dot--active', j <= idx);
-            });
-            if (counterNum) { gsap.to(counterNum, { y: -8, opacity: 0, duration: 0.12, onComplete() { counterNum!.textContent = String(idx + 1).padStart(2, '0'); gsap.fromTo(counterNum, { y: 8, opacity: 0 }, { y: 0, opacity: 0.4, duration: 0.25 }); } }); }
-
-            // Update step label
-            const stepLabel = document.getElementById('svc-step-label');
-            const stepText = inText.getAttribute('data-step') || '';
-            if (stepLabel && stepText) {
-              gsap.to(stepLabel, { opacity: 0, duration: 0.15, onComplete() { stepLabel.textContent = stepText; gsap.to(stepLabel, { opacity: 1, duration: 0.25 }); } });
+              // Update level states
+              levels.forEach((level, i) => {
+                level.classList.remove('svc-arch__level--active', 'svc-arch__level--passed');
+                if (i === activeIdx) {
+                  level.classList.add('svc-arch__level--active');
+                } else if (i < activeIdx) {
+                  level.classList.add('svc-arch__level--passed');
+                }
+                // Future levels: no class added, stays at dormant opacity (0.12)
+              });
             }
-          }
-
-          svcSection.style.height = `${total * 100}vh`;
-          ScrollTrigger.create({ trigger: svcSection, start: 'top top', end: 'bottom bottom', pin: svcPinWrap, pinSpacing: false, onUpdate(self) { const idx = Math.min(Math.floor(self.progress * total), total - 1); if (idx !== current) goTo(idx); } });
+          });
         }
 
         // VALUES
@@ -727,20 +895,17 @@ const audiences = [
           obs.observe(item); observers.push(obs);
         });
 
-        // Mobile: stack services (reuse showAllServices for aria-hidden cleanup)
-        const svcSection = document.querySelector('.svc-section') as HTMLElement;
-        if (svcSection) {
-          svcSection.style.height = 'auto';
-          showAllServices(); // removes aria-hidden + shows all content
-          document.querySelectorAll<HTMLElement>('.svc-slide-img').forEach((el, i) => {
-            el.style.marginBottom = i < 4 ? '3rem' : '0';
-          });
-          const imgArea = document.querySelector('.svc-image-area') as HTMLElement;
-          if (imgArea) { imgArea.style.position = 'relative'; imgArea.style.aspectRatio = 'auto'; imgArea.style.display = 'flex'; imgArea.style.flexDirection = 'column'; imgArea.style.gap = '0'; }
-          document.querySelector('.svc-counter')?.setAttribute('style', 'display:none');
-          document.querySelector('.svc-progress')?.setAttribute('style', 'display:none');
-          document.querySelector('.svc-pinned')?.setAttribute('style', 'height:auto; display:block;');
-        }
+        // Mobile: reveal service levels on scroll
+        document.querySelectorAll('.svc-arch__level').forEach(level => {
+          const obs = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) {
+              level.classList.add('svc-arch__level--active');
+              obs.disconnect();
+            }
+          }, { threshold: 0.2 });
+          obs.observe(level);
+          observers.push(obs);
+        });
 
         return () => {};
       });

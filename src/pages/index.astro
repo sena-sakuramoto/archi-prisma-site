@@ -13,6 +13,7 @@ import Footer from '../components/Footer.astro';
 ---
 
 <Layout
+  description="建築設計とソフトウェア開発の二軸で未来を切り拓く設計事務所 Archi-Prisma Design Works。都市開発・ホテル・商業施設の実績多数。東京/ロンドン拠点。"
   preloadImages={['/assets/curated/masterplan-aerial.jpg']}
 >
   <PageLoader />
@@ -25,39 +26,30 @@ import Footer from '../components/Footer.astro';
     <Products />
 
     <!-- Hook: AI事業への導線 — "The Slit Opens" -->
-    <section id="hook-manifesto" class="dark-space" style="position: relative; min-height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+    <section id="hook-manifesto" class="hook dark-space">
       <!-- Image revealed through expanding slit -->
-      <div class="hook-img-wrap img-vignette img-grain" style="position: absolute; inset: 0;">
+      <div class="hook__img-wrap img-vignette img-grain">
         <img
           src="/assets/generated/hook-manifesto.jpg"
           alt=""
           aria-hidden="true"
           loading="lazy"
-          class="hook-slit-img img-graded"
-          style="width: 100%; height: 100%; object-fit: cover; display: block; clip-path: inset(0 49% 0 49%);"
+          class="hook__img hook-slit-img img-graded"
+          width="1920"
+          height="823"
         />
       </div>
       <!-- Golden center line (visible before slit opens) -->
-      <div class="hook-center-line" style="position: absolute; left: 50%; top: 10%; bottom: 10%; width: 1px; transform: translateX(-50%); background: linear-gradient(to bottom, transparent, var(--color-accent-dark), transparent); z-index: 2; opacity: 1;"></div>
+      <div class="hook__center-line hook-center-line"></div>
       <!-- Text content -->
-      <div style="position: relative; z-index: 3; max-width: 800px; padding: 0 var(--content-padding-x); text-align: center;">
-        <p
-          class="reveal hook-line-1"
-          style="font-family: var(--font-jp); font-size: clamp(1rem, 2.2vw, 1.4rem); font-weight: 400; color: rgba(240,238,235,0.75); line-height: 2.2; margin-bottom: 3rem; letter-spacing: 0.05em;"
-        >
+      <div class="hook__content">
+        <p class="reveal hook__lead hook-line-1">
           建築を知らない人間が AI を持っても、<br />現場では何も変えられない。
         </p>
-        <p
-          class="reveal hook-line-2"
-          style="font-family: var(--font-jp); font-size: clamp(1.4rem, 3.5vw, 2.5rem); font-weight: 700; color: var(--color-ink-dark); line-height: 1.6; margin-bottom: 4rem; letter-spacing: -0.01em;"
-        >
+        <p class="reveal hook__headline hook-line-2">
           経験を持つ人間が<br />AI を手にしたとき、<br />革命が起きる。
         </p>
-        <a
-          href="/ai/"
-          class="link-animated"
-          style="font-family: var(--font-display); font-size: 0.9rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-accent-dark); text-decoration: none;"
-        >
+        <a href="/ai/" class="hook__cta link-animated">
           AI × 建築事業 →
         </a>
       </div>
@@ -165,4 +157,72 @@ import Footer from '../components/Footer.astro';
     import { registerPageInit } from '../lib/scroll-engine';
     registerPageInit(init);
   </script>
+
+  <style>
+    /* ─── Hook Manifesto ─── */
+    .hook {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hook__img-wrap {
+      position: absolute;
+      inset: 0;
+    }
+    .hook__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      clip-path: inset(0 49% 0 49%);
+    }
+    .hook__center-line {
+      position: absolute;
+      left: 50%;
+      top: 10%;
+      bottom: 10%;
+      width: 1px;
+      transform: translateX(-50%);
+      background: linear-gradient(to bottom, transparent, var(--color-accent-dark), transparent);
+      z-index: 2;
+      opacity: 1;
+    }
+    .hook__content {
+      position: relative;
+      z-index: 3;
+      max-width: 800px;
+      padding: 0 var(--content-padding-x);
+      text-align: center;
+    }
+    .hook__lead {
+      font-family: var(--font-jp);
+      font-size: clamp(1rem, 2.2vw, 1.4rem);
+      font-weight: 400;
+      color: rgba(240, 238, 235, 0.75);
+      line-height: 2.2;
+      margin-bottom: 3rem;
+      letter-spacing: 0.05em;
+    }
+    .hook__headline {
+      font-family: var(--font-jp);
+      font-size: clamp(1.4rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      color: var(--color-ink-dark);
+      line-height: 1.6;
+      margin-bottom: 4rem;
+      letter-spacing: -0.01em;
+    }
+    .hook__cta {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-accent-dark);
+      text-decoration: none;
+    }
+  </style>
 </Layout>

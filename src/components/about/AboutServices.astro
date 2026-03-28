@@ -13,12 +13,13 @@ const { services } = Astro.props;
     <ul class="about-services__grid">
       {services.map((svc, i) => (
         <li class="about-services__item reveal" style={`--delay: ${i * 0.04}s`}>
-          <a href="/works/" class="about-services__link">
+          <a href="/works/" class="about-services__link" title="実績を見る">
             <span class="about-services__num">{svc.num}</span>
-            <div>
+            <div class="about-services__text">
               <span class="about-services__title">{svc.title}</span>
               <span class="about-services__en">{svc.en}</span>
             </div>
+            <span class="about-services__arrow" aria-hidden="true">実績を見る &rarr;</span>
           </a>
         </li>
       ))}
@@ -65,6 +66,25 @@ const { services } = Astro.props;
     text-decoration: none;
     color: inherit;
     transition: background-color 0.25s var(--ease);
+  }
+  .about-services__text {
+    flex: 1;
+    min-width: 0;
+  }
+  .about-services__arrow {
+    font-family: var(--font-jp);
+    font-size: 0.8rem;
+    color: var(--color-accent);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .about-services__link:hover .about-services__arrow,
+  .about-services__link:focus-visible .about-services__arrow {
+    opacity: 1;
+    transform: translateX(0);
   }
   .about-services__link:hover,
   .about-services__link:focus-visible {

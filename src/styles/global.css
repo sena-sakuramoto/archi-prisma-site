@@ -139,9 +139,9 @@ h1, h2, h3, h4 {
 
 /* ─── Image Authenticity Layer ─── */
 
-/* Kill the AI sheen: subtle desaturation + contrast */
+/* Kill the AI sheen: stronger desaturation + contrast + warm sepia tint */
 .img-graded {
-  filter: saturate(0.88) contrast(1.08) brightness(0.96);
+  filter: saturate(0.75) contrast(1.14) brightness(0.91) sepia(0.08);
 }
 
 /* Film grain overlay via pseudo-element */
@@ -256,3 +256,17 @@ h1, h2, h3, h4 {
   white-space: nowrap;
   border-width: 0;
 }
+
+/* ─── Layout widths ─── */
+.content-narrow { max-width: 720px; margin: 0 auto; padding: 0 var(--content-padding-x); }
+.content-wide { max-width: var(--max-width); margin: 0 auto; padding: 0 var(--content-padding-x); }
+.content-full { width: 100%; }
+
+/* ─── Typography control ─── */
+.text-measure { max-width: 65ch; }  /* Body text optimal reading width */
+.heading-measure { max-width: 20ch; } /* Headlines break control */
+
+/* ─── Section spacing ─── */
+.section-pad { padding-top: clamp(4rem, 8vw, 8rem); padding-bottom: clamp(4rem, 8vw, 8rem); }
+.section-pad-sm { padding-top: clamp(2rem, 4vw, 4rem); padding-bottom: clamp(2rem, 4vw, 4rem); }
+.section-divider { border-top: 1px solid var(--color-rule); }
