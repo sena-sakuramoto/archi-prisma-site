@@ -34,7 +34,7 @@ const values = [
   { num: '02', title: '現場の課題から始める', criterion: '答えられないなら作るな。' },
   { num: '03', title: '1週間で届ける', criterion: '出せない規模なら分割しろ。' },
   { num: '04', title: '自分の手で作る', criterion: 'まず自分で30分やってみろ。' },
-  { num: '05', title: '隣の1人を本気にさせる', criterion: '最近、誰かを本気にさせたか？' },
+  { num: '05', title: '目の前の1人を動かす', criterion: '最近、誰かを本気にさせたか？' },
 ];
 
 const tools = [
@@ -173,170 +173,61 @@ const audiences = [
       </div>
     </section>
 
-    <!-- ━━━ 3. MANIFESTO — trimmed, paired with evidence ━━━ -->
-    <section class="manifesto" data-section="manifesto">
-      <div class="manifesto-inner">
-        <p class="m-line m-line--muted">この業界には、力がある。</p>
-        <p class="m-line m-line--muted">足りないのは、テクノロジーという武器だけだ。</p>
-        <div class="m-break" aria-hidden="true"></div>
-        <p class="m-line m-line--bold">それを手にしたとき、</p>
-        <p class="m-line m-line--bold">1人が10人分の成果を出せる世界が始まる。</p>
-        <div class="m-break" aria-hidden="true"></div>
-        <p class="m-line m-line--accent">その世界を、俺たちがつくる。</p>
-      </div>
-    </section>
-
-    <!-- ━━━ 4. VISION 2031 — evidentiary, not emotional ━━━ -->
+    <!-- ━━━ 3. VISION + MANIFESTO (統合) ━━━ -->
     <section class="vision" data-section="vision">
       <div class="vision-bg">
         <img src="/assets/generated/ai-vision.jpg" alt="" aria-hidden="true" class="img-graded vision-img" loading="lazy" width="1920" height="823" />
       </div>
       <div class="vision-overlay"></div>
       <div class="vision-content">
-        <span class="section-label reveal">VISION — 2031</span>
-        <h2 class="vision-heading reveal">建築が、最もAIを使いこなす業界になる。</h2>
-        <p class="vision-sub reveal">そうさせるのが、俺たちだ。</p>
-        <div class="vision-evidence reveal">
+        <div class="vision-manifesto">
+          <p class="m-line m-line--muted">この業界には、力がある。</p>
+          <p class="m-line m-line--muted">足りないのは、テクノロジーという武器だけだ。</p>
+          <div class="m-break" aria-hidden="true"></div>
+          <p class="m-line m-line--bold">それを手にしたとき、</p>
+          <p class="m-line m-line--bold">1人が10人分の成果を出せる世界が始まる。</p>
+          <div class="m-break" aria-hidden="true"></div>
+          <p class="m-line m-line--accent">その世界を、俺たちがつくる。</p>
+        </div>
+        <div class="vision-future reveal">
           <div class="vision-ev-item">
-            <span class="vision-ev-icon">→</span>
             <span>設計事務所の5人が、50人分のプロジェクトを動かす</span>
           </div>
           <div class="vision-ev-item">
-            <span class="vision-ev-icon">→</span>
             <span>新人がAIに聞いて初日から現場を回す</span>
           </div>
           <div class="vision-ev-item">
-            <span class="vision-ev-icon">→</span>
             <span>「あの人がいないとわからない」がこの業界から消える</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ━━━ 5. SERVICE — architectural section drawing ━━━ -->
-    <section class="svc-arch" data-section="service" role="region" aria-label="サービス詳細">
-      <div class="svc-arch__sticky">
-        <div class="svc-arch__frame">
-          <!-- Section heading -->
-          <div class="svc-arch__header">
-            <span class="section-label">SERVICE</span>
-            <h2 class="svc-arch__title">関わり方を、選べる。</h2>
-          </div>
+    <!-- ━━━ 5. SERVICE — accordion ━━━ -->
+    <section class="svc" data-section="service">
+      <div class="svc__inner">
+        <span class="section-label reveal">SERVICE</span>
+        <h2 class="svc__title reveal">あなたに合った始め方がある。</h2>
 
-          <!-- Luminous scan line -->
-          <div class="svc-arch__scanline" aria-hidden="true"></div>
-
-          <!-- Service levels -->
-          <div class="svc-arch__levels">
-
-            <!-- Level: Entry -->
-            <div class="svc-arch__level" data-level="entry">
-              <div class="svc-arch__level-meta">
-                <span class="svc-arch__level-label">ENTRY</span>
+        <div class="svc__list">
+          {[...services.entry, ...services.org, ...services.retain, ...services.demand].map((svc, i) => (
+            <details class="svc__item reveal" style={`--delay: ${i * 0.05}s`}>
+              <summary class="svc__header">
+                <span class="svc__name">{svc.name}</span>
+                <span class="svc__step">{svc.step}</span>
+                <span class="svc__toggle" aria-hidden="true"></span>
+              </summary>
+              <div class="svc__body">
+                <p class="svc__desc">{svc.desc}</p>
+                {svc.price && <span class="svc__price">{svc.price}</span>}
               </div>
-              <div class="svc-arch__level-body svc-arch__level-body--dual">
-                <div class="svc-arch__item" data-svc="seminar" tabindex="0">
-                  <h3 class="svc-arch__item-name">{services.entry[0].name}</h3>
-                  <div class="svc-arch__item-detail">
-                    <p class="svc-arch__item-step">{services.entry[0].step}</p>
-                    <p class="svc-arch__item-desc">{services.entry[0].desc}</p>
-                  </div>
-                </div>
-                <div class="svc-arch__level-split" aria-hidden="true"></div>
-                <div class="svc-arch__item" data-svc="circle" tabindex="0">
-                  <h3 class="svc-arch__item-name">{services.entry[1].name}</h3>
-                  <div class="svc-arch__item-detail">
-                    <p class="svc-arch__item-step">{services.entry[1].step}</p>
-                    <p class="svc-arch__item-desc">{services.entry[1].desc}</p>
-                    <span class="svc-arch__item-price">{services.entry[1].price}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Level: Organization -->
-            <div class="svc-arch__level" data-level="org">
-              <div class="svc-arch__level-meta">
-                <span class="svc-arch__level-label">ORGANIZATION</span>
-              </div>
-              <div class="svc-arch__level-body">
-                <div class="svc-arch__item" data-svc="training" tabindex="0">
-                  <h3 class="svc-arch__item-name">{services.org[0].name}</h3>
-                  <div class="svc-arch__item-detail">
-                    <p class="svc-arch__item-step">{services.org[0].step}</p>
-                    <p class="svc-arch__item-desc">{services.org[0].desc}</p>
-                  </div>
-                </div>
-                <div class="svc-arch__level-connector" aria-hidden="true">
-                  <span class="svc-arch__connector-line"></span>
-                  <span class="svc-arch__connector-note">さらに深く</span>
-                </div>
-                <div class="svc-arch__item svc-arch__item--sub" data-svc="program" tabindex="0">
-                  <h3 class="svc-arch__item-name">{services.org[1].name}</h3>
-                  <div class="svc-arch__item-detail">
-                    <p class="svc-arch__item-step">{services.org[1].step}</p>
-                    <p class="svc-arch__item-desc">{services.org[1].desc}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Level: Retention -->
-            <div class="svc-arch__level" data-level="retain">
-              <div class="svc-arch__level-meta">
-                <span class="svc-arch__level-label">RETENTION</span>
-              </div>
-              <div class="svc-arch__level-body">
-                <div class="svc-arch__item" data-svc="advisory" tabindex="0">
-                  <p class="svc-arch__item-convergence">研修後でも、導入後でも。</p>
-                  <h3 class="svc-arch__item-name">{services.retain[0].name}</h3>
-                  <div class="svc-arch__item-detail">
-                    <p class="svc-arch__item-step">{services.retain[0].step}</p>
-                    <p class="svc-arch__item-desc">{services.retain[0].desc}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Level: On Demand -->
-            <div class="svc-arch__level svc-arch__level--demand" data-level="demand">
-              <div class="svc-arch__level-meta">
-                <span class="svc-arch__level-label">ON DEMAND</span>
-              </div>
-              <div class="svc-arch__level-body">
-                <div class="svc-arch__item" data-svc="bespoke" tabindex="0">
-                  <h3 class="svc-arch__item-name">{services.demand[0].name}</h3>
-                  <div class="svc-arch__item-detail">
-                    <p class="svc-arch__item-step">{services.demand[0].step}</p>
-                    <p class="svc-arch__item-desc">{services.demand[0].desc}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ━━━ 7. VALUES ━━━ -->
-    <section class="values-section" data-section="values">
-      <div class="values-inner">
-        <span class="section-label reveal">VALUES</span>
-        <h2 class="values-heading reveal">行動原則</h2>
-        <div class="values-list">
-          {values.map((v) => (
-            <div class="value-item">
-              <span class="value-num">{v.num}</span>
-              <div class="value-content">
-                <h3 class="value-title">{v.title}</h3>
-                <p class="value-criterion">{v.criterion}</p>
-              </div>
-            </div>
+            </details>
           ))}
         </div>
       </div>
     </section>
+
+    <!-- VALUES merged into PERSONAL section below -->
 
     <!-- ━━━ 8. TOOLS ━━━ -->
     <section class="tools-section" data-section="tools">
@@ -361,24 +252,46 @@ const audiences = [
       </div>
     </section>
 
-    <!-- ━━━ 9. BRIDGE — why start with the circle ━━━ -->
-    <section class="bridge-section" data-section="bridge">
-      <div class="bridge-inner reveal">
-        <span class="section-label">WHY START HERE</span>
-        <h2 class="bridge-heading">なぜサークルから始めるのか</h2>
-        <div class="bridge-reasons">
-          <div class="bridge-reason">
-            <span class="bridge-reason-num">1</span>
-            <p>全ツールに即日アクセス。使ってみてから次を決められる。</p>
+    <!-- ━━━ 6. PERSONAL + VALUES ━━━ -->
+    <section class="personal-section" data-section="personal">
+      <div class="personal-inner">
+        <div class="personal-layout reveal">
+          <div class="personal-photo">
+            <img
+              src="/assets/team-sakuramoto-sena.jpg"
+              alt="櫻本 聖成"
+              class="personal-img"
+              loading="lazy"
+              width="400"
+              height="533"
+            />
+            <div class="personal-sign">
+              <span class="personal-name">櫻本 聖成</span>
+              <span class="personal-role">代表取締役 / CEO</span>
+            </div>
           </div>
-          <div class="bridge-reason">
-            <span class="bridge-reason-num">2</span>
-            <p>月1回のイベントで他社の活用事例を直接聞ける。</p>
+          <div class="personal-text">
+            <p class="personal-message">
+              今も自分で設計して、チームでプロジェクトを回しています。<br />
+              だから分かる。AIがどこに効いて、どこは人間がやるべきか。<br /><br />
+              「難しそう」「うちには早い」—<br />
+              そう思っている方ほど、一度話してみてください。<br />
+              30分で、見える景色が変わります。
+            </p>
           </div>
-          <div class="bridge-reason">
-            <span class="bridge-reason-num">3</span>
-            <p>研修やプログラムへの移行時、サークル在籍で特別対応。</p>
-          </div>
+        </div>
+        <!-- 行動原則（同じセクション内、罫線で分離） -->
+        <div class="personal-values reveal">
+          <h3 class="personal-values__heading">行動原則</h3>
+          <ol class="personal-values__list">
+            {values.map((v) => (
+              <li class="personal-values__item">
+                <span class="personal-values__title">{v.title}</span>
+                <span class="personal-values__criterion">{v.criterion}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
         </div>
       </div>
     </section>
@@ -387,11 +300,16 @@ const audiences = [
     <section class="cta-section" data-section="cta">
       <div class="cta-inner reveal">
         <div class="cta-line" aria-hidden="true"></div>
-        <p class="cta-heading">まず、サークルから。</p>
-        <p class="cta-sub">月額5,000円。全ツール使い放題。いつでも退会可能。</p>
+        <p class="cta-heading">まずは、話してみませんか。</p>
+        <p class="cta-sub">30分のオンライン面談（無料）で、御社に合う進め方をご提案します。</p>
+        <div class="cta-steps">
+          <div class="cta-step"><span class="cta-step-num">1</span><span>面談で状況を聞く</span></div>
+          <div class="cta-step"><span class="cta-step-num">2</span><span>セミナーで体感する</span></div>
+          <div class="cta-step"><span class="cta-step-num">3</span><span>サークルで触ってみる</span></div>
+        </div>
         <div class="cta-buttons">
-          <a href="https://ai-archi-circle.jp" target="_blank" rel="noopener noreferrer" class="cta-primary">AI建築サークルを見る</a>
-          <a href="/contact/" class="cta-outline">お問い合わせ</a>
+          <a href="/contact/" class="cta-primary">無料面談を予約する</a>
+          <a href="https://ai-archi-circle.jp" target="_blank" rel="noopener noreferrer" class="cta-outline">セミナー・サークルを見る</a>
         </div>
       </div>
     </section>
@@ -401,12 +319,7 @@ const audiences = [
   <!-- No-JS fallback: make all services visible -->
   <noscript>
     <style>
-      .svc-arch { height: auto !important; }
-      .svc-arch__sticky { position: relative !important; height: auto !important; }
-      .svc-arch__scanline { display: none !important; }
-      .svc-arch__level { opacity: 1 !important; }
-      .svc-arch__item-detail { max-height: 200px !important; opacity: 1 !important; }
-      .svc-arch__item { border-left: 2px solid var(--color-accent-dark) !important; padding-left: 1.5rem !important; }
+      /* accordion needs no noscript overrides */
       .m-line { opacity: 1 !important; }
       .hero-logo, .hero-sub, .hero-proof { opacity: 1 !important; }
       .hero-img { transform: none !important; }
@@ -488,147 +401,104 @@ const audiences = [
     .vision-ev-item { display: flex; align-items: flex-start; gap: 0.75rem; font-family: var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 1.8; }
     .vision-ev-icon { color: var(--color-accent-dark); flex-shrink: 0; margin-top: 0.15rem; }
 
-    /* ── SERVICE — architectural section drawing ── */
-    .svc-arch { position: relative; height: 400vh; }
-    .svc-arch__sticky {
-      position: sticky; top: 0; height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
+    /* ── SERVICE — clean accordion ── */
+    .svc { padding: clamp(5rem, 8vw, 8rem) 0; }
+    .svc__inner { max-width: 800px; margin: 0 auto; padding: 0 var(--pad); }
+    .svc__title {
+      font-family: var(--font-jp); font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+      font-weight: 700; color: var(--color-ink-dark); margin-bottom: 3rem;
     }
-    .svc-arch__frame {
-      max-width: 900px; width: 100%;
-      padding: clamp(2rem, 4vw, 4rem) clamp(1.5rem, 3vw, 3rem);
-      border: 1px solid rgba(196,168,130,0.04);
+    .svc__list { border-top: 1px solid rgba(255,255,255,0.08); }
+    .svc__item {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .svc__header {
+      display: flex; align-items: center; gap: 1rem;
+      padding: clamp(1.25rem, 2vw, 1.75rem) 0;
+      cursor: pointer; list-style: none; width: 100%;
+    }
+    .svc__header::-webkit-details-marker { display: none; }
+    .svc__header::marker { display: none; content: ''; }
+    .svc__name {
+      font-family: var(--font-jp); font-size: clamp(1rem, 1.4vw, 1.2rem);
+      font-weight: 700; color: var(--color-ink-dark);
+      flex-shrink: 0;
+    }
+    .svc__step {
+      font-family: var(--font-jp); font-size: 0.85rem;
+      color: var(--color-ink-muted-dark);
+      flex: 1; text-align: right;
+    }
+    .svc__toggle {
+      width: 20px; height: 20px; flex-shrink: 0;
       position: relative;
     }
-    .svc-arch__header { margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
-    .svc-arch__title {
-      font-family: var(--font-jp); font-size: clamp(1.2rem, 2vw, 1.5rem);
-      font-weight: 700; color: var(--color-ink-dark); margin: 0;
+    .svc__toggle::before, .svc__toggle::after {
+      content: ''; position: absolute;
+      background: var(--color-ink-muted-dark);
+      transition: transform 0.3s var(--ease);
     }
-
-    /* Scan line */
-    .svc-arch__scanline {
-      position: absolute; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent 0%, var(--color-accent-dark) 20%, var(--color-accent-dark) 80%, transparent 100%);
-      box-shadow: 0 0 20px rgba(196,168,130,0.15), 0 0 60px rgba(196,168,130,0.05);
-      top: 0; pointer-events: none; z-index: 2;
-      opacity: 0;
+    .svc__toggle::before { width: 12px; height: 1px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .svc__toggle::after { width: 1px; height: 12px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .svc__item[open] .svc__toggle::after { transform: translate(-50%, -50%) rotate(90deg); }
+    .svc__body {
+      padding: 0 0 clamp(1.25rem, 2vw, 1.75rem);
     }
-
-    /* Levels container */
-    .svc-arch__levels {
-      display: flex; flex-direction: column;
+    .svc__desc {
+      font-family: var(--font-jp); font-size: var(--text-body);
+      color: var(--color-ink-dark); opacity: 0.7; line-height: 2;
+      margin: 0;
     }
-
-    /* Individual level — visible by default, JS adds .svc-arch--js-ready to dim dormant levels */
-    .svc-arch__level {
-      padding: clamp(1.25rem, 2vw, 2rem) 0;
-      border-bottom: 1px solid rgba(196,168,130,0.06);
-      opacity: 1;
-      transition: opacity 0.4s var(--ease);
-      display: grid; grid-template-columns: 110px 1fr; gap: clamp(1rem, 2vw, 2rem);
-      align-items: start;
-    }
-    .svc-arch--js-ready .svc-arch__level { opacity: 0.12; }
-    .svc-arch__level:first-child { border-top: 1px solid rgba(196,168,130,0.06); }
-    .svc-arch__level--demand { padding-top: clamp(2rem, 4vw, 3.5rem); }
-
-    /* Level states */
-    .svc-arch__level--active { opacity: 1 !important; }
-    .svc-arch__level--passed { opacity: 0.55 !important; }
-    .svc-arch__level--active .svc-arch__item {
-      border-left: 2px solid var(--color-accent-dark);
-      padding-left: 1.5rem;
-    }
-
-    /* Level label */
-    .svc-arch__level-meta { padding-top: 0.3rem; }
-    .svc-arch__level-label {
-      font-family: var(--font-display); font-size: 0.6rem; font-weight: 600;
-      letter-spacing: 0.35em; text-transform: uppercase;
-      color: var(--color-accent-dark); opacity: 0.3;
-    }
-
-    /* Level body */
-    .svc-arch__level-body { min-width: 0; }
-    .svc-arch__level-body--dual {
-      display: grid; grid-template-columns: 1fr 1px 1fr; gap: clamp(1rem, 2vw, 2rem);
-    }
-
-    /* Vertical split between dual items */
-    .svc-arch__level-split {
-      background: rgba(255,255,255,0.04); width: 1px; align-self: stretch;
-    }
-
-    /* Service item */
-    .svc-arch__item {
-      transition: border-left 0.3s var(--ease), padding-left 0.3s var(--ease);
-      border-left: 2px solid transparent; padding-left: 0;
-    }
-    .svc-arch__item:focus-visible {
-      outline: 2px solid var(--color-accent-dark); outline-offset: 4px; border-radius: 2px;
-    }
-    .svc-arch__item--sub { padding-left: 1rem; }
-    .svc-arch__item-name {
-      font-family: var(--font-jp); font-size: clamp(1.1rem, 1.8vw, 1.4rem);
-      font-weight: 700; color: var(--color-ink-dark); margin: 0 0 0.25rem;
-    }
-
-    /* Detail — visible by default, JS-ready hides and expands on active */
-    .svc-arch__item-detail {
-      max-height: 200px; opacity: 1; overflow: hidden;
-      transition: max-height 0.5s var(--ease), opacity 0.3s var(--ease);
-    }
-    .svc-arch--js-ready .svc-arch__item-detail {
-      max-height: 0; opacity: 0;
-    }
-    .svc-arch--js-ready .svc-arch__level--active .svc-arch__item-detail {
-      max-height: 200px; opacity: 1;
-    }
-    .svc-arch__item-step {
-      font-family: var(--font-jp); font-size: 0.85rem; font-weight: 400;
-      color: var(--color-accent-dark); opacity: 0.8; margin: 0.4rem 0 0.3rem;
-    }
-    .svc-arch__item-desc {
-      font-family: var(--font-jp); font-size: var(--text-body); font-weight: 300;
-      color: var(--color-ink-muted-dark); line-height: 2; margin: 0;
-    }
-    .svc-arch__item-price {
-      font-family: var(--font-body); font-size: 0.8rem; font-weight: 400;
-      color: var(--color-accent-dark); display: block; margin-top: 0.4rem;
-    }
-
-    /* Convergence text */
-    .svc-arch__item-convergence {
-      font-family: var(--font-jp); font-size: 0.8rem; font-weight: 300;
-      color: var(--color-ink-muted-dark); opacity: 0.6;
-      margin: 0 0 0.3rem; letter-spacing: 0.05em;
-    }
-
-    /* Connector between 研修 and 導入PG */
-    .svc-arch__level-connector {
-      display: flex; flex-direction: column; align-items: center;
-      gap: 0.25rem; margin: 1rem 0;
-    }
-    .svc-arch__connector-line {
-      display: block; width: 1px; height: 32px;
-      background: linear-gradient(to bottom, rgba(196,168,130,0.2), transparent);
-    }
-    .svc-arch__connector-note {
-      font-family: var(--font-jp); font-size: 0.6rem; font-weight: 300;
-      letter-spacing: 0.2em; color: var(--color-ink-muted-dark); opacity: 0.5;
+    .svc__price {
+      font-family: var(--font-body); font-size: 0.85rem;
+      color: var(--color-accent-dark); display: block; margin-top: 0.5rem;
     }
 
     /* ── VALUES ── */
-    .values-section { padding: 8rem 0; }
+    /* ── VALUES (Vercel/Linear hybrid: 5-col grid, title+criterion, numbered) ── */
+    .values-section { padding: clamp(4rem, 6vw, 6rem) 0 clamp(2rem, 3vw, 3rem); border-top: 1px solid rgba(255,255,255,0.04); }
     .values-inner { max-width: var(--mw); margin: 0 auto; padding: 0 var(--pad); }
-    .values-heading { font-family: var(--font-jp); font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; color: var(--color-ink-dark); margin-bottom: 4rem; letter-spacing: -0.02em; }
-    .values-list { display: flex; flex-direction: column; border-top: 1px solid rgba(255,255,255,0.06); }
-    .value-item { display: grid; grid-template-columns: 70px 1fr; gap: 1.25rem; padding: 2rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); opacity: 0; transform: translateY(16px); }
-    .value-num { font-family: var(--font-display); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; color: var(--color-accent-dark); padding-top: 0.2rem; }
-    .value-title { font-family: var(--font-jp); font-size: clamp(0.95rem, 1.3vw, 1.1rem); font-weight: 700; color: var(--color-ink-dark); margin-bottom: 0.3rem; }
-    .value-criterion { font-family: var(--font-jp); font-size: var(--text-caption); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 1.7; }
+    .values-heading {
+      font-family: var(--font-jp); font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+      font-weight: 700; color: var(--color-ink-dark); margin-bottom: 3rem;
+    }
+    .values-list {
+      list-style: none; margin: 0; padding: 0;
+      display: grid; grid-template-columns: 1fr; gap: 0;
+      counter-reset: value-counter;
+    }
+    @media (min-width: 768px) { .values-list { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1200px) { .values-list { grid-template-columns: repeat(5, 1fr); } }
+    .value-item {
+      padding: clamp(1.5rem, 2.5vw, 2rem);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      counter-increment: value-counter;
+      position: relative;
+    }
+    @media (min-width: 768px) {
+      .value-item { border-right: 1px solid rgba(255,255,255,0.04); }
+      .value-item:nth-child(2n) { border-right: none; }
+    }
+    @media (min-width: 1200px) {
+      .value-item:nth-child(2n) { border-right: 1px solid rgba(255,255,255,0.04); }
+      .value-item:last-child { border-right: none; }
+    }
+    .value-item::before {
+      content: counter(value-counter, decimal-leading-zero);
+      font-family: var(--font-display); font-size: 0.65rem; font-weight: 600;
+      letter-spacing: 0.1em; color: var(--color-accent-dark); opacity: 0.4;
+      display: block; margin-bottom: 0.75rem;
+    }
+    .value-title {
+      font-family: var(--font-jp); font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+      font-weight: 700; color: var(--color-ink-dark);
+      display: block; margin-bottom: 0.5rem; line-height: 1.5;
+    }
+    .value-criterion {
+      font-family: var(--font-jp); font-size: 0.85rem;
+      font-weight: 400; color: var(--color-ink-dark); opacity: 0.55;
+      line-height: 1.8; display: block;
+    }
 
     /* ── TOOLS ── */
     .tools-section { padding: 8rem 0; overflow: hidden; }
@@ -647,20 +517,98 @@ const audiences = [
     .tool-screenshot img { width: 100%; height: auto; display: block; }
 
     /* ── BRIDGE ── */
-    .bridge-section { padding: 8rem 0; }
-    .bridge-inner { max-width: var(--mw); margin: 0 auto; padding: 0 var(--pad); max-width: 640px; }
-    .bridge-heading { font-family: var(--font-jp); font-size: clamp(1.2rem, 2vw, 1.6rem); font-weight: 700; color: var(--color-ink-dark); margin-bottom: 2.5rem; }
-    .bridge-reasons { display: flex; flex-direction: column; gap: 2rem; }
-    .bridge-reason { display: grid; grid-template-columns: 32px 1fr; gap: 1rem; align-items: start; }
-    .bridge-reason-num { font-family: var(--font-display); font-size: 0.7rem; font-weight: 700; color: var(--color-accent-dark); width: 24px; height: 24px; border: 1px solid rgba(196,168,130,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .bridge-reason p { font-family: var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 1.9; }
+    .bridge-section { padding: 8rem 0; border-top: 1px solid rgba(255,255,255,0.04); }
+    .bridge-inner { max-width: var(--mw); margin: 0 auto; padding: 0 var(--pad); }
+    .bridge-heading { font-family: var(--font-jp); font-size: clamp(1.3rem, 2.2vw, 1.8rem); font-weight: 700; color: var(--color-ink-dark); margin-bottom: 3rem; }
+    .bridge-reasons { display: grid; grid-template-columns: 1fr; gap: 0; }
+    @media (min-width: 768px) { .bridge-reasons { grid-template-columns: repeat(3, 1fr); } }
+    .bridge-reason {
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    @media (min-width: 768px) {
+      .bridge-reason { border-bottom: none; border-right: 1px solid rgba(255,255,255,0.04); }
+      .bridge-reason:last-child { border-right: none; }
+    }
+    .bridge-reason-num {
+      font-family: var(--font-display); font-size: 0.8rem;
+      font-weight: 600; letter-spacing: 0.15em; color: var(--color-accent-dark); opacity: 0.4;
+      display: block; margin-bottom: 0.75rem; line-height: 1;
+    }
+    .bridge-reason-title { font-family: var(--font-jp); font-size: clamp(1rem, 1.5vw, 1.2rem); font-weight: 700; color: var(--color-ink-dark); margin-bottom: 0.5rem; }
+    .bridge-reason p { font-family: var(--font-jp); font-size: var(--text-body); font-weight: 400; color: var(--color-ink-dark); opacity: 0.7; line-height: 2; }
+
+    /* ── PERSONAL + VALUES ── */
+    .personal-section { padding: 6rem 0; border-top: 1px solid rgba(255,255,255,0.04); }
+    .personal-inner { max-width: var(--mw); margin: 0 auto; padding: 0 var(--pad); }
+    .personal-layout {
+      display: grid; grid-template-columns: 1fr; gap: 3rem;
+    }
+    @media (min-width: 768px) {
+      .personal-layout { grid-template-columns: 220px 1fr; gap: clamp(3rem, 5vw, 5rem); align-items: start; }
+    }
+    .personal-photo { max-width: 220px; }
+    .personal-img {
+      width: 100%; height: auto; border-radius: 4px; display: block;
+      filter: grayscale(0.15) contrast(1.05); margin-bottom: 1rem;
+    }
+    .personal-sign {}
+    .personal-name {
+      font-family: var(--font-jp); font-size: 1rem; font-weight: 700;
+      color: var(--color-ink-dark); display: block; margin-bottom: 0.15rem;
+    }
+    .personal-role {
+      font-family: var(--font-body); font-size: 0.8rem;
+      color: var(--color-ink-muted-dark); letter-spacing: 0.05em;
+    }
+    .personal-text {}
+    .personal-message {
+      font-family: var(--font-jp); font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+      color: var(--color-ink-dark); opacity: 0.85; line-height: 2.2;
+    }
+    /* Values inside personal */
+    .personal-values { margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(255,255,255,0.06); }
+    .personal-values__heading {
+      font-family: var(--font-display); font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--color-accent-dark); opacity: 0.5; margin-bottom: 2rem;
+    }
+    .personal-values__list {
+      list-style: none; margin: 0; padding: 0;
+      display: grid; grid-template-columns: 1fr; gap: 0;
+    }
+    @media (min-width: 768px) { .personal-values__list { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1200px) { .personal-values__list { grid-template-columns: repeat(5, 1fr); } }
+    .personal-values__item {
+      padding: clamp(1rem, 1.5vw, 1.25rem);
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    @media (min-width: 768px) {
+      .personal-values__item { border-right: 1px solid rgba(255,255,255,0.04); }
+      .personal-values__item:nth-child(2n) { border-right: none; }
+    }
+    @media (min-width: 1200px) {
+      .personal-values__item:nth-child(2n) { border-right: 1px solid rgba(255,255,255,0.04); }
+      .personal-values__item:last-child { border-right: none; }
+    }
+    .personal-values__title {
+      font-family: var(--font-jp); font-size: clamp(0.9rem, 1.1vw, 1rem);
+      font-weight: 700; color: var(--color-ink-dark); display: block; margin-bottom: 0.3rem;
+    }
+    .personal-values__criterion {
+      font-family: var(--font-jp); font-size: 0.8rem;
+      color: var(--color-ink-dark); opacity: 0.5; display: block;
+    }
 
     /* ── CTA ── */
     .cta-section { padding: 6rem 0 10rem; }
     .cta-inner { max-width: var(--mw); margin: 0 auto; padding: 0 var(--pad); text-align: center; }
     .cta-line { width: 1px; height: 48px; background: linear-gradient(to bottom, transparent, var(--color-accent-dark), transparent); margin: 0 auto 2.5rem; }
     .cta-heading { font-family: var(--font-jp); font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; color: var(--color-ink-dark); margin-bottom: 0.5rem; }
-    .cta-sub { font-family: var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); margin-bottom: 2.5rem; }
+    .cta-sub { font-family: var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); margin-bottom: 2rem; }
+    .cta-steps { display: flex; gap: 2rem; justify-content: center; margin-bottom: 2.5rem; flex-wrap: wrap; }
+    .cta-step { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-jp); font-size: 0.85rem; color: var(--color-ink-dark); opacity: 0.6; }
+    .cta-step-num { font-family: var(--font-display); font-size: 0.7rem; font-weight: 600; color: var(--color-accent-dark); opacity: 0.5; }
     .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     .cta-primary, .cta-outline { font-family: var(--font-jp); font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em; padding: 1rem 2.5rem; border-radius: 2px; text-decoration: none; display: inline-block; transition: all 0.25s ease; }
     .cta-primary { color: var(--color-surface-dark); background: var(--color-ink-dark); }
@@ -669,35 +617,13 @@ const audiences = [
     .cta-outline:hover { border-color: rgba(240,238,235,0.4); transform: translateY(-2px); }
 
     /* ── Responsive ── */
-    @media (min-width: 768px) {
-      .value-item { grid-template-columns: 90px 1fr; }
-    }
+    /* value-item responsive handled above */
     @media (max-width: 767px) {
       .hero-grid-lines, .hero-scroll-hint { display: none; }
       .hero-proof { gap: 1.25rem; }
       .hero-proof-divider { display: none; }
       .cta-section { padding-bottom: calc(10rem + 56px + env(safe-area-inset-bottom, 0px)); }
-      /* Service section: mobile stacked layout */
-      .svc-arch { height: auto; }
-      .svc-arch__sticky { position: relative; height: auto; }
-      .svc-arch__frame { border: none; padding: clamp(2rem, 4vw, 3rem) var(--pad); }
-      .svc-arch__scanline { display: none; }
-      .svc-arch__level {
-        grid-template-columns: 1fr; gap: 0.5rem;
-        opacity: 1; /* all visible on mobile */
-      }
-      .svc-arch__level-body--dual { grid-template-columns: 1fr; gap: 1.5rem; }
-      .svc-arch__level-split {
-        width: 100%; height: 1px; background: rgba(255,255,255,0.04);
-      }
-      .svc-arch__item-detail { max-height: 200px; opacity: 1; }
-      /* convergence handled by text only */
-    }
-
-    /* ── Short viewport: disable sticky ── */
-    @media (max-height: 699px) {
-      .svc-arch { height: auto; }
-      .svc-arch__sticky { position: relative; height: auto; }
+      /* accordion is naturally responsive */
     }
 
     /* ── Reduced motion ── */
@@ -706,12 +632,7 @@ const audiences = [
       .vision-bg img { transform: none !important; }
       .m-line { opacity: 1 !important; }
       .value-item { opacity: 1 !important; transform: none !important; }
-      .svc-arch { height: auto !important; }
-      .svc-arch__sticky { position: relative !important; height: auto !important; }
-      .svc-arch__scanline { display: none !important; }
-      .svc-arch__level { opacity: 1 !important; }
-      .svc-arch__item-detail { max-height: 200px !important; opacity: 1 !important; }
-      .svc-arch__item { border-left: 2px solid var(--color-accent-dark) !important; padding-left: 1.5rem !important; }
+      /* accordion needs no noscript overrides */
     }
   </style>
 
@@ -735,13 +656,7 @@ const audiences = [
       if (lenisInstance) { lenisInstance.destroy(); lenisInstance = null; }
     }
 
-    /** Show all service levels at full opacity (reduced-motion / no-JS fallback) */
-    function showAllLevels() {
-      document.querySelectorAll<HTMLElement>('.svc-arch__level').forEach(el => {
-        el.classList.add('svc-arch__level--active');
-        el.classList.remove('svc-arch__level--passed');
-      });
-    }
+    /* showAllLevels removed — accordion doesn't need it */
 
     function init() {
       cleanup();
@@ -763,7 +678,7 @@ const audiences = [
         document.querySelectorAll('.value-item').forEach(el => { (el as HTMLElement).style.opacity = '1'; (el as HTMLElement).style.transform = 'none'; });
         gsap.set(['.hero-logo', '.hero-sub', '.hero-proof'], { opacity: 1 });
         gsap.set('.hero-img', { scale: 1 });
-        showAllLevels();
+        /* accordion needs no reduced-motion override */
         return;
       }
 
@@ -801,68 +716,11 @@ const audiences = [
         gsap.to('.vision-img', { y: '-10%', scrollTrigger: { trigger: '.vision', start: 'top bottom', end: 'bottom top', scrub: 0.5 } });
 
         // ── SERVICE — architectural section drawing ──
-        const svcArch = document.querySelector('.svc-arch') as HTMLElement;
-        const scanline = document.querySelector('.svc-arch__scanline') as HTMLElement;
-        const levels = document.querySelectorAll<HTMLElement>('.svc-arch__level');
-        const levelKeys = ['entry', 'org', 'retain', 'demand'];
-        const thresholds = [0, 0.25, 0.5, 0.75]; // progress at which each level activates
+        /* SERVICE: accordion needs no GSAP — native <details> handles it */
 
-        if (svcArch && scanline && levels.length > 0) {
-          // Mark as JS-ready so dormant levels dim via CSS
-          svcArch.classList.add('svc-arch--js-ready');
-          // Show scanline
-          gsap.set(scanline, { opacity: 1 });
-
-          // Get the frame element to measure positions
-          const frame = document.querySelector('.svc-arch__frame') as HTMLElement;
-
-          ScrollTrigger.create({
-            trigger: svcArch,
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: true,
-            onUpdate(self) {
-              const progress = self.progress;
-
-              // Position the scan line within the frame
-              if (frame) {
-                const frameRect = frame.getBoundingClientRect();
-                // Map progress to scan line position within the levels area
-                // Offset from top of frame (account for header)
-                const levelsEl = frame.querySelector('.svc-arch__levels') as HTMLElement;
-                if (levelsEl) {
-                  const levelsTop = levelsEl.offsetTop;
-                  const levelsHeight = levelsEl.offsetHeight;
-                  const scanY = levelsTop + (progress * levelsHeight);
-                  scanline.style.top = `${scanY}px`;
-                }
-              }
-
-              // Determine active level based on progress
-              let activeIdx = 0;
-              for (let i = thresholds.length - 1; i >= 0; i--) {
-                if (progress >= thresholds[i]) {
-                  activeIdx = i;
-                  break;
-                }
-              }
-
-              // Update level states
-              levels.forEach((level, i) => {
-                level.classList.remove('svc-arch__level--active', 'svc-arch__level--passed');
-                if (i === activeIdx) {
-                  level.classList.add('svc-arch__level--active');
-                } else if (i < activeIdx) {
-                  level.classList.add('svc-arch__level--passed');
-                }
-                // Future levels: no class added, stays at dormant opacity (0.12)
-              });
-            }
-          });
-        }
-
-        // VALUES
+        // VALUES — set initial state then animate in
         document.querySelectorAll('.value-item').forEach((item, i) => {
+          gsap.set(item, { opacity: 0, y: 20 });
           gsap.to(item, { opacity: 1, y: 0, duration: 0.6, ease, scrollTrigger: { trigger: item, start: 'top 88%' }, delay: i * 0.05 });
         });
 
@@ -887,17 +745,7 @@ const audiences = [
           obs.observe(item); observers.push(obs);
         });
 
-        // Mobile: reveal service levels on scroll
-        document.querySelectorAll('.svc-arch__level').forEach(level => {
-          const obs = new IntersectionObserver(([e]) => {
-            if (e.isIntersecting) {
-              level.classList.add('svc-arch__level--active');
-              obs.disconnect();
-            }
-          }, { threshold: 0.2 });
-          obs.observe(level);
-          observers.push(obs);
-        });
+        /* accordion: mobile needs no special JS */
 
         return () => {};
       });
