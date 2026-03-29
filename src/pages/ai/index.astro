@@ -215,7 +215,6 @@ const audiences = [
 
     <!-- ━━━ 5. SERVICE — architectural section drawing ━━━ -->
     <section class="svc-arch" data-section="service" role="region" aria-label="サービス詳細">
-      <div class="svc-arch__scroll-height"></div>
       <div class="svc-arch__sticky">
         <div class="svc-arch__frame">
           <!-- Section heading -->
@@ -287,11 +286,6 @@ const audiences = [
               <div class="svc-arch__level-meta">
                 <span class="svc-arch__level-label">RETENTION</span>
               </div>
-              <!-- Convergence SVG -->
-              <svg class="svc-arch__converge-svg" aria-hidden="true" viewBox="0 0 60 40" width="60" height="40">
-                <path d="M15 0 L30 38" fill="none" stroke="rgba(196,168,130,0.1)" stroke-width="1" />
-                <path d="M45 0 L30 38" fill="none" stroke="rgba(196,168,130,0.1)" stroke-width="1" />
-              </svg>
               <div class="svc-arch__level-body">
                 <div class="svc-arch__item" data-svc="advisory" tabindex="0">
                   <p class="svc-arch__item-convergence">研修後でも、導入後でも。</p>
@@ -407,7 +401,7 @@ const audiences = [
   <!-- No-JS fallback: make all services visible -->
   <noscript>
     <style>
-      .svc-arch__scroll-height { display: none !important; }
+      .svc-arch { height: auto !important; }
       .svc-arch__sticky { position: relative !important; height: auto !important; }
       .svc-arch__scanline { display: none !important; }
       .svc-arch__level { opacity: 1 !important; }
@@ -495,8 +489,7 @@ const audiences = [
     .vision-ev-icon { color: var(--color-accent-dark); flex-shrink: 0; margin-top: 0.15rem; }
 
     /* ── SERVICE — architectural section drawing ── */
-    .svc-arch { position: relative; }
-    .svc-arch__scroll-height { height: 400vh; }
+    .svc-arch { position: relative; height: 400vh; }
     .svc-arch__sticky {
       position: sticky; top: 0; height: 100vh;
       display: flex; align-items: center; justify-content: center;
@@ -528,21 +521,22 @@ const audiences = [
       display: flex; flex-direction: column;
     }
 
-    /* Individual level */
+    /* Individual level — visible by default, JS adds .svc-arch--js-ready to dim dormant levels */
     .svc-arch__level {
       padding: clamp(1.25rem, 2vw, 2rem) 0;
       border-bottom: 1px solid rgba(196,168,130,0.06);
-      opacity: 0.12;
+      opacity: 1;
       transition: opacity 0.4s var(--ease);
-      display: grid; grid-template-columns: 90px 1fr; gap: clamp(0.75rem, 1.5vw, 1.5rem);
+      display: grid; grid-template-columns: 110px 1fr; gap: clamp(1rem, 2vw, 2rem);
       align-items: start;
     }
+    .svc-arch--js-ready .svc-arch__level { opacity: 0.12; }
     .svc-arch__level:first-child { border-top: 1px solid rgba(196,168,130,0.06); }
     .svc-arch__level--demand { padding-top: clamp(2rem, 4vw, 3.5rem); }
 
     /* Level states */
-    .svc-arch__level--active { opacity: 1; }
-    .svc-arch__level--passed { opacity: 0.55; }
+    .svc-arch__level--active { opacity: 1 !important; }
+    .svc-arch__level--passed { opacity: 0.55 !important; }
     .svc-arch__level--active .svc-arch__item {
       border-left: 2px solid var(--color-accent-dark);
       padding-left: 1.5rem;
@@ -581,12 +575,15 @@ const audiences = [
       font-weight: 700; color: var(--color-ink-dark); margin: 0 0 0.25rem;
     }
 
-    /* Detail (expandable) */
+    /* Detail — visible by default, JS-ready hides and expands on active */
     .svc-arch__item-detail {
-      max-height: 0; opacity: 0; overflow: hidden;
+      max-height: 200px; opacity: 1; overflow: hidden;
       transition: max-height 0.5s var(--ease), opacity 0.3s var(--ease);
     }
-    .svc-arch__level--active .svc-arch__item-detail {
+    .svc-arch--js-ready .svc-arch__item-detail {
+      max-height: 0; opacity: 0;
+    }
+    .svc-arch--js-ready .svc-arch__level--active .svc-arch__item-detail {
       max-height: 200px; opacity: 1;
     }
     .svc-arch__item-step {
@@ -605,15 +602,8 @@ const audiences = [
     /* Convergence text */
     .svc-arch__item-convergence {
       font-family: var(--font-jp); font-size: 0.8rem; font-weight: 300;
-      color: var(--color-ink-muted-dark); margin: 0 0 0.4rem; opacity: 0.7;
-    }
-
-    /* Convergence SVG */
-    .svc-arch__converge-svg {
-      display: block; margin: 0 auto -0.5rem; grid-column: 2;
-    }
-    .svc-arch__level[data-level="retain"] {
-      grid-template-rows: auto auto;
+      color: var(--color-ink-muted-dark); opacity: 0.6;
+      margin: 0 0 0.3rem; letter-spacing: 0.05em;
     }
 
     /* Connector between 研修 and 導入PG */
@@ -688,7 +678,7 @@ const audiences = [
       .hero-proof-divider { display: none; }
       .cta-section { padding-bottom: calc(10rem + 56px + env(safe-area-inset-bottom, 0px)); }
       /* Service section: mobile stacked layout */
-      .svc-arch__scroll-height { display: none; }
+      .svc-arch { height: auto; }
       .svc-arch__sticky { position: relative; height: auto; }
       .svc-arch__frame { border: none; padding: clamp(2rem, 4vw, 3rem) var(--pad); }
       .svc-arch__scanline { display: none; }
@@ -701,12 +691,12 @@ const audiences = [
         width: 100%; height: 1px; background: rgba(255,255,255,0.04);
       }
       .svc-arch__item-detail { max-height: 200px; opacity: 1; }
-      .svc-arch__converge-svg { display: none; }
+      /* convergence handled by text only */
     }
 
     /* ── Short viewport: disable sticky ── */
     @media (max-height: 699px) {
-      .svc-arch__scroll-height { display: none; }
+      .svc-arch { height: auto; }
       .svc-arch__sticky { position: relative; height: auto; }
     }
 
@@ -716,7 +706,7 @@ const audiences = [
       .vision-bg img { transform: none !important; }
       .m-line { opacity: 1 !important; }
       .value-item { opacity: 1 !important; transform: none !important; }
-      .svc-arch__scroll-height { display: none !important; }
+      .svc-arch { height: auto !important; }
       .svc-arch__sticky { position: relative !important; height: auto !important; }
       .svc-arch__scanline { display: none !important; }
       .svc-arch__level { opacity: 1 !important; }
@@ -818,6 +808,8 @@ const audiences = [
         const thresholds = [0, 0.25, 0.5, 0.75]; // progress at which each level activates
 
         if (svcArch && scanline && levels.length > 0) {
+          // Mark as JS-ready so dormant levels dim via CSS
+          svcArch.classList.add('svc-arch--js-ready');
           // Show scanline
           gsap.set(scanline, { opacity: 1 });
 
