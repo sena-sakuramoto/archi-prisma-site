@@ -217,7 +217,7 @@ function setup(container: HTMLElement): void {
   const loader = new THREE.TextureLoader();
   loader.load(
     imageSrc,
-    (tex) => {
+    (tex: THREE.Texture) => {
       if (isDestroyed) { tex.dispose(); return; }
       texture = tex;
       texture.minFilter = THREE.LinearFilter;
@@ -226,7 +226,7 @@ function setup(container: HTMLElement): void {
       buildMesh(tex);
     },
     undefined,
-    (err) => console.warn('[webgl-hero] Texture load failed:', err),
+    (err: unknown) => console.warn('[webgl-hero] Texture load failed:', err),
   );
 
   // Listeners
@@ -242,6 +242,7 @@ function buildMesh(tex: THREE.Texture): void {
   if (!scene || !renderer || !containerEl) return;
 
   const { clientWidth: w, clientHeight: h } = containerEl;
+  const textureImage = tex.image as { width: number; height: number };
 
   geometry = new THREE.PlaneGeometry(1, 1);
   material = new THREE.ShaderMaterial({
@@ -249,7 +250,7 @@ function buildMesh(tex: THREE.Texture): void {
     fragmentShader,
     uniforms: {
       uTexture:       { value: tex },
-      uTextureSize:   { value: new THREE.Vector2(tex.image.width, tex.image.height) },
+      uTextureSize:   { value: new THREE.Vector2(textureImage.width, textureImage.height) },
       uContainerSize: { value: new THREE.Vector2(w, h) },
       uMouse:         { value: new THREE.Vector2(0.5, 0.5) },
       uReveal:        { value: 0.0 },

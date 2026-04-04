@@ -2,6 +2,12 @@
 const currentPath = Astro.url.pathname;
 const navItems = [
   {
+    label: 'Home',
+    href: '/',
+    icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10L10 3L17 10"/><path d="M5 8.5V16H8.5V12H11.5V16H15V8.5"/></svg>`,
+    exact: true,
+  },
+  {
     label: 'Works',
     href: '/works/',
     icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="1"/><rect x="11" y="2" width="7" height="7" rx="1"/><rect x="2" y="11" width="7" height="7" rx="1"/><rect x="11" y="11" width="7" height="7" rx="1"/></svg>`,
@@ -31,15 +37,15 @@ const navItems = [
   style="position: fixed; top: 0; left: 0; width: 100%; z-index: 100; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background-color: rgba(248, 246, 243, 0.85); border-bottom: 1px solid var(--color-rule); transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease);"
   class="hidden md:block"
 >
-  <div style="max-width: var(--max-width); margin: 0 auto; padding: 0 var(--content-padding-x); height: 64px; display: flex; align-items: center; justify-content: space-between;">
+  <div style="max-width: var(--max-width); margin: 0 auto; padding: 0 var(--content-padding-x); height: 72px; display: flex; align-items: center; justify-content: space-between;">
     <!-- Logo -->
     <a href="/" aria-label="Archi-Prisma Design Works — home">
       <img
-        src="/assets/branding/apdw-logo.png"
-        alt="APDW"
-        width="120"
-        height="36"
-        style="height: 36px; width: auto; display: block;"
+        src="/assets/branding/apdw-logotype.png"
+        alt="Archi-Prisma Design Works"
+        width="300"
+        height="30"
+        style="height: 30px; width: auto; display: block;"
       />
     </a>
 
@@ -63,47 +69,332 @@ const navItems = [
   </div>
 </header>
 
+<!-- Mobile: top header + hamburger menu -->
+<header
+  id="mobile-header"
+  data-space="light"
+  style="position: fixed; top: 0; left: 0; width: 100%; z-index: 110; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background-color: rgba(248, 246, 243, 0.9); border-bottom: 1px solid var(--color-rule); transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease);"
+  class="md:hidden"
+>
+  <div style="height: 56px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 0.9rem;">
+    <a href="/" aria-label="Archi-Prisma Design Works — home">
+      <img
+        src="/assets/branding/apdw-logotype.png"
+        alt="Archi-Prisma Design Works"
+        width="188"
+        height="19"
+        style="height: 19px; width: auto; display: block;"
+      />
+    </a>
+    <button
+      id="mobile-menu-toggle"
+      type="button"
+      aria-label="Open menu"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+      class="mobile-menu-toggle"
+    >
+      <span class="mobile-menu-toggle__line"></span>
+      <span class="mobile-menu-toggle__line"></span>
+      <span class="mobile-menu-toggle__line"></span>
+    </button>
+  </div>
+</header>
+
+<div id="mobile-menu" class="mobile-menu md:hidden" data-open="false" aria-hidden="true">
+  <button id="mobile-menu-backdrop" type="button" class="mobile-menu__backdrop" aria-label="Close menu"></button>
+  <div class="mobile-menu__panel">
+    <div class="mobile-menu__meta">
+      <span class="mobile-menu__eyebrow">MENU</span>
+      <span class="mobile-menu__note">建築とソフトウェアの現在地へ。</span>
+    </div>
+    <nav aria-label="Mobile menu links">
+      <ul class="mobile-menu__list">
+        {navItems.map((item, index) => (
+          <li>
+            <a
+              href={item.href}
+              class="mobile-menu__link"
+              aria-current={(item.exact ? currentPath === item.href : currentPath.startsWith(item.href)) ? 'page' : undefined}
+            >
+              <span class="mobile-menu__index">{String(index + 1).padStart(2, '0')}</span>
+              <span class="mobile-menu__label">{item.label}</span>
+              <span class="mobile-menu__icon" aria-hidden="true">
+                <Fragment set:html={item.icon} />
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <a href="/contact/" class="mobile-menu__cta">無料相談を予約する</a>
+  </div>
+</div>
+
 <style>
   /* Dark space header adaptation */
-  :global(.dark-space) #site-header {
-    background-color: rgba(12, 12, 12, 0.85) !important;
-    border-bottom-color: rgba(255,255,255,0.06) !important;
+  :global(.dark-space) #site-header,
+  :global(.dark-space) #mobile-header {
+    background-color: rgba(12, 12, 12, 0.88) !important;
+    border-color: rgba(255,255,255,0.06) !important;
   }
-  :global(.dark-space) #site-header a {
+  :global(.dark-space) #site-header a,
+  :global(.dark-space) #mobile-header a,
+  :global(.dark-space) #mobile-header button {
     color: var(--color-ink-dark) !important;
   }
-  :global(.dark-space) #site-header img {
+  :global(.dark-space) #site-header img,
+  :global(.dark-space) #mobile-header img {
     filter: brightness(0) invert(1);
   }
-  :global(.dark-space) #mobile-tab-bar {
-    background-color: rgba(12, 12, 12, 0.92) !important;
-    border-top-color: rgba(255,255,255,0.06) !important;
+  :global(.dark-space) #mobile-menu {
+    color: var(--color-ink-dark);
   }
-  :global(.dark-space) #mobile-tab-bar a {
-    color: var(--color-ink-dark) !important;
+
+  :global(html.mobile-menu-open),
+  :global(html.mobile-menu-open body) {
+    overflow: hidden;
+  }
+
+  .mobile-menu-toggle {
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 999px;
+    background: transparent;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: var(--color-ink);
+    transition: border-color 0.25s var(--ease), background-color 0.25s var(--ease);
+  }
+  .mobile-menu-toggle__line {
+    width: 16px;
+    height: 1.5px;
+    border-radius: 999px;
+    background: currentColor;
+    transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
+    transform-origin: center;
+  }
+  .mobile-menu-toggle[data-open='true'] .mobile-menu-toggle__line:nth-child(1) {
+    transform: translateY(5.5px) rotate(45deg);
+  }
+  .mobile-menu-toggle[data-open='true'] .mobile-menu-toggle__line:nth-child(2) {
+    opacity: 0;
+  }
+  .mobile-menu-toggle[data-open='true'] .mobile-menu-toggle__line:nth-child(3) {
+    transform: translateY(-5.5px) rotate(-45deg);
+  }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 105;
+    pointer-events: none;
+  }
+  .mobile-menu__backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgba(8, 8, 8, 0.46);
+    opacity: 0;
+    transition: opacity 0.25s var(--ease);
+  }
+  .mobile-menu__panel {
+    position: absolute;
+    inset: 56px 0 0 0;
+    background:
+      linear-gradient(180deg, rgba(248,246,243,0.98) 0%, rgba(242,239,233,0.98) 100%),
+      radial-gradient(circle at top right, rgba(196,168,130,0.16), transparent 32%);
+    padding: 24px 20px calc(32px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    transform: translateY(-16px);
+    opacity: 0;
+    transition: transform 0.28s var(--ease), opacity 0.28s var(--ease);
+    overflow-y: auto;
+  }
+  .mobile-menu[data-open='true'] {
+    pointer-events: auto;
+  }
+  .mobile-menu[data-open='true'] .mobile-menu__backdrop,
+  .mobile-menu[data-open='true'] .mobile-menu__panel {
+    opacity: 1;
+  }
+  .mobile-menu[data-open='true'] .mobile-menu__panel {
+    transform: translateY(0);
+  }
+  .mobile-menu__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .mobile-menu__eyebrow {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: var(--color-accent);
+  }
+  .mobile-menu__note {
+    font-family: var(--font-body), var(--font-jp);
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: var(--color-ink-muted);
+  }
+  .mobile-menu__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid rgba(0,0,0,0.08);
+  }
+  .mobile-menu__link {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .mobile-menu__link[aria-current='page'] .mobile-menu__label,
+  .mobile-menu__link[aria-current='page'] .mobile-menu__index {
+    color: var(--color-accent);
+  }
+  .mobile-menu__index {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--color-ink-muted);
+  }
+  .mobile-menu__label {
+    font-family: var(--font-display), var(--font-jp);
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .mobile-menu__icon {
+    display: inline-flex;
+    opacity: 0.45;
+  }
+  .mobile-menu__cta {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: var(--color-ink);
+    color: var(--color-surface);
+    text-decoration: none;
+    font-family: var(--font-display), var(--font-jp);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 0 1.25rem;
+  }
+
+  :global(.dark-space) .mobile-menu__panel {
+    background:
+      linear-gradient(180deg, rgba(12,12,12,0.98) 0%, rgba(18,18,18,0.98) 100%),
+      radial-gradient(circle at top right, rgba(196,168,130,0.18), transparent 32%);
+  }
+  :global(.dark-space) .mobile-menu__note,
+  :global(.dark-space) .mobile-menu__index,
+  :global(.dark-space) .mobile-menu__icon {
+    color: var(--color-ink-muted-dark);
+  }
+  :global(.dark-space) .mobile-menu__link {
+    color: var(--color-ink-dark);
+    border-bottom-color: rgba(255,255,255,0.08);
+  }
+  :global(.dark-space) .mobile-menu__list {
+    border-top-color: rgba(255,255,255,0.08);
+  }
+  :global(.dark-space) .mobile-menu__cta {
+    background: var(--color-ink-dark);
+    color: var(--color-surface-dark);
+    border-color: rgba(255,255,255,0.08);
   }
 </style>
 
-<!-- Mobile: fixed bottom tab bar -->
-<nav
-  id="mobile-tab-bar"
-  aria-label="Mobile navigation"
-  data-space="light"
-  style="position: fixed; bottom: 0; left: 0; width: 100%; z-index: 100; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background-color: rgba(248, 246, 243, 0.92); border-top: 1px solid var(--color-rule); padding-bottom: env(safe-area-inset-bottom, 0);"
-  class="md:hidden"
->
-  <ul style="display: flex; justify-content: space-around; align-items: stretch; list-style: none; margin: 0; padding: 0; height: 56px;">
-    {navItems.map((item) => (
-      <li style="flex: 1; display: flex;">
-        <a
-          href={item.href}
-          aria-current={currentPath.startsWith(item.href) ? 'page' : undefined}
-          style={`display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; font-family: var(--font-display); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-ink); text-decoration: none; gap: 2px; padding: 6px 4px; ${currentPath.startsWith(item.href) ? 'opacity: 1;' : 'opacity: 0.6;'}`}
-        >
-          <Fragment set:html={item.icon} />
-          {item.label}
-        </a>
-      </li>
-    ))}
-  </ul>
-</nav>
+<script>
+  let cleanupMobileMenu: (() => void) | undefined;
+
+  function initMobileMenu() {
+    cleanupMobileMenu?.();
+
+    const root = document.documentElement;
+    const button = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    const backdrop = document.getElementById('mobile-menu-backdrop');
+
+    if (!(button instanceof HTMLButtonElement) || !(menu instanceof HTMLElement) || !(backdrop instanceof HTMLButtonElement)) {
+      cleanupMobileMenu = undefined;
+      return;
+    }
+
+    const links = Array.from(menu.querySelectorAll('a'));
+
+    const closeMenu = () => {
+      button.setAttribute('aria-expanded', 'false');
+      button.setAttribute('aria-label', 'Open menu');
+      button.dataset.open = 'false';
+      menu.dataset.open = 'false';
+      menu.setAttribute('aria-hidden', 'true');
+      root.classList.remove('mobile-menu-open');
+    };
+
+    const openMenu = () => {
+      button.setAttribute('aria-expanded', 'true');
+      button.setAttribute('aria-label', 'Close menu');
+      button.dataset.open = 'true';
+      menu.dataset.open = 'true';
+      menu.setAttribute('aria-hidden', 'false');
+      root.classList.add('mobile-menu-open');
+    };
+
+    const toggleMenu = () => {
+      if (menu.dataset.open === 'true') {
+        closeMenu();
+        return;
+      }
+      openMenu();
+    };
+
+    const onKeydown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeMenu();
+      }
+    };
+
+    button.addEventListener('click', toggleMenu);
+    backdrop.addEventListener('click', closeMenu);
+    links.forEach((link) => link.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', onKeydown);
+
+    closeMenu();
+
+    cleanupMobileMenu = () => {
+      button.removeEventListener('click', toggleMenu);
+      backdrop.removeEventListener('click', closeMenu);
+      links.forEach((link) => link.removeEventListener('click', closeMenu));
+      document.removeEventListener('keydown', onKeydown);
+      root.classList.remove('mobile-menu-open');
+    };
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu, { once: true });
+  } else {
+    initMobileMenu();
+  }
+
+  document.addEventListener('astro:page-load', initMobileMenu);
+</script>

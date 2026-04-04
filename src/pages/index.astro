@@ -10,11 +10,24 @@ import Products from '../components/Products.astro';
 import Team from '../components/Team.astro';
 import CompanyInfo from '../components/CompanyInfo.astro';
 import Footer from '../components/Footer.astro';
+
+const homeStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Archi-Prisma Design Works',
+  url: 'https://archi-prisma.co.jp/',
+  inLanguage: 'ja-JP',
+  description: '建築設計とソフトウェア開発の二軸で未来を切り拓く設計事務所。都市開発・ホテル・商業施設・AI建築支援まで対応。',
+};
 ---
 
 <Layout
+  title="Archi-Prisma Design Works | 建築設計 × ソフトウェア開発"
   description="建築設計とソフトウェア開発の二軸で未来を切り拓く設計事務所 Archi-Prisma Design Works。都市開発・ホテル・商業施設の実績多数。東京/ロンドン拠点。"
+  ogImage="https://archi-prisma.co.jp/assets/curated/masterplan-aerial.jpg"
+  ogImageAlt="都市開発プロジェクトの航空視点イメージ"
   preloadImages={['/assets/curated/masterplan-aerial.jpg']}
+  structuredData={homeStructuredData}
 >
   <PageLoader />
   <Header />

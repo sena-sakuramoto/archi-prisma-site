@@ -45,13 +45,33 @@ const offices = [
     details: '国際案件の拠点として20年以上の実績',
   },
 ];
+const aboutStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: 'About',
+    url: 'https://archi-prisma.co.jp/about/',
+    inLanguage: 'ja-JP',
+    description: 'Archi-Prisma Design Works の会社概要。東京・ロンドン二拠点、建築設計×AI開発のハイブリッド体制。',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://archi-prisma.co.jp/' },
+      { '@type': 'ListItem', position: 2, name: 'About', item: 'https://archi-prisma.co.jp/about/' },
+    ],
+  },
+];
 ---
 
 <Layout
   title="About | Archi-Prisma Design Works"
   description="Archi-Prisma Design Works の会社概要。東京・ロンドン二拠点、建築設計×AI開発のハイブリッド体制でプロジェクトを推進します。"
   ogImage="https://archi-prisma.co.jp/assets/curated/yacht-club-aerial-day.jpg"
+  ogImageAlt="海辺の建築プロジェクトを上空から見たイメージ"
   preloadImages={['/assets/curated/yacht-club-aerial-day.jpg']}
+  structuredData={aboutStructuredData}
 >
   <Header />
 

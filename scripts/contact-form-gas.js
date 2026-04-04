@@ -84,7 +84,7 @@ function doPost(e) {
 }
 
 // Handle CORS preflight
-function doGet(e) {
+function doGet(_e) {
   return ContentService
     .createTextOutput(JSON.stringify({ status: 'ok', service: 'APDW Contact Form' }))
     .setMimeType(ContentService.MimeType.JSON);

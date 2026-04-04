@@ -20,12 +20,32 @@ const flowSteps = [
   { num: 2, title: 'ヒアリング', desc: 'ご要望・条件をお伺い' },
   { num: 3, title: 'ご提案', desc: '概算・スケジュールのご提示' },
 ];
+const contactStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: 'Contact',
+    url: 'https://archi-prisma.co.jp/contact/',
+    inLanguage: 'ja-JP',
+    description: 'Archi-Prisma Design Works へのお問い合わせページ。設計・AI導入・研修のご相談受付。',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://archi-prisma.co.jp/' },
+      { '@type': 'ListItem', position: 2, name: 'Contact', item: 'https://archi-prisma.co.jp/contact/' },
+    ],
+  },
+];
 ---
 
 <Layout
   title="Contact | Archi-Prisma Design Works"
   description="Archi-Prisma Design Works へのお問い合わせ。設計・AI導入・研修のご相談はフォームまたはお電話で。東京都品川区上大崎。"
   ogImage="https://archi-prisma.co.jp/assets/curated/about-exterior.jpg"
+  ogImageAlt="Archi-Prisma Design Works の事務所外観"
+  structuredData={contactStructuredData}
 >
   <Header />
 

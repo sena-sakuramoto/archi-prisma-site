@@ -3,28 +3,28 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 
-/* Images kept for potential future use:
- * /assets/generated/ai-service-seminar.jpg
- * /assets/generated/ai-service-circle.jpg
- * /assets/generated/ai-service-training.jpg
- * /assets/generated/ai-service-program.jpg
- * /assets/generated/ai-service-consulting.jpg
- * /assets/generated/ai-service-development.jpg
- */
-const services = {
+type ServiceItem = {
+  name: string;
+  step: string;
+  recommend: string;
+  desc: string;
+  price?: string;
+};
+
+const services: Record<string, ServiceItem[]> = {
   entry: [
-    { name: 'AI×建築セミナー', step: 'AIで何が変わるかを知る', desc: '単発参加OK。サークル会員は月額内で受講可能。' },
-    { name: 'AI × 建築サークル', step: 'まず、自分が触る', desc: '全ツール使い放題。Discord + 月1イベント + セミナー受講。', price: '月額 5,000円' },
+    { name: 'AI×建築セミナー', step: 'AIで何が変わるかを知る', recommend: 'まずは全体像を知りたい人。AIが気になるが、何から見ればいいか分からない人。', desc: '単発参加OK。サークル会員は月額内で受講可能。' },
+    { name: 'AI × 建築サークル', step: 'まず、自分が触る', recommend: '継続して触りたい人。実際にツールを使いながら、自分の業務に置き換えて考えたい人。', desc: '全ツール使い放題。Discord + 月1イベント + セミナー受講。', price: '月額 5,000円' },
   ],
   org: [
-    { name: '法人研修', step: '全員が触れる状態をつくる', desc: '部署別カスタマイズ。ハンズオン70%。共通言語をつくる。' },
-    { name: 'AI導入プログラム', step: '業務ごと変える', desc: '3〜6ヶ月。業務分析→構築→定着。研修の先へ進む会社のために。' },
+    { name: '法人研修', step: '今のAIと、今できることを知る', recommend: '組織のAIリテラシーを底上げしたい会社。各自が「自分の業務も変えられるかもしれない」と考え始める状態をつくりたい会社。', desc: '今のAIを知り、今できることを知る。リテラシーを底上げし、「自分の業務も変えられるかもしれない」に脳を切り替える。部署別カスタマイズ。ハンズオン70%。' },
+    { name: 'AI導入プログラム', step: '業務ごと変える', recommend: '学ぶだけで終わらせず、実際の業務フローまで変えたい会社。特定部門から導入を進めたい会社。', desc: '3〜6ヶ月。業務分析→構築→定着。研修の先へ進む会社のために。' },
   ],
   retain: [
-    { name: 'AI保守顧問', step: '導入後、止まらないようにする', desc: '月1面談 + チャットサポート。研修後でも導入後でも、推進役の伴走。' },
+    { name: 'AI保守顧問', step: '導入後、止まらないようにする', recommend: '研修や導入のあとに失速したくない会社。社内の推進役を継続的に支えたい会社。', desc: '月1面談 + チャットサポート。研修後でも導入後でも、推進役の伴走。' },
   ],
   demand: [
-    { name: '受託開発', step: '自社専用のツールを作る', desc: '既存ツールの限界が見えたとき。建築実務を知る開発チームが構築。' },
+    { name: '受託開発', step: '自社専用のツールを作る', recommend: '既製ツールでは足りない会社。自社フローに合わせた仕組みを持ちたい会社。', desc: '既存ツールの限界が見えたとき。建築実務を知る開発チームが構築。' },
   ],
 };
 const servicesFlat = [...services.entry, ...services.org, ...services.retain, ...services.demand];
@@ -38,292 +38,511 @@ const values = [
 ];
 
 const tools = [
-  { name: 'COMPASS', tagline: '工程管理', logo: '/assets/products/compass-logo.png', image: '/assets/curated/compass-gantt-ui.png' },
-  { name: 'KAKOME', tagline: '写真指示書', logo: '/assets/products/kakome-logo-black.webp', image: '/assets/curated/kakome-report-ui.jpg' },
-  { name: 'KOZO', tagline: '構造計算AI', logo: '/assets/products/kozo-logo.webp', image: null },
-  { name: 'AI Commander', tagline: 'AI操作支援', logo: '/assets/products/aicommander-icon.png', image: '/assets/products/aicommander-screen.png' },
+  { name: 'COMPASS', tagline: '工程管理', logo: '/assets/products/compass-logo.png', image: '/assets/curated/compass-gantt-ui.png', desc: '建設プロジェクトの工程管理をシンプルに。AI補助で予定立案から進捗追跡まで。', linePos: '45%' },
+  { name: 'KAKOME', tagline: '写真指示書', logo: '/assets/products/kakome-logo-black.webp', image: '/assets/curated/kakome-report-ui.jpg', desc: '現場写真に指示を重ねて共有。口頭では伝わらないニュアンスをビジュアルで。', linePos: '55%' },
+  { name: 'KOZO', tagline: '構造計算AI', logo: '/assets/products/kozo-logo.webp', image: null, desc: '構造計算の煩雑な作業をAIがアシスト。法改正にも素早く対応。', linePos: '40%' },
+  { name: 'AI Commander', tagline: 'AI操作支援', logo: '/assets/products/aicommander-icon.png', image: '/assets/products/aicommander-screen.png', desc: 'ArchicadをAIで操る。設計作業の自動化・効率化をアドオンで実現。', linePos: '50%' },
 ];
 
 const audiences = [
-  { type: '設計事務所', pain: '人手不足で案件を回しきれない', outcome: '5人で50人分の業務を処理' },
-  { type: 'ゼネコン', pain: '施工管理の属人化・報告書の工数', outcome: 'AI報告書で週10時間削減' },
+  { type: '設計事務所', pain: '人手不足で案件を回しきれない', outcome: '<span class="ai-num-inline">5人</span>で<span class="ai-num-inline">50人分</span>の業務を処理' },
+  { type: 'ゼネコン', pain: '施工管理の属人化・報告書の工数', outcome: 'AI報告書で週<span class="ai-num-inline">10時間</span>削減' },
   { type: '工務店', pain: 'IT投資の判断材料がない', outcome: '実質負担を最小化して導入' },
+];
+const AI_CIRCLE_URL = 'https://ai-archi-circle.archi-prisma.co.jp/';
+const siteUrl = 'https://archi-prisma.co.jp';
+const aiPageUrl = `${siteUrl}/ai/`;
+const aiPageTitle = 'AI × 建築事業 | 建築AI導入・法人研修・AI建築サークル | Archi-Prisma Design Works';
+const aiPageDescription = '建築のプロを、AIで最強にする。AI建築サークル、法人研修、AI導入プログラム、保守顧問、受託開発まで、建築実務に効くAI導入を支援。';
+const aiFaqs = [
+  {
+    question: 'AI × 建築では何を支援していますか？',
+    answer: 'AI建築サークル、法人研修、AI導入プログラム、AI保守顧問、受託開発まで、建築実務に合わせて段階的に支援しています。',
+  },
+  {
+    question: 'AI建築サークルでは何が使えますか？',
+    answer: 'COMPASS、KAKOME、KOZO、AI Commander、MOJIOKO などの自社開発ツールを利用でき、Discord とイベント参加も含まれます。',
+  },
+  {
+    question: '法人研修では何を得られますか？',
+    answer: '今のAIと今できることを知り、AIリテラシーを底上げし、自分たちの業務を変えられる視点を組織に定着させます。',
+  },
+  {
+    question: 'どんな会社に向いていますか？',
+    answer: '設計事務所、ゼネコン、工務店など、人手不足、属人化、IT投資判断の不足といった課題を抱える会社に向いています。',
+  },
+];
+const aiStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'AI × 建築事業',
+    description: aiPageDescription,
+    url: aiPageUrl,
+    inLanguage: 'ja-JP',
+    breadcrumb: { '@id': `${aiPageUrl}#breadcrumb` },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    '@id': `${aiPageUrl}#breadcrumb`,
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'AI × 建築事業',
+        item: aiPageUrl,
+      },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'AI × 建築支援',
+    description: aiPageDescription,
+    url: aiPageUrl,
+    areaServed: {
+      '@type': 'Country',
+      name: 'Japan',
+    },
+    provider: {
+      '@type': 'Organization',
+      name: 'Archi-Prisma Design Works',
+      url: siteUrl,
+      logo: `${siteUrl}/assets/branding/apdw-logo.png`,
+    },
+    audience: audiences.map((audience) => ({
+      '@type': 'Audience',
+      audienceType: audience.type,
+    })),
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'AI × 建築サービス',
+      itemListElement: servicesFlat.map((service, index) => ({
+        '@type': 'Offer',
+        position: index + 1,
+        itemOffered: {
+          '@type': 'Service',
+          name: service.name,
+          description: service.desc,
+        },
+        priceCurrency: 'JPY',
+        ...(service.name === 'AI × 建築サークル'
+          ? {
+              price: '5000',
+              url: AI_CIRCLE_URL,
+              priceSpecification: {
+                '@type': 'UnitPriceSpecification',
+                price: '5000',
+                priceCurrency: 'JPY',
+                billingDuration: 'P1M',
+              },
+            }
+          : {}),
+      })),
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: '建築向けAIツール',
+    itemListElement: tools.map((tool, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'SoftwareApplication',
+        name: tool.name,
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web',
+        description: tool.desc,
+        image: `${siteUrl}${tool.image ?? tool.logo}`,
+        publisher: {
+          '@type': 'Organization',
+          name: 'Archi-Prisma Design Works',
+        },
+      },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: aiFaqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  },
 ];
 ---
 
 <Layout
-  title="AI × 建築事業 | Archi-Prisma Design Works"
-  description="建築のプロを、AIで最強にする。AI導入プログラム、法人研修、保守顧問、受託開発。"
+  title={aiPageTitle}
+  description={aiPageDescription}
   darkSpace={true}
   ogImage="https://archi-prisma.co.jp/assets/generated/ai-hero.jpg"
+  ogImageAlt="夜の建築空間を背景にした AI × 建築事業ページのメインビジュアル"
   preloadImages={['/assets/generated/ai-hero.jpg']}
+  structuredData={aiStructuredData}
 >
   <Header />
-
-  <!-- Page-specific JSON-LD -->
-  <script type="application/ld+json" set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: 'AI × 建築事業',
-    description: '建築のプロを、AIで最強にする。AI導入プログラム、法人研修、保守顧問、受託開発。',
-    url: 'https://archi-prisma.co.jp/ai/',
-    provider: {
-      '@type': 'Organization',
-      name: 'Archi-Prisma Design Works',
-      alternateName: 'APDW',
-      url: 'https://archi-prisma.co.jp',
-      logo: 'https://archi-prisma.co.jp/assets/branding/apdw-logo.png',
-    },
-    hasOfferCatalog: {
-      '@type': 'OfferCatalog',
-      name: 'AI × 建築 商品ライン',
-      itemListElement: servicesFlat.map((s, i) => {
-        const offer: Record<string, unknown> = {
-          '@type': 'Offer',
-          position: i + 1,
-          name: s.name,
-          description: s.desc,
-          priceCurrency: 'JPY',
-        };
-        // サークル: public monthly price
-        if (s.name === 'AI × 建築サークル') {
-          offer.price = '5000';
-          offer.priceSpecification = {
-            '@type': 'UnitPriceSpecification',
-            price: '5000',
-            priceCurrency: 'JPY',
-            billingDuration: 'P1M',
-          };
-        }
-        return offer;
-      }),
-    },
-  })} />
 
   <main class="dark-space ai-page">
 
     <!-- ━━━ 1. HERO ━━━ -->
-    <section class="hero-wrap" data-section="hero">
-      <div class="hero-sticky">
-        <div class="hero-bg img-vignette">
-          <img src="/assets/generated/ai-hero.jpg" alt="" aria-hidden="true" class="img-graded hero-img" width="1920" height="823" />
+    <section class="ai-hero" data-section="hero">
+      <div class="ai-hero__sticky">
+        <div class="ai-hero__bg img-vignette img-grain">
+          <img src="/assets/generated/ai-hero.jpg" alt="" aria-hidden="true" class="img-graded ai-hero__img" width="1920" height="823" loading="eager" fetchpriority="high" />
         </div>
-        <div class="hero-overlay"></div>
-        <div class="hero-grid-lines" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-        <div class="hero-content">
-          <div class="hero-inner">
-            <img src="/assets/branding/apdw-dev-logo.png" alt="ARCHI-PRISMA" class="hero-logo" width="400" height="80" />
-            <h1 class="hero-title">
-              <span class="hero-word">建築のプロを、</span>
-              <span class="hero-word">AIで最強にする。</span>
-            </h1>
-            <p class="hero-sub">建築実務 × AI の両方を知る集団が、現場を変える。</p>
-            <!-- Credibility signal in hero -->
-            <div class="hero-proof">
-              <div class="hero-proof-item">
-                <span class="hero-proof-num">28+</span>
-                <span class="hero-proof-label">サークルメンバー</span>
-              </div>
-              <div class="hero-proof-divider"></div>
-              <div class="hero-proof-item">
-                <span class="hero-proof-num">6</span>
-                <span class="hero-proof-label">自社開発ツール</span>
-              </div>
-              <div class="hero-proof-divider"></div>
-              <div class="hero-proof-item">
-                <span class="hero-proof-num">40年</span>
-                <span class="hero-proof-label">建築実務の蓄積</span>
-              </div>
+        <div class="ai-hero__overlay"></div>
+        <div class="ai-hero__content">
+          <div class="ai-hero__inner">
+            <div data-hero-item style="opacity: 0; transform: translateY(24px);">
+              <h1 class="ai-hero__title" style="font-family: var(--font-display), var(--font-jp); font-size: var(--text-hero); font-weight: 800; color: var(--color-ink-dark); line-height: 1.2; letter-spacing: -0.03em; margin: 0;">
+                <span class="ai-hero__word">建築のプロを、</span>
+                <span class="ai-hero__word">AIで最強にする。</span>
+              </h1>
             </div>
-            <div class="hero-scroll-hint">
-              <span class="hero-scroll-line"></span>
-              <span class="hero-scroll-label">SCROLL</span>
+            <div data-hero-item style="opacity: 0; transform: translateY(24px); margin-top: 24px;">
+              <p class="ai-hero__lead-copy" style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 2; margin: 0; max-width: 36ch;">
+                <span class="ai-hero__copy-line">建築実務 × AI の両方を知る集団が、</span>
+                <span class="ai-hero__copy-line">現場を変える。</span>
+              </p>
+            </div>
+            <div data-hero-item class="ai-kpi-group" style="opacity: 0; transform: translateY(24px); margin-top: 40px; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+              <div class="ai-kpi" style="display: flex; flex-direction: column; gap: 0.15rem;">
+                <span class="ai-kpi__value"><span class="ai-num">28+</span></span>
+                <span class="ai-kpi__label">サークルメンバー</span>
+              </div>
+              <div class="ai-kpi__divider" style="width: 1px; height: 32px; background: rgba(255,255,255,0.08);"></div>
+              <div class="ai-kpi" style="display: flex; flex-direction: column; gap: 0.15rem;">
+                <span class="ai-kpi__value"><span class="ai-num">7+</span></span>
+                <span class="ai-kpi__label">自社開発ツール</span>
+              </div>
+              <div class="ai-kpi__divider" style="width: 1px; height: 32px; background: rgba(255,255,255,0.08);"></div>
+              <div class="ai-kpi" style="display: flex; flex-direction: column; gap: 0.15rem;">
+                <span class="ai-kpi__value"><span class="ai-num">40</span>年</span>
+                <span class="ai-kpi__label">建築実務の蓄積</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ━━━ 2. PROOF — who we serve, what changes ━━━ -->
-    <section class="proof-section" data-section="proof">
-      <div class="proof-inner">
-        <span class="section-label reveal">WHO WE SERVE</span>
-        <h2 class="proof-heading reveal">こんな課題を、解決する。</h2>
-        <div class="proof-grid">
-          {audiences.map((a) => (
-            <div class="proof-card reveal">
-              <span class="proof-type">{a.type}</span>
-              <p class="proof-pain">{a.pain}</p>
-              <div class="proof-arrow" aria-hidden="true">→</div>
-              <p class="proof-outcome">{a.outcome}</p>
+    <!-- ━━━ 2. PROOF ━━━ -->
+    <section class="section-pad" id="proof" data-section="proof" style="border-top: 1px solid rgba(196,168,130,0.15);">
+      <div class="content-wide">
+        <p style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--color-accent-dark); margin: 0 0 1.5rem;" class="reveal">
+          WHO WE SERVE
+        </p>
+        <h2 class="ai-proof__heading reveal" style="font-family: var(--font-display), var(--font-jp); font-size: var(--text-section); font-weight: 700; color: var(--color-ink-dark); margin: 0 0 clamp(2rem, 4vw, 4rem); letter-spacing: -0.02em;">
+          こんな課題を、解決する。
+        </h2>
+      </div>
+      {audiences.map((a, i) => (
+        <div class="reveal" style={`--delay: ${i * 0.08}s; --line-pos: ${i === 1 ? '55%' : i === 2 ? '40%' : '50%'}; border-top: 1px solid rgba(196,168,130,0.1);`}>
+          <div class="line-section ai-proof__row" style="align-items: stretch;">
+            <div class="ai-proof__meta" style="padding: clamp(32px, 4vw, 56px) 40px clamp(32px, 4vw, 56px) 0; display: flex; flex-direction: column; justify-content: center;">
+              <span style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 700; color: var(--color-accent-dark); letter-spacing: 0.1em; text-transform: uppercase;">{a.type}</span>
+              <p style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 1.9; margin: 0.75rem 0 0;">{a.pain}</p>
             </div>
+            <div class="dividing-line" aria-hidden="true"></div>
+            <div class="ai-proof__outcome-wrap" style="padding: clamp(32px, 4vw, 56px) 0 clamp(32px, 4vw, 56px) 40px; display: flex; align-items: center;">
+              <div>
+                <span style="font-family: var(--font-display); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-accent-dark); opacity: 0.5; display: block; margin-bottom: 0.5rem;">OUTCOME</span>
+                <p class="ai-outcome" style="font-size: var(--text-project); color: var(--color-ink-dark); margin: 0;" set:html={a.outcome}></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+      <!-- Real UI evidence -->
+      <div class="content-wide" style="margin-top: clamp(3rem, 5vw, 5rem);">
+        <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;" class="reveal proof-ui-grid">
+          <div class="img-grain" style="overflow: hidden; border-radius: 4px; border: 1px solid rgba(196,168,130,0.12);">
+            <img src="/assets/curated/compass-gantt-ui.png" alt="COMPASS ガントチャートUI" style="width: 100%; height: auto; display: block;" loading="lazy" width="800" height="500" />
+          </div>
+          <div class="img-grain" style="overflow: hidden; border-radius: 4px; border: 1px solid rgba(196,168,130,0.12);">
+            <img src="/assets/curated/kakome-report-ui.jpg" alt="KAKOME 写真指示書UI" style="width: 100%; height: auto; display: block;" loading="lazy" width="800" height="500" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━ 3. VISION / MANIFESTO ━━━ -->
+    <section class="ai-vision" id="vision" data-section="vision">
+      <div class="ai-vision__bg img-vignette img-grain">
+        <img src="/assets/generated/ai-vision.jpg" alt="" aria-hidden="true" class="img-graded ai-vision__img img-ken-burns" loading="lazy" width="1920" height="823" />
+      </div>
+      <div class="ai-vision__overlay"></div>
+      <div class="ai-vision__content">
+        <div class="line-section" style="--line-pos: 40%;">
+          <div style="padding: clamp(4rem, 8vw, 8rem) 40px clamp(4rem, 8vw, 8rem) 0;">
+            <p class="m-line m-line--muted">この業界には、力がある。</p>
+            <p class="m-line m-line--muted">足りないのは、テクノロジーという武器だけだ。</p>
+            <div style="height: 2rem;" aria-hidden="true"></div>
+            <p class="m-line m-line--bold">それを手にしたとき、</p>
+            <p class="m-line m-line--bold m-line--split">
+              <span class="m-line__chunk">1人が10人分の成果を出せる</span>
+              <span class="m-line__chunk">世界が始まる。</span>
+            </p>
+            <div style="height: 2rem;" aria-hidden="true"></div>
+            <p class="m-line m-line--accent m-line--split">
+              <span class="m-line__chunk">その世界を、</span>
+              <span class="m-line__chunk">俺たちがつくる。</span>
+            </p>
+          </div>
+          <div class="dividing-line" aria-hidden="true"></div>
+          <div class="reveal ai-vision__points" style="padding: clamp(4rem, 8vw, 8rem) 0 clamp(4rem, 8vw, 8rem) 40px; display: flex; flex-direction: column; justify-content: center; gap: 1.5rem;">
+            <div class="ai-vision__point" style="display: flex; align-items: flex-start; gap: 0.75rem;">
+              <span class="ai-vision__point-num" style="font-family: var(--font-display); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.15em; color: var(--color-accent-dark); opacity: 0.4; flex-shrink: 0; margin-top: 0.3rem;">01</span>
+              <span class="ai-vision__point-text" style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 1.9;">設計事務所の5人が、50人分のプロジェクトを動かす</span>
+            </div>
+            <div class="ai-vision__point" style="display: flex; align-items: flex-start; gap: 0.75rem;">
+              <span class="ai-vision__point-num" style="font-family: var(--font-display); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.15em; color: var(--color-accent-dark); opacity: 0.4; flex-shrink: 0; margin-top: 0.3rem;">02</span>
+              <span class="ai-vision__point-text" style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 1.9;">新人がAIに聞いて初日から現場を回す</span>
+            </div>
+            <div class="ai-vision__point" style="display: flex; align-items: flex-start; gap: 0.75rem;">
+              <span class="ai-vision__point-num" style="font-family: var(--font-display); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.15em; color: var(--color-accent-dark); opacity: 0.4; flex-shrink: 0; margin-top: 0.3rem;">03</span>
+              <span class="ai-vision__point-text" style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 1.9;">「あの人がいないとわからない」がこの業界から消える</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━ 4. SERVICE ━━━ -->
+    <section class="section-pad" id="service" data-section="service" style="border-top: 1px solid rgba(196,168,130,0.15);">
+      <div class="line-section" style="--line-pos: 35%;">
+        <div style="padding-right: 40px;">
+          <p style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--color-accent-dark); margin: 0 0 1.5rem;" class="reveal">
+            SERVICE
+          </p>
+          <h2 class="ai-service__heading reveal" style="font-family: var(--font-display), var(--font-jp); font-size: var(--text-section); font-weight: 700; color: var(--color-ink-dark); margin: 0; letter-spacing: -0.02em; line-height: 1.3;">
+            <span class="ai-service__line">あなたに合った</span>
+            <span class="ai-service__line">始め方がある。</span>
+          </h2>
+        </div>
+        <div class="dividing-line" aria-hidden="true"></div>
+        <div style="padding-left: 40px;">
+          <div class="ai-svc__list">
+            {[...services.entry, ...services.org, ...services.retain, ...services.demand].map((svc, i) => (
+              <details class="ai-svc__item reveal" style={`--delay: ${i * 0.06}s`}>
+                <summary class="ai-svc__header">
+                  <span class="ai-svc__name">{svc.name}</span>
+                  <span class="ai-svc__step">{svc.step}</span>
+                  <span class="ai-svc__toggle" aria-hidden="true"></span>
+                </summary>
+                <div class="ai-svc__body">
+                  <div class="ai-svc__recommend">
+                    <span class="ai-svc__recommend-label">こんな方におすすめ</span>
+                    <p class="ai-svc__recommend-text">{svc.recommend}</p>
+                  </div>
+                  <p class="ai-svc__desc" style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); color: var(--color-ink-dark); opacity: 0.7; line-height: 2; margin: 0;">{svc.desc}</p>
+                  {svc.price && <span style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; color: var(--color-accent-dark); display: block; margin-top: 0.5rem; letter-spacing: 0.05em;">{svc.price}</span>}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━ 5. TOOLS ━━━ -->
+    <section class="ai-tools" id="tools" style="padding-top: clamp(64px, 8vw, 120px);" data-section="tools">
+      <div class="content-wide ai-tools__intro" style="padding-bottom: clamp(40px, 6vw, 80px);">
+        <h2 class="ai-tools__heading reveal" style="font-family: var(--font-display); font-size: var(--text-section); font-weight: 700; letter-spacing: -0.02em; color: var(--color-ink-dark); margin: 0 0 12px; line-height: 1.15;">
+          Tools
+        </h2>
+        <p class="ai-tools__lead reveal" style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); line-height: 1.9; color: var(--color-ink-muted-dark); margin: 0; max-width: 40ch;">
+          COMPASS、KAKOME、KOZO、AI Commander、MOJIOKO など。サークルメンバーは全て使い放題。建築のためのソフトウェアを、自分たちでつくる。
+        </p>
+      </div>
+      {tools.map((tool, i) => (
+        <div class="reveal ai-tool" style={`--line-pos: ${tool.linePos}; --delay: ${i * 0.06}s; border-top: 1px solid rgba(196,168,130,0.2);`}>
+          <div class="line-section ai-tool__grid" style="align-items: stretch;">
+            {i % 2 === 0 ? (
+              <>
+                <div class="ai-tool__content" style="padding: clamp(48px, 7vw, 96px) 40px clamp(48px, 7vw, 96px) 0; display: flex; flex-direction: column; justify-content: center; gap: 24px;">
+                  <img src={tool.logo} alt={tool.name} class="invert ai-tool__logo" style="height: 40px; width: auto; display: block; object-fit: contain; object-position: left center;" loading="lazy" width="200" height="40" />
+                  <p class="ai-tool__tagline" style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent-dark); margin: 0;">{tool.tagline}</p>
+                  <h3 class="ai-tool__name" style="font-family: var(--font-display); font-size: var(--text-project); font-weight: 700; color: var(--color-ink-dark); margin: 0;">{tool.name}</h3>
+                  <p class="ai-tool__desc" style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); line-height: 1.9; color: var(--color-ink-muted-dark); margin: 0; max-width: 36ch;">{tool.desc}</p>
+                </div>
+                <div class="dividing-line" aria-hidden="true"></div>
+                <div class="ai-tool__media" style="min-height: 280px; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: clamp(40px, 5vw, 64px) 0 clamp(40px, 5vw, 64px) 40px;">
+                  {tool.image ? (
+                    <div class="img-grain ai-tool__shot" style="width: 100%; border-radius: 4px; overflow: hidden;">
+                      <img src={tool.image} alt={`${tool.name} screenshot`} loading="lazy" style="width: 100%; height: auto; display: block; opacity: 0.9;" width="800" height="500" />
+                    </div>
+                  ) : (
+                    <div class="ai-tool__placeholder" style="width: 100%; aspect-ratio: 16/9; background: rgba(196,168,130,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 4px; border: 1px solid rgba(196,168,130,0.1);">
+                      <img src={tool.logo} alt="" class="invert" style="height: 36px; width: auto; opacity: 0.3;" aria-hidden="true" width="180" height="36" />
+                      <span style="font-family: var(--font-display); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(196,168,130,0.4);">Coming Soon</span>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <>
+                <div class="ai-tool__media" style="min-height: 280px; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: clamp(40px, 5vw, 64px) 40px clamp(40px, 5vw, 64px) 0;">
+                  {tool.image ? (
+                    <div class="img-grain ai-tool__shot" style="width: 100%; border-radius: 4px; overflow: hidden;">
+                      <img src={tool.image} alt={`${tool.name} screenshot`} loading="lazy" style="width: 100%; height: auto; display: block; opacity: 0.9;" width="800" height="500" />
+                    </div>
+                  ) : (
+                    <div class="ai-tool__placeholder" style="width: 100%; aspect-ratio: 16/9; background: rgba(196,168,130,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; border-radius: 4px; border: 1px solid rgba(196,168,130,0.1);">
+                      <img src={tool.logo} alt="" class="invert" style="height: 36px; width: auto; opacity: 0.3;" aria-hidden="true" width="180" height="36" />
+                      <span style="font-family: var(--font-display); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(196,168,130,0.4);">Coming Soon</span>
+                    </div>
+                  )}
+                </div>
+                <div class="dividing-line" aria-hidden="true"></div>
+                <div class="ai-tool__content" style="padding: clamp(48px, 7vw, 96px) 0 clamp(48px, 7vw, 96px) 40px; display: flex; flex-direction: column; justify-content: center; gap: 24px;">
+                  <img src={tool.logo} alt={tool.name} class="invert ai-tool__logo" style="height: 40px; width: auto; display: block; object-fit: contain; object-position: left center;" loading="lazy" width="200" height="40" />
+                  <p class="ai-tool__tagline" style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent-dark); margin: 0;">{tool.tagline}</p>
+                  <h3 class="ai-tool__name" style="font-family: var(--font-display); font-size: var(--text-project); font-weight: 700; color: var(--color-ink-dark); margin: 0;">{tool.name}</h3>
+                  <p class="ai-tool__desc" style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); line-height: 1.9; color: var(--color-ink-muted-dark); margin: 0; max-width: 36ch;">{tool.desc}</p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      ))}
+      <!-- Tools CTA -->
+      <div class="ai-tools__cta" style="border-top: 1px solid rgba(196, 168, 130, 0.2); padding: clamp(40px, 5vw, 64px) var(--content-padding-x); max-width: var(--max-width); margin: 0 auto; text-align: center;">
+        <a href={AI_CIRCLE_URL} target="_blank" rel="noopener noreferrer" class="ai-tools__cta-link" style="text-decoration: none;">
+          <span class="ai-tools__cta-kicker">AI ARCHI CIRCLE</span>
+          <span class="ai-tools__cta-title">AI建築サークルを見る</span>
+          <span class="ai-tools__cta-sub">月額5,000円 / ツール使い放題 / Discord・月1イベント付き</span>
+          <span class="ai-tools__cta-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ━━━ 6. PERSONAL + VALUES ━━━ -->
+    <section class="section-pad ai-personal" id="team" data-section="personal" style="border-top: 1px solid rgba(196,168,130,0.15);">
+      <h2 class="sr-only">運営者と実務思想</h2>
+      <div class="line-section ai-personal__grid reveal" style="--line-pos: 30%; align-items: start;">
+        <div class="ai-personal__media" style="padding-right: 40px;">
+          <div class="img-vignette img-grain ai-personal__image" style="border-radius: 4px; overflow: hidden;">
+            <img src="/assets/team-sakuramoto-sena.jpg" alt="櫻本 聖成" class="img-graded" style="width: 100%; height: auto; display: block;" loading="lazy" width="400" height="533" />
+          </div>
+          <div class="ai-personal__meta" style="margin-top: 1.25rem;">
+            <span class="ai-personal__name" style="font-family: var(--font-display), var(--font-jp); font-size: 1rem; font-weight: 700; color: var(--color-ink-dark); display: block; margin-bottom: 0.15rem;">櫻本 聖成</span>
+            <span class="ai-personal__role" style="font-family: var(--font-display); font-size: var(--text-caption); font-weight: 500; color: var(--color-ink-muted-dark); letter-spacing: 0.05em;">CEO / Architect</span>
+          </div>
+        </div>
+        <div class="dividing-line" aria-hidden="true"></div>
+        <div class="ai-personal__copy-wrap" style="padding-left: 40px; display: flex; flex-direction: column; justify-content: center;">
+          <p class="ai-personal__copy" style="font-family: var(--font-body), var(--font-jp); font-size: clamp(1rem, 1.3vw, 1.15rem); color: var(--color-ink-dark); opacity: 0.85; line-height: 2.2; margin: 0; max-width: 40ch;">
+            今も自分で設計して、チームでプロジェクトを回しています。<br />
+            だから分かる。AIがどこに効いて、どこは人間がやるべきか。<br /><br />
+            「難しそう」「うちには早い」—<br />
+            そう思っている方ほど、一度話してみてください。<br />
+            30分で、見える景色が変わります。
+          </p>
+        </div>
+      </div>
+      <!-- Values -->
+      <div class="content-wide" style="margin-top: clamp(3rem, 5vw, 5rem); padding-top: clamp(2rem, 3vw, 3rem); border-top: 1px solid rgba(255,255,255,0.06);">
+        <h2 style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--color-accent-dark); opacity: 0.5; margin: 0 0 2rem;" class="reveal">
+          PRINCIPLES
+        </h2>
+        <ol class="ai-values__list">
+          {values.map((v, i) => (
+            <li class="ai-values__item reveal" style={`--delay: ${i * 0.06}s`}>
+              <span class="ai-values__num">{v.num}</span>
+              <span class="ai-values__title">{v.title}</span>
+              <span class="ai-values__criterion">{v.criterion}</span>
+            </li>
           ))}
-        </div>
-        <!-- Real UI evidence — two products side by side -->
-        <div class="proof-ui-grid reveal">
-          <div class="proof-ui">
-            <img src="/assets/curated/compass-gantt-ui.png" alt="COMPASS ガントチャートUI" class="proof-ui-img" loading="lazy" width="800" height="500" />
-            <p class="proof-ui-caption">COMPASS — 工程管理ガントチャート</p>
-          </div>
-          <div class="proof-ui">
-            <img src="/assets/curated/kakome-report-ui.jpg" alt="KAKOME 写真指示書UI" class="proof-ui-img" loading="lazy" width="800" height="500" />
-            <p class="proof-ui-caption">KAKOME — 写真指示書レポート</p>
-          </div>
-        </div>
+        </ol>
       </div>
     </section>
 
-    <!-- ━━━ 3. VISION + MANIFESTO (統合) ━━━ -->
-    <section class="vision" data-section="vision">
-      <div class="vision-bg">
-        <img src="/assets/generated/ai-vision.jpg" alt="" aria-hidden="true" class="img-graded vision-img" loading="lazy" width="1920" height="823" />
-      </div>
-      <div class="vision-overlay"></div>
-      <div class="vision-content">
-        <div class="vision-manifesto">
-          <p class="m-line m-line--muted">この業界には、力がある。</p>
-          <p class="m-line m-line--muted">足りないのは、テクノロジーという武器だけだ。</p>
-          <div class="m-break" aria-hidden="true"></div>
-          <p class="m-line m-line--bold">それを手にしたとき、</p>
-          <p class="m-line m-line--bold">1人が10人分の成果を出せる世界が始まる。</p>
-          <div class="m-break" aria-hidden="true"></div>
-          <p class="m-line m-line--accent">その世界を、俺たちがつくる。</p>
+    <!-- ━━━ 7. FAQ ━━━ -->
+    <section class="section-pad" id="faq" data-section="faq" style="border-top: 1px solid rgba(196,168,130,0.15);">
+      <div class="line-section" style="--line-pos: 35%;">
+        <div style="padding-right: 40px;">
+          <p style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--color-accent-dark); margin: 0 0 1.5rem;" class="reveal">
+            FAQ
+          </p>
+          <h2 class="reveal" style="font-family: var(--font-display), var(--font-jp); font-size: var(--text-section); font-weight: 700; color: var(--color-ink-dark); margin: 0; letter-spacing: -0.02em; line-height: 1.2;">
+            よくある質問
+          </h2>
         </div>
-        <div class="vision-future reveal">
-          <div class="vision-ev-item">
-            <span>設計事務所の5人が、50人分のプロジェクトを動かす</span>
-          </div>
-          <div class="vision-ev-item">
-            <span>新人がAIに聞いて初日から現場を回す</span>
-          </div>
-          <div class="vision-ev-item">
-            <span>「あの人がいないとわからない」がこの業界から消える</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ━━━ 5. SERVICE — accordion ━━━ -->
-    <section class="svc" data-section="service">
-      <div class="svc__inner">
-        <span class="section-label reveal">SERVICE</span>
-        <h2 class="svc__title reveal">あなたに合った始め方がある。</h2>
-
-        <div class="svc__list">
-          {[...services.entry, ...services.org, ...services.retain, ...services.demand].map((svc, i) => (
-            <details class="svc__item reveal" style={`--delay: ${i * 0.05}s`}>
-              <summary class="svc__header">
-                <span class="svc__name">{svc.name}</span>
-                <span class="svc__step">{svc.step}</span>
-                <span class="svc__toggle" aria-hidden="true"></span>
+        <div class="dividing-line" aria-hidden="true"></div>
+        <div class="ai-faq__list" style="padding-left: 40px;">
+          {aiFaqs.map((faq, i) => (
+            <details class="ai-faq__item reveal" style={`--delay: ${i * 0.05}s`}>
+              <summary class="ai-faq__question">
+                <span class="ai-faq__qmark" aria-hidden="true">Q</span>
+                <span>{faq.question}</span>
               </summary>
-              <div class="svc__body">
-                <p class="svc__desc">{svc.desc}</p>
-                {svc.price && <span class="svc__price">{svc.price}</span>}
-              </div>
+              <p class="ai-faq__answer">{faq.answer}</p>
             </details>
           ))}
         </div>
       </div>
     </section>
 
-    <!-- VALUES merged into PERSONAL section below -->
-
-    <!-- ━━━ 8. TOOLS ━━━ -->
-    <section class="tools-section" data-section="tools">
-      <div class="tools-header">
-        <span class="section-label reveal">TOOLS</span>
-        <h2 class="tools-heading reveal">自社開発ツール</h2>
-        <p class="tools-sub reveal">サークルメンバーは全て使い放題。</p>
-      </div>
-      <div class="tools-track-wrap" role="region" aria-label="ツール一覧" tabindex="0">
-        <div class="tools-track" id="tools-track">
-          {tools.map((tool) => (
-            <div class="tool-card">
-              <img src={tool.logo} alt={tool.name} loading="lazy" class="tool-logo" width="120" height="40" />
-              <span class="tool-tagline">{tool.tagline}</span>
-              <h3 class="tool-name">{tool.name}</h3>
-              {tool.image && (
-                <div class="tool-screenshot"><img src={tool.image} alt="" loading="lazy" width="800" height="500" /></div>
-              )}
-            </div>
-          ))}
+    <!-- ━━━ 8. CTA ━━━ -->
+    <section class="section-pad" id="contact-cta" data-section="cta" style="border-top: 1px solid rgba(196,168,130,0.15);">
+      <div class="line-section reveal" style="--line-pos: 45%;">
+        <div style="padding-right: 40px; display: flex; flex-direction: column; justify-content: center;">
+          <p style="font-family: var(--font-display); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--color-accent-dark); opacity: 0.5; margin: 0 0 1.5rem;">CONTACT</p>
+          <h2 style="font-family: var(--font-display), var(--font-jp); font-size: var(--text-section); font-weight: 700; color: var(--color-ink-dark); margin: 0 0 1rem; letter-spacing: -0.02em; line-height: 1.3;">
+            まずは、<br />話してみませんか。
+          </h2>
+          <p style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); margin: 0; line-height: 1.9; max-width: 32ch;">
+            30分のオンライン面談（無料）で、御社に合う進め方をご提案します。
+          </p>
         </div>
-      </div>
-    </section>
-
-    <!-- ━━━ 6. PERSONAL + VALUES ━━━ -->
-    <section class="personal-section" data-section="personal">
-      <div class="personal-inner">
-        <div class="personal-layout reveal">
-          <div class="personal-photo">
-            <img
-              src="/assets/team-sakuramoto-sena.jpg"
-              alt="櫻本 聖成"
-              class="personal-img"
-              loading="lazy"
-              width="400"
-              height="533"
-            />
-            <div class="personal-sign">
-              <span class="personal-name">櫻本 聖成</span>
-              <span class="personal-role">代表取締役 / CEO</span>
+        <div class="dividing-line" aria-hidden="true"></div>
+        <div style="padding-left: 40px; display: flex; flex-direction: column; justify-content: center; gap: 2.5rem;">
+          <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="font-family: var(--font-display); font-size: 0.7rem; font-weight: 600; color: var(--color-accent-dark); opacity: 0.5;">01</span>
+              <span style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); color: var(--color-ink-dark); opacity: 0.7;">面談で状況を聞く</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="font-family: var(--font-display); font-size: 0.7rem; font-weight: 600; color: var(--color-accent-dark); opacity: 0.5;">02</span>
+              <span style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); color: var(--color-ink-dark); opacity: 0.7;">セミナーで体感する</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="font-family: var(--font-display); font-size: 0.7rem; font-weight: 600; color: var(--color-accent-dark); opacity: 0.5;">03</span>
+              <span style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); color: var(--color-ink-dark); opacity: 0.7;">サークルで触ってみる</span>
             </div>
           </div>
-          <div class="personal-text">
-            <p class="personal-message">
-              今も自分で設計して、チームでプロジェクトを回しています。<br />
-              だから分かる。AIがどこに効いて、どこは人間がやるべきか。<br /><br />
-              「難しそう」「うちには早い」—<br />
-              そう思っている方ほど、一度話してみてください。<br />
-              30分で、見える景色が変わります。
-            </p>
+          <div class="ai-cta__actions">
+            <a href="/contact/" class="ai-cta__button ai-cta__button--primary">
+              無料面談を予約する
+            </a>
+            <a href={AI_CIRCLE_URL} target="_blank" rel="noopener noreferrer" class="ai-cta__button ai-cta__button--secondary">
+              AI建築サークルを見る
+            </a>
           </div>
-        </div>
-        <!-- 行動原則（同じセクション内、罫線で分離） -->
-        <div class="personal-values reveal">
-          <h3 class="personal-values__heading">行動原則</h3>
-          <ol class="personal-values__list">
-            {values.map((v) => (
-              <li class="personal-values__item">
-                <span class="personal-values__title">{v.title}</span>
-                <span class="personal-values__criterion">{v.criterion}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ━━━ 10. CTA ━━━ -->
-    <section class="cta-section" data-section="cta">
-      <div class="cta-inner reveal">
-        <div class="cta-line" aria-hidden="true"></div>
-        <p class="cta-heading">まずは、話してみませんか。</p>
-        <p class="cta-sub">30分のオンライン面談（無料）で、御社に合う進め方をご提案します。</p>
-        <div class="cta-steps">
-          <div class="cta-step"><span class="cta-step-num">1</span><span>面談で状況を聞く</span></div>
-          <div class="cta-step"><span class="cta-step-num">2</span><span>セミナーで体感する</span></div>
-          <div class="cta-step"><span class="cta-step-num">3</span><span>サークルで触ってみる</span></div>
-        </div>
-        <div class="cta-buttons">
-          <a href="/contact/" class="cta-primary">無料面談を予約する</a>
-          <a href="https://ai-archi-circle.jp" target="_blank" rel="noopener noreferrer" class="cta-outline">セミナー・サークルを見る</a>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- No-JS fallback: make all services visible -->
   <noscript>
     <style>
-      /* accordion needs no noscript overrides */
       .m-line { opacity: 1 !important; }
-      .hero-logo, .hero-sub, .hero-proof { opacity: 1 !important; }
-      .hero-img { transform: none !important; }
-      .value-item { opacity: 1 !important; transform: none !important; }
+      [data-hero-item] { opacity: 1 !important; transform: none !important; }
       .reveal { opacity: 1 !important; transform: none !important; }
     </style>
   </noscript>
@@ -331,308 +550,587 @@ const audiences = [
   <div class="dark-space"><Footer /></div>
 
   <style>
-    .ai-page { --pad: var(--content-padding-x); --mw: var(--max-width); }
-    .section-label {
-      font-family: var(--font-display); font-size: 0.6rem; font-weight: 700;
-      letter-spacing: 0.35em; text-transform: uppercase;
-      color: var(--color-accent-dark); display: block; margin-bottom: 1.5rem;
-    }
-
     /* ── HERO ── */
-    .hero-wrap { position: relative; height: 220vh; }
-    .hero-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; }
-    .hero-bg { position: absolute; inset: 0; }
-    .hero-img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.1); will-change: transform; }
-    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(12,12,12,0.82) 0%, rgba(12,12,12,0.35) 50%, rgba(12,12,12,0.65) 100%); z-index: 1; }
-    .hero-grid-lines { position: absolute; inset: 0; z-index: 1; display: flex; justify-content: space-evenly; pointer-events: none; opacity: 0.035; }
-    .hero-grid-lines span { width: 1px; height: 100%; background: var(--color-ink-dark); }
-    .hero-content { position: relative; z-index: 2; max-width: var(--mw); margin: 0 auto; padding: 0 var(--pad); width: 100%; }
-    .hero-inner { max-width: 700px; }
-    .hero-logo { height: 22px; width: auto; opacity: 0; margin-bottom: 2.5rem; display: block; }
-    .hero-title { font-family: var(--font-jp); font-size: clamp(2.2rem, 6vw, 4.2rem); font-weight: 800; color: var(--color-ink-dark); line-height: 1.3; letter-spacing: -0.03em; margin-bottom: 1.25rem; }
-    .hero-word { display: block; overflow: hidden; }
-    .hero-sub { font-family: var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 2; opacity: 0; max-width: 420px; margin-bottom: 2.5rem; }
-    .hero-proof { display: flex; align-items: center; gap: 2rem; opacity: 0; flex-wrap: wrap; }
-    .hero-proof-item { display: flex; flex-direction: column; gap: 0.2rem; }
-    .hero-proof-num { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--color-ink-dark); letter-spacing: -0.02em; }
-    .hero-proof-label { font-family: var(--font-jp); font-size: 0.7rem; font-weight: 300; color: var(--color-ink-muted-dark); }
-    .hero-proof-divider { width: 1px; height: 32px; background: rgba(255,255,255,0.1); }
-    .hero-scroll-hint { position: absolute; bottom: -28vh; left: 0; display: flex; flex-direction: column; align-items: center; gap: 0.6rem; opacity: 0; }
-    .hero-scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--color-accent-dark), transparent); }
-    .hero-scroll-label { font-family: var(--font-display); font-size: 0.5rem; font-weight: 600; letter-spacing: 0.4em; color: var(--color-accent-dark); }
+    .ai-hero { position: relative; height: 180vh; }
+    .ai-hero__sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+    .ai-hero__bg { position: absolute; inset: 0; }
+    .ai-hero__img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.1); will-change: transform; }
+    .ai-hero__overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(12,12,12,0.82) 0%, rgba(12,12,12,0.35) 50%, rgba(12,12,12,0.65) 100%); z-index: 1; }
+    .ai-hero__content { position: relative; z-index: 2; height: 100%; display: flex; align-items: flex-end; max-width: var(--max-width); margin: 0 auto; padding: 0 var(--content-padding-x); }
+    .ai-hero__inner { padding: clamp(40px, 6vw, 80px) 0; max-width: 700px; }
+    .ai-num { font-family: var(--font-body), sans-serif; font-variant-numeric: lining-nums tabular-nums; font-feature-settings: 'lnum' 1, 'tnum' 1; letter-spacing: -0.03em; }
+    .ai-num-inline { font-family: var(--font-body), sans-serif; font-variant-numeric: lining-nums tabular-nums; font-feature-settings: 'lnum' 1, 'tnum' 1; letter-spacing: -0.03em; display: inline-block; vertical-align: baseline; }
+    .ai-kpi__value { font-family: var(--font-display), var(--font-jp); font-size: 1.65rem; font-weight: 800; color: var(--color-ink-dark); letter-spacing: -0.02em; line-height: 1; display: inline-flex; align-items: baseline; gap: 0.02em; min-height: 1em; }
+    .ai-kpi__label { font-family: var(--font-body), var(--font-jp); font-size: 0.85rem; font-weight: 400; color: var(--color-ink-muted-dark); line-height: 1.35; }
+    .ai-outcome { font-family: var(--font-jp), var(--font-body), sans-serif; font-weight: 700; line-height: 1.35; letter-spacing: -0.02em; }
+    .ai-outcome .ai-num-inline { font-weight: 800; margin: 0 0.02em; }
+    .ai-hero__title { text-wrap: balance; }
+    .ai-hero__word { display: block; overflow: hidden; }
+    .ai-hero__copy-line { display: block; }
+    .ai-proof__heading { text-wrap: balance; line-height: 1.18; }
+    .ai-outcome,
+    .ai-svc__name,
+    .ai-svc__step,
+    .m-line--bold,
+    .m-line--accent { text-wrap: balance; }
 
-    /* ── PROOF ── */
-    .proof-section { padding: 10rem 0 6rem; }
-    .proof-inner { max-width: var(--mw); margin: 0 auto; padding: 0 var(--pad); }
-    .proof-heading { font-family: var(--font-jp); font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 700; color: var(--color-ink-dark); margin-bottom: 3rem; }
-    .proof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 4rem; }
-    .proof-card { padding: 2rem; border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; transition: border-color 0.3s ease; }
-    .proof-card:hover { border-color: rgba(196,168,130,0.25); }
-    .proof-type { font-family: var(--font-jp); font-size: 0.75rem; font-weight: 700; color: var(--color-accent-dark); letter-spacing: 0.1em; display: block; margin-bottom: 0.75rem; }
-    .proof-pain { font-family: var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 1.8; margin-bottom: 1rem; }
-    .proof-arrow { color: var(--color-accent-dark); font-size: 1rem; margin-bottom: 0.5rem; }
-    .proof-outcome { font-family: var(--font-jp); font-size: var(--text-body); font-weight: 600; color: var(--color-ink-dark); line-height: 1.8; }
-    .proof-ui-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+    /* ── PROOF responsive ── */
+    .proof-ui-grid { grid-template-columns: 1fr; }
     @media (min-width: 768px) { .proof-ui-grid { grid-template-columns: 1fr 1fr; } }
-    .proof-ui { overflow: hidden; border-radius: 4px; border: 1px solid rgba(255,255,255,0.06); transition: border-color 0.3s ease; }
-    .proof-ui:hover { border-color: rgba(196,168,130,0.2); }
-    .proof-ui-img { width: 100%; height: auto; display: block; }
-    .proof-ui-caption { font-family: var(--font-jp); font-size: 0.7rem; font-weight: 300; color: var(--color-ink-muted-dark); padding: 0.75rem 1rem; background: rgba(255,255,255,0.02); }
 
-    /* ── MANIFESTO ── */
-    .manifesto { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 8rem var(--pad); }
-    .manifesto-inner { max-width: 720px; }
-    .m-line { font-family: var(--font-jp); margin: 0; opacity: 0; transition: opacity 0.6s ease; }
-    .m-line--muted { font-size: clamp(0.9rem, 1.5vw, 1.1rem); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 2.6; }
-    .m-line--bold { font-size: clamp(1.2rem, 2.5vw, 1.8rem); font-weight: 700; color: var(--color-ink-dark); line-height: 2; }
-    .m-line--accent { font-size: clamp(1.3rem, 2.8vw, 2.2rem); font-weight: 800; color: var(--color-accent-dark); line-height: 2; }
-    .m-break { height: 2rem; }
-    .m-line.is-visible { opacity: 1; }
+    /* ── TOOLS ── */
+    .ai-tools__heading { text-wrap: balance; }
+    .ai-tools__lead { text-wrap: pretty; }
+    .ai-tools__cta-link {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.45rem 1rem;
+      align-items: center;
+      width: min(100%, 680px);
+      margin: 0 auto;
+      padding: 1.35rem 1.45rem 1.25rem;
+      border-radius: 28px;
+      border: 1px solid rgba(196,168,130,0.24);
+      background:
+        radial-gradient(circle at top right, rgba(231,193,143,0.18), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.015) 100%);
+      box-shadow: 0 22px 44px rgba(0,0,0,0.24);
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      text-align: left;
+    }
+    .ai-tools__cta-link:hover {
+      transform: translateY(-2px);
+      border-color: rgba(231,193,143,0.36);
+      box-shadow: 0 26px 54px rgba(0,0,0,0.28);
+    }
+    .ai-tools__cta-kicker {
+      grid-column: 1;
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(231,193,143,0.84);
+    }
+    .ai-tools__cta-title {
+      grid-column: 1;
+      font-family: var(--font-display), var(--font-jp);
+      font-size: clamp(1.35rem, 2vw, 1.65rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--color-ink-dark);
+    }
+    .ai-tools__cta-sub {
+      grid-column: 1;
+      font-family: var(--font-body), var(--font-jp);
+      font-size: 0.95rem;
+      font-weight: 500;
+      line-height: 1.65;
+      color: rgba(240, 238, 235, 0.76);
+    }
+    .ai-tools__cta-arrow {
+      grid-column: 2;
+      grid-row: 1 / span 3;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      border: 1px solid rgba(240,238,235,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--color-ink-dark);
+      font-size: 1.2rem;
+    }
+    .ai-tool__desc { color: rgba(240, 238, 235, 0.68) !important; }
+    .ai-personal__copy { color: rgba(240, 238, 235, 0.88) !important; opacity: 1 !important; }
+    .ai-personal__role { color: rgba(240, 238, 235, 0.64) !important; }
 
     /* ── VISION ── */
-    .vision { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; }
-    .vision-bg { position: absolute; inset: 0; }
-    .vision-bg img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.05); }
-    .vision-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(12,12,12,0.9) 0%, rgba(12,12,12,0.5) 50%, rgba(12,12,12,0.3) 100%); z-index: 1; }
-    .vision-content { position: relative; z-index: 2; max-width: var(--mw); margin: 0 auto; padding: 6rem var(--pad); max-width: 640px; }
-    .vision-heading { font-family: var(--font-jp); font-size: clamp(1.5rem, 3.5vw, 2.8rem); font-weight: 800; color: var(--color-ink-dark); line-height: 1.5; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
-    .vision-sub { font-family: var(--font-jp); font-size: clamp(0.85rem, 1.1vw, 1rem); font-weight: 500; color: var(--color-accent-dark); margin-bottom: 2.5rem; }
-    .vision-evidence { display: flex; flex-direction: column; gap: 1rem; }
-    .vision-ev-item { display: flex; align-items: flex-start; gap: 0.75rem; font-family: var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); line-height: 1.8; }
-    .vision-ev-icon { color: var(--color-accent-dark); flex-shrink: 0; margin-top: 0.15rem; }
+    .ai-vision { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; }
+    .ai-vision__bg { position: absolute; inset: 0; }
+    .ai-vision__img { width: 100%; height: 100%; object-fit: cover; }
+    .ai-vision__overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(8,8,8,0.96) 0%, rgba(10,10,10,0.78) 48%, rgba(12,12,12,0.62) 100%); z-index: 1; }
+    .ai-vision__content { position: relative; z-index: 2; width: 100%; }
 
-    /* ── SERVICE — clean accordion ── */
-    .svc { padding: clamp(5rem, 8vw, 8rem) 0; }
-    .svc__inner { max-width: 800px; margin: 0 auto; padding: 0 var(--pad); }
-    .svc__title {
-      font-family: var(--font-jp); font-size: clamp(1.3rem, 2.2vw, 1.8rem);
-      font-weight: 700; color: var(--color-ink-dark); margin-bottom: 3rem;
+    /* Manifesto lines */
+    .m-line { margin: 0; opacity: 0; transition: opacity 0.6s ease; }
+    .m-line--muted { font-family: var(--font-body), var(--font-jp); font-size: clamp(0.9rem, 1.5vw, 1.1rem); font-weight: 400; color: rgba(240, 238, 235, 0.82); line-height: 2.6; text-shadow: 0 1px 12px rgba(0,0,0,0.2); }
+    .m-line--bold { font-family: var(--font-display), var(--font-jp); font-size: clamp(1.2rem, 2.5vw, 1.8rem); font-weight: 700; color: var(--color-ink-dark); line-height: 2; text-shadow: 0 2px 20px rgba(0,0,0,0.28); }
+    .m-line--accent { font-family: var(--font-display), var(--font-jp); font-size: clamp(1.3rem, 2.8vw, 2.2rem); font-weight: 800; color: var(--color-accent-dark); line-height: 2; }
+    .m-line.is-visible { opacity: 1; }
+    .m-line--split .m-line__chunk { display: block; }
+    .ai-vision__points { max-width: 34rem; }
+    .ai-vision__point-num { opacity: 0.7 !important; }
+    .ai-vision__point-text {
+      color: rgba(240, 238, 235, 0.84) !important;
+      font-weight: 400 !important;
+      text-shadow: 0 1px 12px rgba(0,0,0,0.2);
     }
-    .svc__list { border-top: 1px solid rgba(255,255,255,0.08); }
-    .svc__item {
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .svc__header {
+
+    /* ── SERVICE accordion ── */
+    .ai-svc__list { border-top: 1px solid rgba(255,255,255,0.08); }
+    .ai-svc__item { border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .ai-svc__header {
       display: flex; align-items: center; gap: 1rem;
       padding: clamp(1.25rem, 2vw, 1.75rem) 0;
       cursor: pointer; list-style: none; width: 100%;
     }
-    .svc__header::-webkit-details-marker { display: none; }
-    .svc__header::marker { display: none; content: ''; }
-    .svc__name {
-      font-family: var(--font-jp); font-size: clamp(1rem, 1.4vw, 1.2rem);
-      font-weight: 700; color: var(--color-ink-dark);
-      flex-shrink: 0;
-    }
-    .svc__step {
-      font-family: var(--font-jp); font-size: 0.85rem;
-      color: var(--color-ink-muted-dark);
-      flex: 1; text-align: right;
-    }
-    .svc__toggle {
-      width: 20px; height: 20px; flex-shrink: 0;
+    .ai-svc__header::-webkit-details-marker { display: none; }
+    .ai-svc__header::marker { display: none; content: ''; }
+    .ai-svc__name { font-family: var(--font-display), var(--font-jp); font-size: clamp(1rem, 1.4vw, 1.2rem); font-weight: 700; color: var(--color-ink-dark); flex-shrink: 0; }
+    .ai-service__heading { text-wrap: balance; }
+    .ai-service__line { display: block; }
+    .ai-svc__step { font-family: var(--font-body), var(--font-jp); font-size: var(--text-nav); color: rgba(240, 238, 235, 0.72); flex: 1; text-align: right; font-weight: 500; }
+    .ai-svc__toggle { width: 20px; height: 20px; flex-shrink: 0; position: relative; }
+    .ai-svc__toggle::before, .ai-svc__toggle::after { content: ''; position: absolute; background: rgba(240, 238, 235, 0.52); transition: transform 0.3s var(--ease); }
+    .ai-svc__toggle::before { width: 12px; height: 1px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .ai-svc__toggle::after { width: 1px; height: 12px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .ai-svc__item[open] .ai-svc__toggle::after { transform: translate(-50%, -50%) rotate(90deg); }
+    .ai-svc__item[open] { background: rgba(255,255,255,0.015); }
+    .ai-svc__body { padding: 0 0 clamp(1.25rem, 2vw, 1.75rem); display: grid; gap: 0.9rem; }
+    .ai-svc__recommend {
       position: relative;
+      margin: 0.25rem 0 0;
+      padding: 1.1rem 1rem 0.95rem;
+      border: 1px solid rgba(214, 171, 116, 0.26);
+      background: linear-gradient(180deg, rgba(214, 171, 116, 0.14) 0%, rgba(214, 171, 116, 0.08) 100%);
+      border-radius: 18px;
+      box-shadow: 0 14px 30px rgba(0,0,0,0.18);
     }
-    .svc__toggle::before, .svc__toggle::after {
-      content: ''; position: absolute;
-      background: var(--color-ink-muted-dark);
-      transition: transform 0.3s var(--ease);
+    .ai-svc__recommend::after {
+      content: '';
+      position: absolute;
+      left: 1.25rem;
+      bottom: -10px;
+      width: 18px;
+      height: 18px;
+      background: linear-gradient(135deg, rgba(214, 171, 116, 0.14) 0%, rgba(214, 171, 116, 0.08) 100%);
+      border-right: 1px solid rgba(214, 171, 116, 0.22);
+      border-bottom: 1px solid rgba(214, 171, 116, 0.22);
+      transform: rotate(45deg);
+      border-bottom-right-radius: 4px;
     }
-    .svc__toggle::before { width: 12px; height: 1px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-    .svc__toggle::after { width: 1px; height: 12px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-    .svc__item[open] .svc__toggle::after { transform: translate(-50%, -50%) rotate(90deg); }
-    .svc__body {
-      padding: 0 0 clamp(1.25rem, 2vw, 1.75rem);
+    .ai-svc__recommend-label {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      margin-bottom: 0.55rem;
+      padding: 0.2rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(255, 233, 205, 0.9);
+      color: #6d4a1c;
+      font-family: var(--font-display), var(--font-jp);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
     }
-    .svc__desc {
-      font-family: var(--font-jp); font-size: var(--text-body);
-      color: var(--color-ink-dark); opacity: 0.7; line-height: 2;
+    .ai-svc__recommend-text {
       margin: 0;
+      font-family: var(--font-body), var(--font-jp);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: rgba(255, 232, 205, 0.98);
+      line-height: 1.8;
     }
-    .svc__price {
-      font-family: var(--font-body); font-size: 0.85rem;
-      color: var(--color-accent-dark); display: block; margin-top: 0.5rem;
+    .ai-svc__desc { color: rgba(240, 238, 235, 0.84) !important; opacity: 1 !important; line-height: 1.9 !important; }
+
+    /* ── CTA buttons ── */
+    .ai-cta__actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .ai-cta__button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 280px;
+      min-height: 60px;
+      padding: 0 2rem;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      font-family: var(--font-display), var(--font-jp);
+      font-size: var(--text-nav);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-align: center;
+    }
+    .ai-cta__button--primary {
+      color: var(--color-surface-dark);
+      background: var(--color-ink-dark);
+    }
+    .ai-cta__button--secondary {
+      color: var(--color-ink-dark);
+      border: 1px solid rgba(240,238,235,0.15);
+      background: transparent;
+    }
+
+    /* ── FAQ ── */
+    .ai-faq__list {
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .ai-faq__item {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .ai-faq__question {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.85rem;
+      align-items: start;
+      padding: 1.25rem 0;
+      list-style: none;
+      cursor: pointer;
+      font-family: var(--font-display), var(--font-jp);
+      font-size: clamp(1rem, 1.2vw, 1.12rem);
+      font-weight: 700;
+      color: var(--color-ink-dark);
+      line-height: 1.55;
+    }
+    .ai-faq__question::-webkit-details-marker { display: none; }
+    .ai-faq__question::marker { display: none; content: ''; }
+    .ai-faq__qmark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 999px;
+      background: rgba(196,168,130,0.14);
+      color: var(--color-accent-dark);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .ai-faq__answer {
+      margin: 0;
+      padding: 0 0 1.25rem 2.65rem;
+      font-family: var(--font-body), var(--font-jp);
+      font-size: var(--text-body);
+      line-height: 1.85;
+      color: rgba(240, 238, 235, 0.82);
     }
 
     /* ── VALUES ── */
-    /* ── VALUES (Vercel/Linear hybrid: 5-col grid, title+criterion, numbered) ── */
-    .values-section { padding: clamp(4rem, 6vw, 6rem) 0 clamp(2rem, 3vw, 3rem); border-top: 1px solid rgba(255,255,255,0.04); }
-    .values-inner { max-width: var(--mw); margin: 0 auto; padding: 0 var(--pad); }
-    .values-heading {
-      font-family: var(--font-jp); font-size: clamp(1.3rem, 2.2vw, 1.8rem);
-      font-weight: 700; color: var(--color-ink-dark); margin-bottom: 3rem;
-    }
-    .values-list {
-      list-style: none; margin: 0; padding: 0;
-      display: grid; grid-template-columns: 1fr; gap: 0;
-      counter-reset: value-counter;
-    }
-    @media (min-width: 768px) { .values-list { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 1200px) { .values-list { grid-template-columns: repeat(5, 1fr); } }
-    .value-item {
-      padding: clamp(1.5rem, 2.5vw, 2rem);
-      border-top: 1px solid rgba(255,255,255,0.06);
-      counter-increment: value-counter;
-      position: relative;
-    }
-    @media (min-width: 768px) {
-      .value-item { border-right: 1px solid rgba(255,255,255,0.04); }
-      .value-item:nth-child(2n) { border-right: none; }
-    }
-    @media (min-width: 1200px) {
-      .value-item:nth-child(2n) { border-right: 1px solid rgba(255,255,255,0.04); }
-      .value-item:last-child { border-right: none; }
-    }
-    .value-item::before {
-      content: counter(value-counter, decimal-leading-zero);
-      font-family: var(--font-display); font-size: 0.65rem; font-weight: 600;
-      letter-spacing: 0.1em; color: var(--color-accent-dark); opacity: 0.4;
-      display: block; margin-bottom: 0.75rem;
-    }
-    .value-title {
-      font-family: var(--font-jp); font-size: clamp(0.95rem, 1.2vw, 1.1rem);
-      font-weight: 700; color: var(--color-ink-dark);
-      display: block; margin-bottom: 0.5rem; line-height: 1.5;
-    }
-    .value-criterion {
-      font-family: var(--font-jp); font-size: 0.85rem;
-      font-weight: 400; color: var(--color-ink-dark); opacity: 0.55;
-      line-height: 1.8; display: block;
-    }
-
-    /* ── TOOLS ── */
-    .tools-section { padding: 8rem 0; overflow: hidden; }
-    .tools-header { max-width: var(--mw); margin: 0 auto; padding: 0 var(--pad); margin-bottom: 3rem; }
-    .tools-heading { font-family: var(--font-jp); font-size: var(--text-section); font-weight: 700; color: var(--color-ink-dark); margin-bottom: 0.5rem; }
-    .tools-sub { font-family: var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); }
-    .tools-track-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
-    .tools-track-wrap::-webkit-scrollbar { height: 0; }
-    .tools-track { display: flex; gap: 1.5rem; padding: 0 var(--pad) 1rem; }
-    .tool-card { width: 300px; flex-shrink: 0; padding: 1.75rem; border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; transition: border-color 0.3s, transform 0.3s; scroll-snap-align: start; }
-    .tool-card:hover { border-color: rgba(196,168,130,0.25); transform: translateY(-3px); }
-    .tool-logo { height: 20px; width: auto; filter: brightness(0) invert(1); opacity: 0.5; margin-bottom: 1rem; display: block; }
-    .tool-tagline { font-family: var(--font-display); font-size: 0.55rem; font-weight: 600; letter-spacing: 0.2em; color: var(--color-accent-dark); text-transform: uppercase; display: block; margin-bottom: 0.25rem; }
-    .tool-name { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--color-ink-dark); }
-    .tool-screenshot { margin-top: 1.25rem; overflow: hidden; border-radius: 2px; border: 1px solid rgba(255,255,255,0.04); }
-    .tool-screenshot img { width: 100%; height: auto; display: block; }
-
-    /* ── BRIDGE ── */
-    .bridge-section { padding: 8rem 0; border-top: 1px solid rgba(255,255,255,0.04); }
-    .bridge-inner { max-width: var(--mw); margin: 0 auto; padding: 0 var(--pad); }
-    .bridge-heading { font-family: var(--font-jp); font-size: clamp(1.3rem, 2.2vw, 1.8rem); font-weight: 700; color: var(--color-ink-dark); margin-bottom: 3rem; }
-    .bridge-reasons { display: grid; grid-template-columns: 1fr; gap: 0; }
-    @media (min-width: 768px) { .bridge-reasons { grid-template-columns: repeat(3, 1fr); } }
-    .bridge-reason {
-      padding: clamp(1.5rem, 3vw, 2.5rem);
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-    }
-    @media (min-width: 768px) {
-      .bridge-reason { border-bottom: none; border-right: 1px solid rgba(255,255,255,0.04); }
-      .bridge-reason:last-child { border-right: none; }
-    }
-    .bridge-reason-num {
-      font-family: var(--font-display); font-size: 0.8rem;
-      font-weight: 600; letter-spacing: 0.15em; color: var(--color-accent-dark); opacity: 0.4;
-      display: block; margin-bottom: 0.75rem; line-height: 1;
-    }
-    .bridge-reason-title { font-family: var(--font-jp); font-size: clamp(1rem, 1.5vw, 1.2rem); font-weight: 700; color: var(--color-ink-dark); margin-bottom: 0.5rem; }
-    .bridge-reason p { font-family: var(--font-jp); font-size: var(--text-body); font-weight: 400; color: var(--color-ink-dark); opacity: 0.7; line-height: 2; }
-
-    /* ── PERSONAL + VALUES ── */
-    .personal-section { padding: 6rem 0; border-top: 1px solid rgba(255,255,255,0.04); }
-    .personal-inner { max-width: var(--mw); margin: 0 auto; padding: 0 var(--pad); }
-    .personal-layout {
-      display: grid; grid-template-columns: 1fr; gap: 3rem;
-    }
-    @media (min-width: 768px) {
-      .personal-layout { grid-template-columns: 220px 1fr; gap: clamp(3rem, 5vw, 5rem); align-items: start; }
-    }
-    .personal-photo { max-width: 220px; }
-    .personal-img {
-      width: 100%; height: auto; border-radius: 4px; display: block;
-      filter: grayscale(0.15) contrast(1.05); margin-bottom: 1rem;
-    }
-    .personal-sign {}
-    .personal-name {
-      font-family: var(--font-jp); font-size: 1rem; font-weight: 700;
-      color: var(--color-ink-dark); display: block; margin-bottom: 0.15rem;
-    }
-    .personal-role {
-      font-family: var(--font-body); font-size: 0.8rem;
-      color: var(--color-ink-muted-dark); letter-spacing: 0.05em;
-    }
-    .personal-text {}
-    .personal-message {
-      font-family: var(--font-jp); font-size: clamp(0.95rem, 1.2vw, 1.1rem);
-      color: var(--color-ink-dark); opacity: 0.85; line-height: 2.2;
-    }
-    /* Values inside personal */
-    .personal-values { margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(255,255,255,0.06); }
-    .personal-values__heading {
-      font-family: var(--font-display); font-size: 0.6rem; font-weight: 600;
-      letter-spacing: 0.35em; text-transform: uppercase;
-      color: var(--color-accent-dark); opacity: 0.5; margin-bottom: 2rem;
-    }
-    .personal-values__list {
+    .ai-values__list {
       list-style: none; margin: 0; padding: 0;
       display: grid; grid-template-columns: 1fr; gap: 0;
     }
-    @media (min-width: 768px) { .personal-values__list { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 1200px) { .personal-values__list { grid-template-columns: repeat(5, 1fr); } }
-    .personal-values__item {
-      padding: clamp(1rem, 1.5vw, 1.25rem);
+    @media (min-width: 768px) { .ai-values__list { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1200px) { .ai-values__list { grid-template-columns: repeat(5, 1fr); } }
+    .ai-values__item {
+      padding: clamp(1.25rem, 2vw, 1.5rem);
       border-top: 1px solid rgba(255,255,255,0.06);
     }
     @media (min-width: 768px) {
-      .personal-values__item { border-right: 1px solid rgba(255,255,255,0.04); }
-      .personal-values__item:nth-child(2n) { border-right: none; }
+      .ai-values__item { border-right: 1px solid rgba(255,255,255,0.04); }
+      .ai-values__item:nth-child(2n) { border-right: none; }
     }
     @media (min-width: 1200px) {
-      .personal-values__item:nth-child(2n) { border-right: 1px solid rgba(255,255,255,0.04); }
-      .personal-values__item:last-child { border-right: none; }
+      .ai-values__item:nth-child(2n) { border-right: 1px solid rgba(255,255,255,0.04); }
+      .ai-values__item:last-child { border-right: none; }
     }
-    .personal-values__title {
-      font-family: var(--font-jp); font-size: clamp(0.9rem, 1.1vw, 1rem);
-      font-weight: 700; color: var(--color-ink-dark); display: block; margin-bottom: 0.3rem;
-    }
-    .personal-values__criterion {
-      font-family: var(--font-jp); font-size: 0.8rem;
-      color: var(--color-ink-dark); opacity: 0.5; display: block;
-    }
-
-    /* ── CTA ── */
-    .cta-section { padding: 6rem 0 10rem; }
-    .cta-inner { max-width: var(--mw); margin: 0 auto; padding: 0 var(--pad); text-align: center; }
-    .cta-line { width: 1px; height: 48px; background: linear-gradient(to bottom, transparent, var(--color-accent-dark), transparent); margin: 0 auto 2.5rem; }
-    .cta-heading { font-family: var(--font-jp); font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 700; color: var(--color-ink-dark); margin-bottom: 0.5rem; }
-    .cta-sub { font-family: var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); margin-bottom: 2rem; }
-    .cta-steps { display: flex; gap: 2rem; justify-content: center; margin-bottom: 2.5rem; flex-wrap: wrap; }
-    .cta-step { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-jp); font-size: 0.85rem; color: var(--color-ink-dark); opacity: 0.6; }
-    .cta-step-num { font-family: var(--font-display); font-size: 0.7rem; font-weight: 600; color: var(--color-accent-dark); opacity: 0.5; }
-    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-    .cta-primary, .cta-outline { font-family: var(--font-jp); font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em; padding: 1rem 2.5rem; border-radius: 2px; text-decoration: none; display: inline-block; transition: all 0.25s ease; }
-    .cta-primary { color: var(--color-surface-dark); background: var(--color-ink-dark); }
-    .cta-primary:hover { opacity: 0.85; transform: translateY(-2px); }
-    .cta-outline { color: var(--color-ink-dark); border: 1px solid rgba(240,238,235,0.15); }
-    .cta-outline:hover { border-color: rgba(240,238,235,0.4); transform: translateY(-2px); }
+    .ai-values__num { font-family: var(--font-display); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; color: var(--color-accent-dark); opacity: 0.4; display: block; margin-bottom: 0.75rem; }
+    .ai-values__title { font-family: var(--font-display), var(--font-jp); font-size: clamp(0.95rem, 1.2vw, 1.1rem); font-weight: 700; color: var(--color-ink-dark); display: block; margin-bottom: 0.4rem; line-height: 1.5; }
+    .ai-values__criterion { font-family: var(--font-body), var(--font-jp); font-size: var(--text-caption); font-weight: 400; color: var(--color-ink-dark); opacity: 0.5; line-height: 1.8; display: block; }
 
     /* ── Responsive ── */
-    /* value-item responsive handled above */
     @media (max-width: 767px) {
-      .hero-grid-lines, .hero-scroll-hint { display: none; }
-      .hero-proof { gap: 1.25rem; }
-      .hero-proof-divider { display: none; }
-      .cta-section { padding-bottom: calc(10rem + 56px + env(safe-area-inset-bottom, 0px)); }
-      /* accordion is naturally responsive */
+      .ai-hero { height: auto; }
+      .ai-hero__sticky { position: relative; }
+      .ai-hero__content {
+        align-items: center;
+        padding-top: 60px;
+      }
+      .ai-hero__inner {
+        width: 100%;
+        max-width: none;
+        padding: clamp(104px, 22vw, 148px) 0 clamp(28px, 10vw, 48px);
+      }
+      .ai-hero__img {
+        object-position: 56% 34%;
+      }
+      .ai-hero__title { font-size: clamp(2.35rem, 10vw, 3.5rem) !important; line-height: 1.08 !important; }
+      .ai-hero .line-section { min-height: 100vh !important; min-height: 100svh !important; }
+      .ai-page .section-pad:last-of-type { padding-bottom: clamp(4rem, 8vw, 8rem); }
+      .ai-proof__heading {
+        font-size: clamp(2rem, 10vw, 2.7rem) !important;
+        margin-bottom: 1.5rem !important;
+      }
+      .ai-proof__row {
+        gap: 0;
+      }
+      .ai-proof__meta {
+        padding: 1.5rem 0 1rem !important;
+      }
+      .ai-proof__outcome-wrap {
+        padding: 0 0 1.75rem !important;
+        align-items: flex-start !important;
+      }
+      .proof-ui-grid {
+        display: none !important;
+      }
+      .ai-outcome {
+        font-size: clamp(1.85rem, 8.5vw, 2.35rem) !important;
+        line-height: 1.16;
+        letter-spacing: -0.03em;
+      }
+      .ai-kpi-group {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        align-items: start !important;
+      }
+      .ai-kpi__value { font-size: 1.95rem; }
+      .ai-kpi__divider { display: none; }
+      .ai-kpi { min-width: 0; }
+      .ai-kpi__label { font-size: 0.78rem; }
+      .m-line--muted { line-height: 2.2; color: rgba(240, 238, 235, 0.74); }
+      .m-line--bold { line-height: 1.55; }
+      .m-line--accent { line-height: 1.45; }
+      .ai-vision__point-text { color: rgba(240, 238, 235, 0.76) !important; }
+      .ai-service__heading {
+        font-size: clamp(2rem, 9.4vw, 2.45rem) !important;
+        line-height: 1.04 !important;
+        letter-spacing: -0.04em !important;
+      }
+      .ai-service__line {
+        white-space: nowrap;
+      }
+      .ai-svc__header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto;
+        column-gap: 1rem;
+        row-gap: 0.35rem;
+        align-items: center;
+        padding: 1.1rem 0;
+      }
+      .ai-svc__name {
+        grid-column: 1;
+        grid-row: 1;
+        font-size: 1.15rem;
+      }
+      .ai-svc__step {
+        grid-column: 1;
+        grid-row: 2;
+        text-align: left;
+        font-size: 0.95rem;
+        line-height: 1.55;
+        color: rgba(240, 238, 235, 0.78);
+      }
+      .ai-svc__toggle {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: center;
+      }
+      .ai-svc__body {
+        gap: 1rem;
+        padding: 0 0 1.4rem;
+      }
+      .ai-svc__recommend {
+        padding: 1rem 0.95rem 0.9rem;
+        border-radius: 16px;
+      }
+      .ai-svc__recommend-label {
+        font-size: 0.72rem;
+        min-height: 26px;
+      }
+      .ai-svc__recommend-text {
+        font-size: 0.98rem;
+        line-height: 1.72;
+      }
+      .ai-svc__desc {
+        font-size: 0.98rem !important;
+        line-height: 1.85 !important;
+      }
+      .ai-tools {
+        padding-top: 3.5rem !important;
+      }
+      .ai-tools__intro {
+        padding-bottom: 1.5rem !important;
+      }
+      .ai-tools__heading {
+        font-size: clamp(2.4rem, 12vw, 3rem) !important;
+        line-height: 1.02 !important;
+        margin-bottom: 0.8rem !important;
+      }
+      .ai-tools__lead {
+        font-size: 1rem !important;
+        line-height: 1.85 !important;
+        color: rgba(240, 238, 235, 0.78) !important;
+        max-width: none !important;
+      }
+      .ai-tool {
+        border-top: 0 !important;
+        padding: 0 var(--content-padding-x) 1rem;
+      }
+      .ai-tool__grid {
+        padding: 1.25rem;
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 100%),
+          radial-gradient(circle at top right, rgba(196,168,130,0.12), transparent 34%);
+        border: 1px solid rgba(196,168,130,0.16);
+        border-radius: 22px;
+        gap: 1.1rem;
+      }
+      .ai-tool__content,
+      .ai-tool__media {
+        padding: 0 !important;
+        min-height: 0 !important;
+      }
+      .ai-tool__content {
+        gap: 0.9rem !important;
+      }
+      .ai-tool__logo {
+        height: 34px !important;
+        max-width: 78%;
+      }
+      .ai-tool__tagline {
+        display: inline-flex;
+        align-self: flex-start;
+        padding: 0.35rem 0.65rem;
+        border-radius: 999px;
+        background: rgba(196,168,130,0.1);
+        border: 1px solid rgba(196,168,130,0.16);
+        font-size: 0.78rem !important;
+        letter-spacing: 0.08em !important;
+      }
+      .ai-tool__name {
+        display: none;
+      }
+      .ai-tool__desc {
+        font-size: 1rem !important;
+        line-height: 1.82 !important;
+        color: rgba(240, 238, 235, 0.82) !important;
+        max-width: none !important;
+      }
+      .ai-tool__shot,
+      .ai-tool__placeholder {
+        border-radius: 16px !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        box-shadow: 0 18px 40px rgba(0,0,0,0.24);
+      }
+      .ai-tools__cta {
+        border-top: 0 !important;
+        padding: 0.75rem var(--content-padding-x) 0.75rem !important;
+      }
+      .ai-tools__cta-link {
+        grid-template-columns: minmax(0, 1fr) auto;
+        padding: 1rem 1rem 1rem 1.05rem;
+        border-radius: 22px;
+      }
+      .ai-tools__cta-kicker {
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+      }
+      .ai-tools__cta-title {
+        font-size: 1.02rem;
+        line-height: 1.26;
+      }
+      .ai-tools__cta-sub {
+        font-size: 0.84rem;
+        line-height: 1.55;
+      }
+      .ai-tools__cta-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+      .ai-personal {
+        padding-top: 2.5rem !important;
+      }
+      .ai-personal__grid {
+        gap: 1rem;
+      }
+      .ai-personal__media,
+      .ai-personal__copy-wrap {
+        padding: 0 !important;
+      }
+      .ai-personal__image {
+        border-radius: 18px !important;
+      }
+      .ai-personal__meta {
+        margin-top: 0.9rem !important;
+      }
+      .ai-personal__name {
+        font-size: 1.6rem !important;
+        line-height: 1.05;
+      }
+      .ai-personal__role {
+        font-size: 0.9rem !important;
+        letter-spacing: 0.04em !important;
+      }
+      .ai-personal__copy {
+        font-size: 1.02rem !important;
+        line-height: 1.9 !important;
+        max-width: none !important;
+      }
+      .ai-values__list {
+        gap: 0.85rem;
+      }
+      .ai-values__item {
+        padding: 1.1rem 1rem 1rem;
+        border: 1px solid rgba(196,168,130,0.12);
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.018) 0%, rgba(255,255,255,0.01) 100%);
+      }
+      .ai-values__num {
+        font-size: 0.72rem;
+        opacity: 0.75;
+        margin-bottom: 0.6rem;
+        color: rgba(231, 193, 143, 0.92);
+      }
+      .ai-values__title {
+        font-size: 1.28rem;
+        line-height: 1.25;
+        margin-bottom: 0.5rem;
+      }
+      .ai-values__criterion {
+        font-size: 0.98rem;
+        line-height: 1.65;
+        color: rgba(240, 238, 235, 0.78);
+        opacity: 1;
+      }
+      .ai-cta__actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+      }
+      .ai-cta__button {
+        width: 100%;
+        min-width: 0;
+        min-height: 56px;
+        padding: 0 1rem;
+      }
+      .ai-faq__list {
+        margin-top: 1.5rem;
+      }
+      .ai-faq__question {
+        padding: 1rem 0;
+        font-size: 1rem;
+        gap: 0.75rem;
+      }
+      .ai-faq__qmark {
+        width: 1.6rem;
+        height: 1.6rem;
+        font-size: 0.75rem;
+      }
+      .ai-faq__answer {
+        padding: 0 0 1rem 2.35rem;
+        font-size: 0.98rem;
+        line-height: 1.72;
+      }
     }
 
     /* ── Reduced motion ── */
     @media (prefers-reduced-motion: reduce) {
-      .hero-img { transform: none !important; }
-      .vision-bg img { transform: none !important; }
+      .ai-hero__img { transform: none !important; }
+      .ai-vision__img { animation: none; }
       .m-line { opacity: 1 !important; }
-      .value-item { opacity: 1 !important; transform: none !important; }
-      /* accordion needs no noscript overrides */
     }
   </style>
 
@@ -656,14 +1154,11 @@ const audiences = [
       if (lenisInstance) { lenisInstance.destroy(); lenisInstance = null; }
     }
 
-    /* showAllLevels removed — accordion doesn't need it */
-
     function init() {
       cleanup();
 
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Only init Lenis if motion is allowed
       if (!prefersReduced) {
         lenisInstance = new Lenis({ duration: 1.1, easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
         lenisInstance.on('scroll', ScrollTrigger.update);
@@ -674,15 +1169,13 @@ const audiences = [
 
       if (prefersReduced) {
         document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
-        document.querySelectorAll('.m-line').forEach(el => (el as HTMLElement).classList.add('is-visible'));
-        document.querySelectorAll('.value-item').forEach(el => { (el as HTMLElement).style.opacity = '1'; (el as HTMLElement).style.transform = 'none'; });
-        gsap.set(['.hero-logo', '.hero-sub', '.hero-proof'], { opacity: 1 });
-        gsap.set('.hero-img', { scale: 1 });
-        /* accordion needs no reduced-motion override */
+        document.querySelectorAll('.m-line').forEach(el => el.classList.add('is-visible'));
+        gsap.set('[data-hero-item]', { opacity: 1, y: 0 });
+        gsap.set('.ai-hero__img', { scale: 1 });
         return;
       }
 
-      // ── Reveals (tracked for cleanup) ──
+      // ── Reveals ──
       document.querySelectorAll('.reveal').forEach(el => {
         const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { el.classList.add('visible'); obs.disconnect(); } }, { threshold: 0.12 });
         obs.observe(el); observers.push(obs);
@@ -690,65 +1183,110 @@ const audiences = [
 
       const ease = 'power3.out';
 
-      // ── Match media for responsive GSAP (stored for proper cleanup) ──
       mm = gsap.matchMedia();
+
+      // ── Desktop ──
       mm.add('(min-width: 768px)', () => {
-        // HERO
-        const heroTl = gsap.timeline({ delay: 0.2 });
+        // HERO — clip-path reveal + staggered text (same pattern as Home Hero)
+        const heroTl = gsap.timeline({ delay: 0.3 });
         heroTl
-          .to('.hero-img', { scale: 1, duration: 2.2, ease: 'power2.out' }, 0)
-          .to('.hero-logo', { opacity: 0.5, duration: 0.7, ease }, 0.15)
-          .from('.hero-word', { y: '110%', duration: 0.9, ease: 'power4.out', stagger: 0.12 }, 0.35)
-          .to('.hero-sub', { opacity: 1, duration: 0.7, ease }, 1)
-          .to('.hero-proof', { opacity: 1, duration: 0.7, ease }, 1.15)
-          .to('.hero-scroll-hint', { opacity: 0.5, duration: 0.6, ease }, 1.5);
+          .to('.ai-hero__img', { scale: 1, duration: 2.2, ease: 'power2.out' }, 0)
+          .to('[data-hero-item]', { opacity: 1, y: 0, duration: 0.9, stagger: 0.15, ease }, 0.6);
 
-        gsap.to('.hero-overlay', { background: 'rgba(12,12,12,0.92)', scrollTrigger: { trigger: '.hero-wrap', start: 'top top', end: '70% top', scrub: true } });
-        gsap.to('.hero-img', { y: '12%', scrollTrigger: { trigger: '.hero-wrap', start: 'top top', end: 'bottom top', scrub: true } });
-        gsap.to('.hero-scroll-hint', { opacity: 0, scrollTrigger: { trigger: '.hero-wrap', start: '12% top', end: '22% top', scrub: true } });
+        // Hero parallax on scroll
+        gsap.to('.ai-hero__overlay', { background: 'rgba(12,12,12,0.92)', scrollTrigger: { trigger: '.ai-hero', start: 'top top', end: '70% top', scrub: true } });
+        gsap.to('.ai-hero__img', { y: '12%', scrollTrigger: { trigger: '.ai-hero', start: 'top top', end: 'bottom top', scrub: true } });
 
-        // MANIFESTO
-        document.querySelectorAll('.m-line:not(.m-break)').forEach((line, i) => {
-          ScrollTrigger.create({ trigger: '.manifesto', start: `${12 + i * 10}% center`, once: true, onEnter: () => { gsap.to(line, { opacity: 1, duration: 0.6, ease: 'power2.out' }); line.classList.add('is-visible'); } });
+        // VISION parallax + manifesto scrub
+        gsap.to('.ai-vision__img', { y: '-10%', scrollTrigger: { trigger: '.ai-vision', start: 'top bottom', end: 'bottom top', scrub: 0.5 } });
+
+        document.querySelectorAll('.m-line').forEach((line, i) => {
+          gsap.to(line, {
+            opacity: 1,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '.ai-vision',
+              start: `${15 + i * 8}% center`,
+              once: true,
+              onEnter: () => line.classList.add('is-visible'),
+            },
+          });
         });
-
-        // VISION PARALLAX
-        gsap.to('.vision-img', { y: '-10%', scrollTrigger: { trigger: '.vision', start: 'top bottom', end: 'bottom top', scrub: 0.5 } });
-
-        // ── SERVICE — architectural section drawing ──
-        /* SERVICE: accordion needs no GSAP — native <details> handles it */
-
-        // VALUES — set initial state then animate in
-        document.querySelectorAll('.value-item').forEach((item, i) => {
-          gsap.set(item, { opacity: 0, y: 20 });
-          gsap.to(item, { opacity: 1, y: 0, duration: 0.6, ease, scrollTrigger: { trigger: item, start: 'top 88%' }, delay: i * 0.05 });
-        });
-
-        // TOOLS stagger
-        gsap.from('.tool-card', { x: 50, opacity: 0, stagger: 0.08, duration: 0.7, ease, scrollTrigger: { trigger: '.tools-section', start: 'top 75%' } });
 
         return () => {};
       });
 
+      // ── Mobile ──
       mm.add('(max-width: 767px)', () => {
-        gsap.set(['.hero-logo', '.hero-sub', '.hero-proof'], { opacity: 1 });
-        gsap.set('.hero-img', { scale: 1 });
-        gsap.from('.hero-word', { y: '100%', duration: 0.8, ease: 'power4.out', stagger: 0.1, delay: 0.2 });
+        gsap.set('[data-hero-item]', { opacity: 1, y: 0 });
+        gsap.set('.ai-hero__img', { scale: 1 });
 
-        document.querySelectorAll('.m-line:not(.m-break)').forEach(line => {
-          const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { (line as HTMLElement).style.opacity = '1'; line.classList.add('is-visible'); obs.disconnect(); } }, { threshold: 0.3 });
+        gsap.to('.ai-hero__img', {
+          y: '8%',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.ai-hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.6,
+          },
+        });
+
+        gsap.to('.ai-vision__img', {
+          y: '-6%',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.ai-vision',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 0.6,
+          },
+        });
+
+        document.querySelectorAll<HTMLElement>('.ai-tool__shot img, .ai-personal__image img').forEach((media) => {
+          const trigger = media.closest('.ai-tool, .ai-personal');
+          if (!trigger) return;
+
+          gsap.fromTo(
+            media,
+            { y: '-2%' },
+            {
+              y: '6%',
+              ease: 'none',
+              scrollTrigger: {
+                trigger,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 0.7,
+              },
+            }
+          );
+        });
+
+        document.querySelectorAll('.m-line').forEach(line => {
+          const obs = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) { (line as HTMLElement).style.opacity = '1'; line.classList.add('is-visible'); obs.disconnect(); }
+          }, { threshold: 0.3 });
           obs.observe(line); observers.push(obs);
         });
 
-        document.querySelectorAll('.value-item').forEach(item => {
-          const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { (item as HTMLElement).style.opacity = '1'; (item as HTMLElement).style.transform = 'none'; obs.disconnect(); } }, { threshold: 0.2 });
-          obs.observe(item); observers.push(obs);
-        });
-
-        /* accordion: mobile needs no special JS */
-
         return () => {};
       });
+
+      // Header dark space awareness
+      const header = document.getElementById('site-header') ?? document.getElementById('mobile-header');
+      const darkSections = document.querySelectorAll('.dark-space');
+      if (header && darkSections.length > 0) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const isInDark = entries.some(e => e.isIntersecting);
+            header.setAttribute('data-space', isInDark ? 'dark' : 'light');
+          },
+          { rootMargin: '-64px 0px -90% 0px' }
+        );
+        darkSections.forEach(el => observer.observe(el));
+      }
     }
 
     import { registerPageInit } from '../../lib/scroll-engine';

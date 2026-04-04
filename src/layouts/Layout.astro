@@ -1,13 +1,17 @@
 ---
 import '../styles/global.css';
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title?: string;
   description?: string;
   darkSpace?: boolean;
   ogImage?: string;
+  ogImageAlt?: string;
+  ogType?: string;
+  robots?: string;
   preloadImages?: string[];
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
@@ -15,12 +19,26 @@ const {
   description = 'Archi-Prisma Design Works は建築設計とソフトウェア開発の二軸で、AI × 建築の未来を切り拓く設計事務所です。Tokyo / London.',
   darkSpace = false,
   ogImage = 'https://archi-prisma.co.jp/assets/og-image.png',
+  ogImageAlt = 'Archi-Prisma Design Works のサイトOGイメージ',
+  ogType = 'website',
+  robots = 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1',
   preloadImages = [],
+  structuredData = [],
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://archi-prisma.co.jp');
+const preloadImageTypes = preloadImages.map((src) => ({
+  src,
+  type: src.endsWith('.png')
+    ? 'image/png'
+    : src.endsWith('.webp')
+      ? 'image/webp'
+      : src.endsWith('.svg')
+        ? 'image/svg+xml'
+        : 'image/jpeg',
+}));
 
-const jsonLd = {
+const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'Archi-Prisma Design Works',
@@ -40,8 +58,23 @@ const jsonLd = {
       addressCountry: 'GB',
     },
   ],
-  sameAs: ['https://ai-archi-circle.jp'],
+  sameAs: ['https://ai-archi-circle.archi-prisma.co.jp/'],
 };
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Archi-Prisma Design Works',
+  url: 'https://archi-prisma.co.jp',
+  inLanguage: 'ja-JP',
+  publisher: {
+    '@type': 'Organization',
+    name: 'Archi-Prisma Design Works',
+  },
+};
+
+const pageSchemas = Array.isArray(structuredData) ? structuredData : [structuredData];
+const jsonLd = [organizationSchema, websiteSchema, ...pageSchemas];
 ---
 
 <!doctype html>
@@ -54,27 +87,38 @@ const jsonLd = {
     <!-- SEO -->
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <meta name="googlebot" content={robots} />
+    <meta name="theme-color" content={darkSpace ? '#0C0C0C' : '#F8F6F3'} />
     <link rel="canonical" href={canonicalURL.href} />
+    <link rel="alternate" hreflang="ja-JP" href={canonicalURL.href} />
+    <link rel="alternate" hreflang="x-default" href={canonicalURL.href} />
 
     <!-- OGP -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="Archi-Prisma Design Works" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:locale" content="ja_JP" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <!-- Preload critical assets (per-page) -->
-    {preloadImages.map((src) => (
-      <link rel="preload" href={src} as="image" type="image/jpeg" />
+    {preloadImageTypes.map(({ src, type }) => (
+      <link rel="preload" href={src} as="image" type={type} />
     ))}
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="APDW" />
 
     <!-- Google Fonts: Syne + Outfit + Noto Sans JP -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -84,11 +128,11 @@ const jsonLd = {
       rel="stylesheet"
     />
 
-    <!-- JSON-LD Organization schema -->
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <!-- JSON-LD -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
 
     <!-- View Transitions for seamless page navigation -->
-    <ViewTransitions />
+    <ClientRouter />
   </head>
   <body>
     <slot />
