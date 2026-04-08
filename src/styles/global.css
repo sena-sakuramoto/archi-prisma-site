@@ -30,6 +30,7 @@
 }
 
 html {
+  --header-height: 56px;
   background-color: var(--color-surface);
   color: var(--color-ink);
   font-family: var(--font-jp), var(--font-body), sans-serif;
@@ -40,11 +41,7 @@ html {
 
 body { min-height: 100vh; overflow-x: hidden; }
 
-/* Desktop header offset — mobile uses bottom tab bar, no top padding needed */
-.page-main { padding-top: 0; }
-@media (min-width: 768px) {
-  .page-main { padding-top: 64px; }
-}
+.page-main { padding-top: var(--header-height); }
 
 h1, h2, h3, h4 {
   font-family: var(--font-jp), var(--font-display), sans-serif;
@@ -270,3 +267,20 @@ h1, h2, h3, h4 {
 .section-pad { padding-top: clamp(4rem, 8vw, 8rem); padding-bottom: clamp(4rem, 8vw, 8rem); }
 .section-pad-sm { padding-top: clamp(2rem, 4vw, 4rem); padding-bottom: clamp(2rem, 4vw, 4rem); }
 .section-divider { border-top: 1px solid var(--color-rule); }
+
+@media (max-width: 767px) {
+  html {
+    --content-padding-x: 20px;
+  }
+
+  .section-pad {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  html {
+    --header-height: 72px;
+  }
+}

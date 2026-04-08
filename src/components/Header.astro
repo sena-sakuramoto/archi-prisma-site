@@ -41,9 +41,9 @@ const navItems = [
     <!-- Logo -->
     <a href="/" aria-label="Archi-Prisma Design Works — home">
       <img
-        src="/assets/branding/apdw-logotype.png"
+        src="/assets/branding/apdw-ai-logo.png"
         alt="Archi-Prisma Design Works"
-        width="300"
+        width="236"
         height="30"
         style="height: 30px; width: auto; display: block;"
       />
@@ -79,11 +79,11 @@ const navItems = [
   <div style="height: 56px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 0.9rem;">
     <a href="/" aria-label="Archi-Prisma Design Works — home">
       <img
-        src="/assets/branding/apdw-logotype.png"
+        src="/assets/branding/apdw-ai-logo.png"
         alt="Archi-Prisma Design Works"
-        width="188"
-        height="19"
-        style="height: 19px; width: auto; display: block;"
+        width="136"
+        height="17"
+        style="height: 17px; width: auto; display: block;"
       />
     </a>
     <button
@@ -157,22 +157,25 @@ const navItems = [
   }
 
   .mobile-menu-toggle {
-    width: 38px;
-    height: 38px;
-    border: 1px solid rgba(0,0,0,0.08);
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(0,0,0,0.14);
     border-radius: 999px;
-    background: transparent;
+    background: rgba(255,255,255,0.38);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     display: inline-flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 3.5px;
     color: var(--color-ink);
-    transition: border-color 0.25s var(--ease), background-color 0.25s var(--ease);
+    transition: border-color 0.25s var(--ease), background-color 0.25s var(--ease), transform 0.25s var(--ease);
   }
   .mobile-menu-toggle__line {
-    width: 16px;
-    height: 1.5px;
+    width: 15px;
+    height: 1.75px;
     border-radius: 999px;
     background: currentColor;
     transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
@@ -304,6 +307,11 @@ const navItems = [
     background:
       linear-gradient(180deg, rgba(12,12,12,0.98) 0%, rgba(18,18,18,0.98) 100%),
       radial-gradient(circle at top right, rgba(196,168,130,0.18), transparent 32%);
+  }
+  :global(.dark-space) .mobile-menu-toggle {
+    border-color: rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.06);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
   }
   :global(.dark-space) .mobile-menu__note,
   :global(.dark-space) .mobile-menu__index,

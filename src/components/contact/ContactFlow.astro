@@ -69,4 +69,15 @@ const { steps } = Astro.props;
     font-family: var(--font-jp); font-size: 0.8rem;
     color: var(--color-ink-muted); line-height: 1.5;
   }
+
+  @media (max-width: 767px) {
+    .contact-flow {
+      padding: 1.5rem var(--content-padding-x) 2rem;
+    }
+
+    .contact-flow.reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
 </style>

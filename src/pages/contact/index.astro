@@ -193,7 +193,7 @@ const contactStructuredData = [
     .reveal { transition-delay: var(--delay, 0s); }
 
     .contact-split {
-      min-height: calc(100vh - 64px);
+      min-height: calc(100vh - var(--header-height));
       display: grid;
       grid-template-columns: 1fr;
     }
@@ -203,7 +203,7 @@ const contactStructuredData = [
 
     /* ─── Right panel ─── */
     .contact-right {
-      order: 1; display: flex; flex-direction: column;
+      order: 2; display: flex; flex-direction: column;
     }
     @media (min-width: 768px) {
       .contact-right { order: 2; }

@@ -65,4 +65,30 @@
     color: rgba(240,238,235,0.65);
     letter-spacing: 0.1em;
   }
+
+  @media (max-width: 767px) {
+    .about-hero {
+      min-height: 58svh;
+    }
+
+    .about-hero__content {
+      padding-bottom: 2.5rem;
+    }
+
+    .about-hero__title {
+      font-size: clamp(2.8rem, 15vw, 4.4rem);
+      line-height: 0.92;
+      margin-bottom: 0.75rem;
+    }
+
+    .about-hero__sub {
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+    }
+
+    .about-hero .reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
 </style>

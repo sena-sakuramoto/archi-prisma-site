@@ -53,4 +53,30 @@ const { count } = Astro.props;
   }
 
   .reveal { transition-delay: var(--delay, 0s); }
+
+  @media (max-width: 767px) {
+    .works-hero {
+      padding: 4.25rem 0 2.5rem;
+    }
+
+    .works-hero__title {
+      font-size: clamp(2.8rem, 16vw, 4.5rem);
+      margin-bottom: 1rem;
+    }
+
+    .works-hero__sub {
+      line-height: 1.85;
+      margin-bottom: 1.35rem;
+    }
+
+    .works-hero__count {
+      display: block;
+      line-height: 1.7;
+    }
+
+    .works-hero .reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
 </style>

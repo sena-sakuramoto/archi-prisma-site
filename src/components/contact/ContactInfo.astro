@@ -68,7 +68,7 @@ const company = loadCompany();
   .contact-info {
     display: flex; flex-direction: column; justify-content: center;
     padding: clamp(3rem, 6vw, 6rem) var(--content-padding-x);
-    order: 2;
+    order: 1;
   }
   @media (min-width: 768px) {
     .contact-info {
@@ -135,5 +135,27 @@ const company = loadCompany();
   .contact-social:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
+  }
+
+  @media (max-width: 767px) {
+    .contact-info {
+      padding-top: 2.25rem;
+      padding-bottom: 2rem;
+    }
+
+    .contact-title {
+      font-size: clamp(2.2rem, 12vw, 3.2rem);
+      line-height: 0.92;
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-block {
+      margin-bottom: 1.35rem;
+    }
+
+    .contact-info .reveal {
+      opacity: 1;
+      transform: none;
+    }
   }
 </style>

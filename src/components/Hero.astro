@@ -9,23 +9,25 @@
 
 <section
   id="hero"
-  class="relative overflow-hidden"
-  style="min-height: 100svh; padding-top: 64px;"
+  class="hero-home relative overflow-hidden"
+  style="min-height: calc(100svh - var(--header-height)); padding-top: var(--header-height);"
 >
   <div
-    class="line-section"
-    style="--line-pos: 30%; min-height: calc(100svh - 64px); align-items: stretch;"
+    class="hero-home__grid line-section"
+    style="--line-pos: 30%; min-height: calc(100svh - var(--header-height)); align-items: stretch;"
   >
     <!-- Left zone: Identity statement -->
     <div
+      class="hero-home__copy"
       style="display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(40px, 6vw, 80px) 40px clamp(48px, 6vw, 80px) 0;"
     >
       <div data-hero-item style="opacity: 0; transform: translateY(24px);">
         <img
-          src="/assets/branding/apdw-logotype.png"
+          src="/assets/branding/apdw-ai-logo.png"
           alt="Archi-Prisma Design Works"
+          class="hero-home__logo"
           style="height: 28px; width: auto; display: block;"
-          width="280"
+          width="236"
           height="28"
         />
       </div>
@@ -66,6 +68,7 @@
     <!-- Right zone: Hero image + WebGL overlay -->
     <div
       id="hero-image-container"
+      class="hero-home__media"
       data-webgl-src="/assets/curated/masterplan-aerial.jpg"
       style="position: relative; overflow: hidden; min-height: 320px;"
     >
@@ -131,3 +134,63 @@
   document.addEventListener('astro:before-swap', () => destroyWebGLHero());
   document.addEventListener('astro:after-swap', animateHero);
 </script>
+
+<style>
+  @media (max-width: 767px) {
+    .hero-home {
+      min-height: auto !important;
+      padding-top: var(--header-height) !important;
+    }
+
+    .hero-home__grid {
+      min-height: auto !important;
+      gap: 0;
+    }
+
+    .hero-home__copy {
+      padding: 2rem 0 1.5rem !important;
+      gap: 0;
+    }
+
+    .hero-home__logo {
+      display: none !important;
+    }
+
+    .hero-home__copy [data-hero-item]:nth-child(2) {
+      margin-top: 1.5rem !important;
+    }
+
+    .hero-home__copy [data-hero-item]:nth-child(3) {
+      margin-top: 1.25rem !important;
+    }
+
+    .hero-home__copy [data-hero-item]:last-child {
+      margin-top: 1.5rem !important;
+    }
+
+    .hero-home__copy h1 {
+      font-size: clamp(2.45rem, 12vw, 3.5rem) !important;
+      line-height: 0.95 !important;
+      margin-bottom: 0.9rem !important;
+    }
+
+    .hero-home [data-hero-item] {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .hero-home [data-hero-image] {
+      clip-path: inset(0 0 0 0) !important;
+    }
+
+    .hero-home__copy p {
+      max-width: none !important;
+    }
+
+    .hero-home__media {
+      min-height: 38svh !important;
+      margin-left: calc(var(--content-padding-x) * -1);
+      margin-right: calc(var(--content-padding-x) * -1);
+    }
+  }
+</style>
