@@ -68,12 +68,13 @@ const projects = [
         {/* === day-night layout: 40|60 — scroll-driven day→night crossfade === */}
         {p.layout === 'day-night' && (
           <div
-            class="line-section"
+            class="line-section works-highlight__row works-highlight__row--day-night"
             style="align-items: stretch;"
             data-day-night-section
           >
             {/* Left: text content */}
             <div
+              class="works-highlight__copy works-highlight__copy--left"
               style="padding: clamp(48px, 7vw, 96px) 40px clamp(48px, 7vw, 96px) 0; display: flex; flex-direction: column; justify-content: space-between; position: relative; z-index: 2;"
             >
               <div>
@@ -84,6 +85,7 @@ const projects = [
                   {p.title}
                 </h2>
                 <ul
+                  class="works-highlight__meta-list works-highlight__meta-list--inline"
                   style="list-style: none; padding: 0; margin: 0 0 32px; display: flex; flex-wrap: wrap; gap: 8px 16px;"
                 >
                   <li class="project-meta" data-dn-text>{p.type}</li>
@@ -103,7 +105,7 @@ const projects = [
             <div class="dividing-line" aria-hidden="true" />
 
             {/* Right: stacked day/night images */}
-            <div class="project-image" style="min-height: 480px;" data-works-image>
+            <div class="project-image works-highlight__media" style="min-height: 480px;" data-works-image>
               <img
                 src={p.image}
                 alt={`${p.title} — Day`}
@@ -130,12 +132,12 @@ const projects = [
         {/* === day-night-reverse layout: 65|35 — image left (day→night), text right === */}
         {p.layout === 'day-night-reverse' && (
           <div
-            class="line-section"
+            class="line-section works-highlight__row works-highlight__row--day-night-reverse"
             style="align-items: stretch;"
             data-day-night-section
           >
             {/* Left: stacked day/night images (65%) */}
-            <div class="project-image" style="min-height: 480px;" data-works-image>
+            <div class="project-image works-highlight__media" style="min-height: 480px;" data-works-image>
               <img
                 src={p.image}
                 alt={`${p.title} — Day`}
@@ -161,6 +163,7 @@ const projects = [
 
             {/* Right: text (35%) */}
             <div
+              class="works-highlight__copy works-highlight__copy--right"
               style="padding: clamp(48px, 7vw, 96px) 0 clamp(48px, 7vw, 96px) 40px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; z-index: 2;"
             >
               <p class="project-num" aria-hidden="true" data-dn-text>
@@ -170,6 +173,7 @@ const projects = [
                 {p.title}
               </h2>
               <ul
+                class="works-highlight__meta-list works-highlight__meta-list--stack"
                 style="list-style: none; padding: 0; margin: 0 0 32px; display: flex; flex-direction: column; gap: 6px;"
               >
                 {[p.type, p.region, String(p.year), p.phase].map((meta) => (
@@ -185,9 +189,10 @@ const projects = [
 
         {/* === image-dominant layout: 20|80 — small label left, full image right === */}
         {p.layout === 'image-dominant' && (
-          <div class="line-section reveal" style="align-items: stretch;">
+          <div class="line-section works-highlight__row works-highlight__row--image-dominant reveal" style="align-items: stretch;">
             {/* Left: rotated label / number (20%) */}
             <div
+              class="works-highlight__label"
               style="padding: clamp(48px, 7vw, 96px) 40px clamp(48px, 7vw, 96px) 0; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start;"
             >
               <p class="project-num" style="margin: 0;" aria-hidden="true">
@@ -205,7 +210,7 @@ const projects = [
             <div class="dividing-line" aria-hidden="true" />
 
             {/* Right: image (80%) with text overlay */}
-            <div class="project-image" style="min-height: 480px;" data-works-image>
+            <div class="project-image works-highlight__media works-highlight__media--overlay" style="min-height: 480px;" data-works-image>
               <img
                 src={p.image}
                 alt={p.title}
@@ -216,6 +221,7 @@ const projects = [
               />
               {/* Text overlay */}
               <div
+                class="works-highlight__overlay"
                 style="position: absolute; bottom: 0; left: 0; right: 0; padding: 40px; background: linear-gradient(to top, rgba(10,10,10,0.75) 0%, transparent 100%);"
               >
                 <h2 class="project-title project-title--overlay">
@@ -253,23 +259,44 @@ const projects = [
   gsap.registerPlugin(ScrollTrigger);
 
   function initWorksEffects() {
-    // Subtle image scale on hover
-    document.querySelectorAll<HTMLElement>('[data-works-image]').forEach((wrap) => {
-      const img = wrap.querySelector('img');
-      if (!img) return;
-      wrap.addEventListener('mouseenter', () => {
-        img.style.transform = 'scale(1.03)';
-      });
-      wrap.addEventListener('mouseleave', () => {
-        img.style.transform = 'scale(1)';
-      });
-    });
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-    // Day → Night: pin each day-night section and crossfade while stationary
+    // Subtle image scale on hover
+    if (canHover) {
+      document.querySelectorAll<HTMLElement>('[data-works-image]').forEach((wrap) => {
+        const img = wrap.querySelector('img');
+        if (!img) return;
+        wrap.addEventListener('mouseenter', () => {
+          img.style.transform = 'scale(1.03)';
+        });
+        wrap.addEventListener('mouseleave', () => {
+          img.style.transform = 'scale(1)';
+        });
+      });
+    }
+
+    // Day → Night: desktop pins, mobile scrubs without pinning
     document.querySelectorAll('[data-day-night-section]').forEach((section) => {
       const nightImg = section.querySelector('[data-night-img]') as HTMLElement;
       const parentSection = section.closest('section') as HTMLElement;
       if (!nightImg || !parentSection) return;
+
+      if (isMobile) {
+        gsap.set(nightImg, { opacity: 0 });
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: parentSection,
+            start: 'top 78%',
+            end: 'bottom 34%',
+            scrub: 0.55,
+          },
+        })
+          .to(nightImg, { opacity: 1, ease: 'none', duration: 1 }, 0)
+          .to(parentSection, { backgroundColor: '#0C0C0C', ease: 'none', duration: 1 }, 0)
+          .to(section.querySelectorAll('[data-dn-text]'), { color: '#F0EEEB', ease: 'none', duration: 1 }, 0);
+        return;
+      }
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -345,5 +372,72 @@ const projects = [
     overflow: hidden;
     min-height: 320px;
     position: relative;
+  }
+
+  @media (max-width: 767px) {
+    .works-highlight__row {
+      gap: 0;
+    }
+
+    .works-highlight__media {
+      order: 1;
+      min-height: min(58svh, 420px) !important;
+      margin-left: calc(var(--content-padding-x) * -1);
+      margin-right: calc(var(--content-padding-x) * -1);
+    }
+
+    .works-highlight__copy,
+    .works-highlight__label {
+      order: 2;
+      padding: 1.35rem 0 2rem !important;
+    }
+
+    .works-highlight__copy--right {
+      justify-content: flex-start !important;
+    }
+
+    .works-highlight__label {
+      display: none !important;
+    }
+
+    .works-highlight__meta-list {
+      margin-bottom: 1rem !important;
+      gap: 0.3rem 0.7rem !important;
+    }
+
+    .works-highlight__meta-list--stack {
+      gap: 0.3rem !important;
+    }
+
+    .works-highlight__overlay {
+      padding: 1.15rem !important;
+      background: linear-gradient(to top, rgba(10,10,10,0.84) 0%, rgba(10,10,10,0.12) 100%) !important;
+    }
+
+    .project-num {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .project-title {
+      font-size: clamp(1.75rem, 8vw, 2.3rem);
+      margin-bottom: 0.85rem;
+      line-height: 1.02;
+    }
+
+    .project-meta {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+    }
+
+    .project-storyline {
+      line-height: 1.8;
+      font-size: 0.96rem;
+    }
+
+    .project-storyline--overlay {
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
   }
 </style>
