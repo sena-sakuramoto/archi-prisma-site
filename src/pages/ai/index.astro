@@ -54,6 +54,93 @@ const siteUrl = 'https://archi-prisma.co.jp';
 const aiPageUrl = `${siteUrl}/ai/`;
 const aiPageTitle = 'AI × 建築事業 | 建築AI導入・法人研修・AI建築サークル | Archi-Prisma Design Works';
 const aiPageDescription = '建築のプロを、AIで最強にする。AI建築サークル、法人研修、AI導入プログラム、保守顧問、受託開発まで、建築実務に効くAI導入を支援。';
+const seminarPageUrl = `${aiPageUrl}#seminar`;
+const seminarOverview = {
+  title: 'Claude AI セミナー',
+  dateLabel: '2026年4月19日（日）',
+  dateTimeLabel: '2026年4月19日（日） 10:00 - 17:00',
+  venue: 'オンライン（Zoom）',
+  note: '片方だけの参加もOK / アーカイブを全員にお渡しします',
+  description:
+    '4月19日（日）、Claudeを実務に入れるところから、自動化して任せるところまでを1日で通します。基礎編は「自分で使えるようになる」、実践編は「AIに仕事を振れるようになる」ためのセミナーです。',
+};
+const seminarHighlights = [
+  '基礎編: Claudeの基本、安全性、議事録化、メール返信、PDF分析',
+  '実践編: メール自動化、AI秘書、資料分析、Web・スライド生成',
+  '両方受講で「使う」から「任せる」まで一気に繋がります',
+];
+const seminarSessions = [
+  {
+    label: '基礎編',
+    time: '10:00 - 13:00',
+    title: 'AI活用を基礎からハンズオンで',
+    description:
+      'Claudeの基本、安全に仕事で使う考え方、伝わる頼み方、資料を読ませる使い方まで。初めてでも、その場で実務に入れられる状態まで持っていきます。',
+    bullets: [
+      'Claude / ChatGPT / Gemini の違いと、仕事で使う前提の安全性',
+      '打合せメモ、メール返信、報告書をその場で作るハンズオン',
+      'PDF・画像・見積資料を読み込ませて要約 / 比較 / 指摘する実践',
+    ],
+    ctaLabel: '基礎編に申し込む',
+    url: 'https://buy.stripe.com/eVqfZj77vgtv16NcSrf7i09',
+    startDate: '2026-04-19T10:00:00+09:00',
+    endDate: '2026-04-19T13:00:00+09:00',
+  },
+  {
+    label: '実践編',
+    time: '14:00 - 17:00',
+    title: 'メール自動化・AI秘書の仕組みを全公開',
+    description:
+      '資料を丸ごと読ませる方法、スマホから仕事を振る仕組み、メール自動化、AI秘書の設計まで。AIを補助役ではなく実務の担当者として動かすところまで見せます。',
+    bullets: [
+      'Coworkでフォルダ単位の資料分析、比較表、要約メールを作る',
+      'Dispatchとスキルで受信メールの下書き自動化とAI秘書を設計する',
+      'HP・仕上げ表・スライドをAIで生成する実演とワーク',
+    ],
+    ctaLabel: '実践編に申し込む',
+    url: 'https://buy.stripe.com/6oU8wRbnLgtv7vb9Gff7i0a',
+    startDate: '2026-04-19T14:00:00+09:00',
+    endDate: '2026-04-19T17:00:00+09:00',
+  },
+];
+const seminarStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'EducationEvent',
+  name: seminarOverview.title,
+  description: seminarOverview.description,
+  url: seminarPageUrl,
+  image: `${siteUrl}/assets/generated/ai-service-seminar.jpg`,
+  eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
+  eventStatus: 'https://schema.org/EventScheduled',
+  startDate: '2026-04-19T10:00:00+09:00',
+  endDate: '2026-04-19T17:00:00+09:00',
+  inLanguage: 'ja-JP',
+  isAccessibleForFree: false,
+  location: {
+    '@type': 'VirtualLocation',
+    url: seminarPageUrl,
+  },
+  organizer: {
+    '@type': 'Organization',
+    name: 'Archi-Prisma Design Works',
+    url: siteUrl,
+  },
+  subEvent: seminarSessions.map((session) => ({
+    '@type': 'EducationEvent',
+    name: `${seminarOverview.title} ${session.label}`,
+    description: session.description,
+    startDate: session.startDate,
+    endDate: session.endDate,
+    eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
+    eventStatus: 'https://schema.org/EventScheduled',
+    inLanguage: 'ja-JP',
+    url: session.url,
+    location: {
+      '@type': 'VirtualLocation',
+      url: seminarPageUrl,
+    },
+  })),
+};
 const aiFaqs = [
   {
     question: 'AI × 建築では何を支援していますか？',
@@ -181,6 +268,7 @@ const aiStructuredData = [
       },
     })),
   },
+  seminarStructuredData,
 ];
 ---
 
@@ -206,6 +294,12 @@ const aiStructuredData = [
         <div class="ai-hero__overlay"></div>
         <div class="ai-hero__content">
           <div class="ai-hero__inner">
+            <div data-hero-item style="opacity: 0; transform: translateY(24px); margin-bottom: 1rem;">
+              <a href="#seminar" class="ai-hero__event-badge">
+                <span class="ai-hero__event-badge-label">4.19 SUN</span>
+                <span class="ai-hero__event-badge-text">Claude AI セミナー申込受付中</span>
+              </a>
+            </div>
             <div data-hero-item style="opacity: 0; transform: translateY(24px);">
               <h1 class="ai-hero__title" style="font-family: var(--font-display), var(--font-jp); font-size: var(--text-hero); font-weight: 800; color: var(--color-ink-dark); line-height: 1.2; letter-spacing: -0.03em; margin: 0;">
                 <span class="ai-hero__word">建築のプロを、</span>
@@ -239,7 +333,116 @@ const aiStructuredData = [
       </div>
     </section>
 
-    <!-- ━━━ 2. PROOF ━━━ -->
+    <!-- ━━━ 2. SEMINAR ━━━ -->
+    <section class="section-pad ai-seminar" id="seminar" data-section="seminar" style="border-top: 1px solid rgba(196,168,130,0.15);">
+      <div class="line-section ai-seminar__intro" style="--line-pos: 43%;">
+        <div style="padding-right: 40px;">
+          <p style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--color-accent-dark); margin: 0 0 1.5rem;" class="reveal">
+            SPECIAL EVENT
+          </p>
+          <div class="ai-seminar__signal reveal">
+            <span class="ai-seminar__signal-badge">ONE DAY ONLY</span>
+            <span class="ai-seminar__signal-text">{seminarOverview.dateLabel} / LIVE ONLINE</span>
+          </div>
+          <h2 class="ai-seminar__heading reveal" style="font-family: var(--font-display), var(--font-jp); font-weight: 700; color: var(--color-ink-dark); margin: 0; letter-spacing: -0.02em;">
+            <span class="ai-seminar__heading-line">4/19（日）</span>
+            <span class="ai-seminar__heading-line ai-seminar__heading-line--main">Claude AI セミナー</span>
+          </h2>
+          <p class="ai-seminar__lead reveal" style="font-family: var(--font-body), var(--font-jp); font-size: var(--text-body); font-weight: 300; color: var(--color-ink-muted-dark); margin: 1.5rem 0 0; line-height: 1.95; max-width: 40rem;">
+            {seminarOverview.description}
+          </p>
+        </div>
+        <div class="dividing-line" aria-hidden="true"></div>
+        <div class="ai-seminar__aside" style="padding-left: 40px;">
+          <div class="ai-seminar__poster reveal img-grain">
+            <img src="/assets/generated/ai-service-seminar.jpg" alt="Claude AI セミナーのビジュアル" loading="lazy" width="960" height="720" />
+            <div class="ai-seminar__poster-stamp">
+              <span class="ai-seminar__poster-stamp-date">4.19</span>
+              <span class="ai-seminar__poster-stamp-text">SPECIAL EVENT</span>
+            </div>
+            <div class="ai-seminar__poster-overlay"></div>
+            <div class="ai-seminar__poster-copy">
+              <span class="ai-seminar__poster-kicker">ONLINE / ZOOM</span>
+              <p class="ai-seminar__poster-text">{seminarOverview.note}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-wide">
+        <div class="ai-seminar-cta reveal">
+          <div class="ai-seminar-cta__copy">
+            <span class="ai-seminar-cta__eyebrow">EVENT ENTRY</span>
+            <h3 class="ai-seminar-cta__title">参加したい編をそのまま選んで申し込む</h3>
+            <p class="ai-seminar-cta__note">{seminarOverview.note}</p>
+          </div>
+          <div class="ai-seminar-cta__actions">
+            {seminarSessions.map((session) => (
+              <a
+                href={session.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="ai-seminar-cta__button"
+              >
+                <span class="ai-seminar-cta__button-copy">
+                  <span class="ai-seminar-cta__button-label">{session.label}</span>
+                  <span class="ai-seminar-cta__button-meta">{session.time}</span>
+                  <span class="ai-seminar-cta__button-text">{session.ctaLabel}</span>
+                </span>
+                <span class="ai-seminar-cta__button-arrow" aria-hidden="true">→</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div class="ai-seminar__meta-grid reveal">
+          <div class="ai-seminar__meta-card">
+            <span class="ai-seminar__meta-label">DATE</span>
+            <p class="ai-seminar__meta-value">{seminarOverview.dateTimeLabel}</p>
+          </div>
+          <div class="ai-seminar__meta-card">
+            <span class="ai-seminar__meta-label">PLACE</span>
+            <p class="ai-seminar__meta-value">{seminarOverview.venue}</p>
+          </div>
+        </div>
+
+        <ul class="ai-seminar__highlight-list reveal">
+          {seminarHighlights.map((highlight, index) => (
+            <li class="ai-seminar__highlight" style={`--delay: ${index * 0.05}s;`}>
+              {highlight}
+            </li>
+          ))}
+        </ul>
+
+        <div class="ai-seminar__cards">
+          {seminarSessions.map((session, index) => (
+            <article class="ai-seminar-card reveal" style={`--delay: ${index * 0.08}s;`}>
+              <div class="ai-seminar-card__top">
+                <span class="ai-seminar-card__label">{session.label}</span>
+                <span class="ai-seminar-card__time">{session.time}</span>
+              </div>
+              <h3 class="ai-seminar-card__title">{session.title}</h3>
+              <p class="ai-seminar-card__description">{session.description}</p>
+              <ul class="ai-seminar-card__list">
+                {session.bullets.map((bullet) => (
+                  <li>{bullet}</li>
+                ))}
+              </ul>
+              <a
+                href={session.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="ai-seminar-card__button"
+              >
+                {session.ctaLabel}
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━ 3. PROOF ━━━ -->
     <section class="section-pad" id="proof" data-section="proof" style="border-top: 1px solid rgba(196,168,130,0.15);">
       <div class="content-wide">
         <p style="font-family: var(--font-display); font-size: var(--text-nav); font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--color-accent-dark); margin: 0 0 1.5rem;" class="reveal">
@@ -567,12 +770,522 @@ const aiStructuredData = [
     .ai-hero__title { text-wrap: balance; }
     .ai-hero__word { display: block; overflow: hidden; }
     .ai-hero__copy-line { display: block; }
+    .ai-hero__event-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.85rem;
+      min-height: 44px;
+      padding: 0.5rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(231,193,143,0.28);
+      background: rgba(12, 12, 12, 0.34);
+      color: var(--color-ink-dark);
+      text-decoration: none;
+      box-shadow: 0 18px 36px rgba(0,0,0,0.18);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .ai-hero__event-badge-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      padding: 0 0.7rem;
+      border-radius: 999px;
+      background: rgba(231,193,143,0.16);
+      color: rgba(255, 232, 205, 0.94);
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .ai-hero__event-badge-text {
+      font-family: var(--font-display), var(--font-jp);
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1.4;
+      letter-spacing: 0.02em;
+    }
     .ai-proof__heading { text-wrap: balance; line-height: 1.18; }
     .ai-outcome,
     .ai-svc__name,
     .ai-svc__step,
     .m-line--bold,
     .m-line--accent { text-wrap: balance; }
+
+    /* ── SEMINAR ── */
+    .ai-seminar {
+      background:
+        radial-gradient(circle at top right, rgba(231,193,143,0.1), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.018) 0%, rgba(255,255,255,0) 100%);
+    }
+    .ai-seminar__intro {
+      position: relative;
+      padding-top: 1.2rem;
+      padding-bottom: 1.2rem;
+      border: 1px solid rgba(231,193,143,0.12);
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at top left, rgba(231,193,143,0.1), transparent 26%),
+        linear-gradient(180deg, rgba(255,255,255,0.028) 0%, rgba(255,255,255,0.008) 100%);
+      box-shadow: 0 24px 48px rgba(0,0,0,0.16);
+      overflow: hidden;
+    }
+    .ai-seminar__intro::before,
+    .ai-seminar__intro::after {
+      content: '';
+      position: absolute;
+      width: 140px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(231,193,143,0), rgba(231,193,143,0.5), rgba(231,193,143,0));
+    }
+    .ai-seminar__intro::before {
+      top: 18px;
+      left: 24px;
+    }
+    .ai-seminar__intro::after {
+      right: 24px;
+      bottom: 18px;
+    }
+    .ai-seminar__signal {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      margin: 0 0 1rem;
+    }
+    .ai-seminar__signal-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(231,193,143,0.28);
+      background: rgba(231,193,143,0.14);
+      color: rgba(255,232,205,0.94);
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .ai-seminar__signal-text {
+      font-family: var(--font-display), var(--font-jp);
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: rgba(240, 238, 235, 0.74);
+    }
+    .ai-seminar__heading {
+      font-size: clamp(3rem, 4.8vw, 4.6rem);
+      line-height: 1.04;
+      text-wrap: initial;
+    }
+    .ai-seminar__heading-line {
+      display: block;
+    }
+    .ai-seminar__heading-line--main {
+      white-space: nowrap;
+    }
+    .ai-seminar__lead {
+      text-wrap: pretty;
+    }
+    .ai-seminar__aside {
+      display: flex;
+      align-items: center;
+    }
+    .ai-seminar__poster {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      min-height: 22rem;
+      border-radius: 28px;
+      border: 1px solid rgba(196,168,130,0.18);
+      box-shadow: 0 28px 56px rgba(0,0,0,0.22);
+      background: rgba(255,255,255,0.02);
+    }
+    .ai-seminar__poster-stamp {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      z-index: 2;
+      display: grid;
+      gap: 0.15rem;
+      min-width: 112px;
+      padding: 0.75rem 0.8rem;
+      border-radius: 18px;
+      border: 1px solid rgba(231,193,143,0.32);
+      background: rgba(12,12,12,0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.24);
+    }
+    .ai-seminar__poster-stamp-date {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: var(--color-ink-dark);
+      line-height: 1;
+    }
+    .ai-seminar__poster-stamp-text {
+      font-family: var(--font-display);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(231,193,143,0.88);
+      line-height: 1.2;
+    }
+    .ai-seminar__poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .ai-seminar__poster-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(12,12,12,0.08) 0%, rgba(12,12,12,0.76) 100%);
+    }
+    .ai-seminar__poster-copy {
+      position: absolute;
+      inset: auto 1.35rem 1.35rem 1.35rem;
+      z-index: 1;
+      display: grid;
+      gap: 0.55rem;
+    }
+    .ai-seminar__poster-kicker {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 232, 205, 0.84);
+    }
+    .ai-seminar__poster-text {
+      margin: 0;
+      font-family: var(--font-display), var(--font-jp);
+      font-size: clamp(1.2rem, 1.6vw, 1.55rem);
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--color-ink-dark);
+      text-wrap: balance;
+    }
+    .ai-seminar-cta {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 1rem;
+      align-items: stretch;
+      margin-top: clamp(2rem, 4vw, 3rem);
+      padding: 1.2rem;
+      border-radius: 28px;
+      border: 1px solid rgba(231,193,143,0.2);
+      background:
+        radial-gradient(circle at top right, rgba(231,193,143,0.14), transparent 32%),
+        linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.018) 100%);
+      box-shadow: 0 28px 56px rgba(0,0,0,0.2);
+    }
+    .ai-seminar-cta::before,
+    .ai-seminar-cta::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: #0c0c0c;
+      border: 1px solid rgba(231,193,143,0.1);
+      transform: translateY(-50%);
+    }
+    .ai-seminar-cta::before {
+      left: -12px;
+    }
+    .ai-seminar-cta::after {
+      right: -12px;
+    }
+    .ai-seminar-cta__copy {
+      display: grid;
+      gap: 0.6rem;
+      align-content: center;
+      padding: 0.5rem 0.35rem;
+    }
+    .ai-seminar-cta__eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(231,193,143,0.82);
+    }
+    .ai-seminar-cta__title {
+      margin: 0;
+      font-family: var(--font-display), var(--font-jp);
+      font-size: clamp(1.4rem, 2vw, 1.9rem);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--color-ink-dark);
+      text-wrap: balance;
+    }
+    .ai-seminar-cta__note {
+      margin: 0;
+      font-family: var(--font-body), var(--font-jp);
+      font-size: 0.96rem;
+      line-height: 1.8;
+      color: rgba(240, 238, 235, 0.76);
+    }
+    .ai-seminar-cta__actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+    .ai-seminar-cta__button {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.9rem;
+      align-items: center;
+      min-height: 132px;
+      padding: 1.1rem 1.15rem;
+      border-radius: 22px;
+      border: 1px solid rgba(231,193,143,0.38);
+      background:
+        linear-gradient(180deg, rgba(232,198,149,0.98) 0%, rgba(196,168,130,0.92) 100%);
+      color: #16120d;
+      text-decoration: none;
+      box-shadow:
+        inset 0 1px 0 rgba(255,245,227,0.72),
+        0 18px 38px rgba(0,0,0,0.24);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+    .ai-seminar-cta__button:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.03);
+      box-shadow:
+        inset 0 1px 0 rgba(255,245,227,0.82),
+        0 22px 46px rgba(0,0,0,0.28);
+    }
+    .ai-seminar-cta__button:active {
+      transform: translateY(-1px);
+      box-shadow:
+        inset 0 2px 0 rgba(255,245,227,0.65),
+        0 12px 24px rgba(0,0,0,0.22);
+    }
+    .ai-seminar-cta__button-copy {
+      display: grid;
+      gap: 0.28rem;
+      align-content: center;
+    }
+    .ai-seminar-cta__button-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-height: 26px;
+      padding: 0 0.55rem;
+      border-radius: 999px;
+      background: rgba(22, 18, 13, 0.08);
+      font-family: var(--font-display), var(--font-jp);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .ai-seminar-cta__button-meta {
+      font-family: var(--font-display);
+      font-size: 0.86rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      opacity: 0.78;
+    }
+    .ai-seminar-cta__button-text {
+      font-family: var(--font-display), var(--font-jp);
+      font-size: 1.24rem;
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+    .ai-seminar-cta__button-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      background: rgba(22, 18, 13, 0.12);
+      border: 1px solid rgba(22, 18, 13, 0.1);
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      line-height: 1;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);
+    }
+    .ai-seminar__meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .ai-seminar__meta-card {
+      padding: 1.1rem 1.15rem 1rem;
+      border-radius: 20px;
+      border: 1px solid rgba(196,168,130,0.14);
+      background: rgba(255,255,255,0.02);
+    }
+    .ai-seminar__meta-label {
+      display: inline-flex;
+      margin-bottom: 0.55rem;
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(231,193,143,0.82);
+    }
+    .ai-seminar__meta-value {
+      margin: 0;
+      font-family: var(--font-body), var(--font-jp);
+      font-size: 0.98rem;
+      line-height: 1.75;
+      color: rgba(240, 238, 235, 0.82);
+    }
+    .ai-seminar__highlight-list {
+      list-style: none;
+      margin: 1.5rem 0 0;
+      padding: 0;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .ai-seminar__highlight {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      padding: 0.45rem 0.95rem;
+      border-radius: 999px;
+      border: 1px solid rgba(196,168,130,0.16);
+      background: rgba(255,255,255,0.02);
+      font-family: var(--font-body), var(--font-jp);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: rgba(240, 238, 235, 0.76);
+    }
+    .ai-seminar__cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+      margin-top: clamp(1.5rem, 3vw, 2rem);
+    }
+    .ai-seminar-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-height: 100%;
+      padding: clamp(1.4rem, 2vw, 1.75rem);
+      border-radius: 26px;
+      border: 1px solid rgba(196,168,130,0.18);
+      background:
+        radial-gradient(circle at top right, rgba(231,193,143,0.12), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%);
+      box-shadow: 0 18px 42px rgba(0,0,0,0.18);
+    }
+    .ai-seminar-card__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .ai-seminar-card__label {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 0.8rem;
+      border-radius: 999px;
+      background: rgba(231,193,143,0.12);
+      color: rgba(255, 232, 205, 0.96);
+      font-family: var(--font-display), var(--font-jp);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+    .ai-seminar-card__time {
+      font-family: var(--font-display);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: rgba(231,193,143,0.78);
+    }
+    .ai-seminar-card__title {
+      margin: 0;
+      font-family: var(--font-display), var(--font-jp);
+      font-size: clamp(1.5rem, 2vw, 1.95rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--color-ink-dark);
+      text-wrap: balance;
+    }
+    .ai-seminar-card__description {
+      margin: 0;
+      font-family: var(--font-body), var(--font-jp);
+      font-size: 0.98rem;
+      line-height: 1.9;
+      color: rgba(240, 238, 235, 0.8);
+    }
+    .ai-seminar-card__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 0.8rem;
+    }
+    .ai-seminar-card__list li {
+      position: relative;
+      padding-left: 1rem;
+      font-family: var(--font-body), var(--font-jp);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: rgba(240, 238, 235, 0.78);
+    }
+    .ai-seminar-card__list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.72rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(231,193,143,0.9);
+    }
+    .ai-seminar-card__button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 56px;
+      margin-top: auto;
+      padding: 0 1.2rem;
+      border-radius: 999px;
+      border: 1px solid rgba(231,193,143,0.34);
+      background: linear-gradient(180deg, rgba(232,198,149,0.98) 0%, rgba(196,168,130,0.9) 100%);
+      color: #16120d;
+      text-decoration: none;
+      font-family: var(--font-display), var(--font-jp);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    }
+    .ai-seminar-card__button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.03);
+      box-shadow: 0 18px 34px rgba(0,0,0,0.24);
+    }
 
     /* ── PROOF responsive ── */
     .proof-ui-grid { grid-template-columns: 1fr; }
@@ -881,6 +1594,172 @@ const aiStructuredData = [
         max-width: 22ch !important;
         font-size: 0.92rem !important;
         line-height: 1.75 !important;
+      }
+      .ai-hero__event-badge {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.7rem;
+        padding: 0.55rem 0.7rem;
+      }
+      .ai-hero__event-badge-label {
+        min-height: 28px;
+        padding: 0 0.55rem;
+        font-size: 0.66rem;
+        letter-spacing: 0.12em;
+      }
+      .ai-hero__event-badge-text {
+        font-size: 0.82rem;
+        line-height: 1.35;
+      }
+      #seminar .line-section > :first-child {
+        padding-bottom: 0 !important;
+      }
+      #seminar .line-section > :last-child {
+        padding-top: 0 !important;
+      }
+      .ai-seminar__intro {
+        padding-top: 0.85rem;
+        padding-bottom: 0.85rem;
+        border-radius: 24px;
+      }
+      .ai-seminar__intro::before,
+      .ai-seminar__intro::after {
+        display: none;
+      }
+      .ai-seminar__aside,
+      .ai-seminar__intro > :last-child {
+        padding-left: 0 !important;
+      }
+      .ai-seminar__intro > :first-child {
+        padding-right: 0 !important;
+      }
+      .ai-seminar__signal {
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+      }
+      .ai-seminar__signal-badge {
+        min-height: 24px;
+        padding: 0 0.55rem;
+        font-size: 0.64rem;
+      }
+      .ai-seminar__signal-text {
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+      }
+      .ai-seminar__poster {
+        min-height: 16rem;
+        border-radius: 20px;
+      }
+      .ai-seminar__poster-stamp {
+        top: 0.75rem;
+        left: 0.75rem;
+        min-width: 96px;
+        padding: 0.6rem 0.65rem;
+        border-radius: 14px;
+      }
+      .ai-seminar__poster-stamp-date {
+        font-size: 1rem;
+      }
+      .ai-seminar__poster-stamp-text {
+        font-size: 0.56rem;
+      }
+      .ai-seminar__heading {
+        font-size: clamp(2.3rem, 9.8vw, 3.2rem);
+        line-height: 1.02;
+      }
+      .ai-seminar__heading-line--main {
+        white-space: normal;
+      }
+      .ai-seminar__poster-copy {
+        inset: auto 1rem 1rem 1rem;
+      }
+      .ai-seminar__poster-text {
+        font-size: 1.1rem;
+      }
+      .ai-seminar-cta {
+        grid-template-columns: 1fr;
+        gap: 0.9rem;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border-radius: 22px;
+      }
+      .ai-seminar-cta::before,
+      .ai-seminar-cta::after {
+        width: 18px;
+        height: 18px;
+      }
+      .ai-seminar-cta::before {
+        left: -9px;
+      }
+      .ai-seminar-cta::after {
+        right: -9px;
+      }
+      .ai-seminar-cta__copy {
+        padding: 0;
+      }
+      .ai-seminar-cta__title {
+        font-size: 1.35rem;
+      }
+      .ai-seminar-cta__note {
+        font-size: 0.92rem;
+        line-height: 1.7;
+      }
+      .ai-seminar-cta__actions {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      .ai-seminar-cta__button {
+        min-height: 108px;
+        padding: 0.95rem 1rem;
+        border-radius: 18px;
+      }
+      .ai-seminar-cta__button-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+      }
+      .ai-seminar-cta__button-text {
+        font-size: 1.12rem;
+      }
+      .ai-seminar__meta-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+        margin-top: 0.9rem;
+      }
+      .ai-seminar__meta-card {
+        border-radius: 18px;
+      }
+      .ai-seminar__highlight-list {
+        display: grid;
+        gap: 0.65rem;
+      }
+      .ai-seminar__highlight {
+        justify-content: flex-start;
+        min-height: 0;
+        padding: 0.8rem 0.95rem;
+        border-radius: 18px;
+        font-size: 0.92rem;
+        line-height: 1.6;
+      }
+      .ai-seminar__cards {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .ai-seminar-card {
+        padding: 1.2rem;
+        border-radius: 22px;
+        gap: 0.9rem;
+      }
+      .ai-seminar-card__title {
+        font-size: 1.45rem;
+      }
+      .ai-seminar-card__description,
+      .ai-seminar-card__list li {
+        font-size: 0.95rem;
+        line-height: 1.75;
+      }
+      .ai-seminar-card__button {
+        width: 100%;
       }
       .ai-vision .line-section,
       #service .line-section,
